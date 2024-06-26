@@ -17,7 +17,7 @@
 namespace scran {
 
 /**
- * @namespace scran::per_cell_qc_metrics.hpp
+ * @namespace scran::per_cell_qc_metrics
  * @brief Compute per-cell quality control metrics. 
  *
  * Given a feature-by-cell expression matrix (usually containing counts), we compute several QC metrics:
