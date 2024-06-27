@@ -1,0 +1,5 @@
+<map id="scran/find_median_mad.hpp" name="scran/find_median_mad.hpp">
+<area shape="rect" id="Node000001" title="Compute the median and MAD from an array of values." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000002" href="$choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="31,79,162,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,46,99,79,94,79,94,46"/>
+</map>

@@ -1,10 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="file">
+    <name>choose_filter_thresholds.hpp</name>
+    <path>scran/</path>
+    <filename>choose__filter__thresholds_8hpp.html</filename>
+    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
+    <class kind="struct">scran::choose_filter_thresholds::Options</class>
+    <class kind="class">scran::choose_filter_thresholds::Thresholds</class>
+    <class kind="class">scran::choose_filter_thresholds::BlockThresholds</class>
+    <namespace>scran</namespace>
+    <namespace>scran::choose_filter_thresholds</namespace>
+  </compound>
+  <compound kind="file">
     <name>find_median_mad.hpp</name>
     <path>scran/</path>
     <filename>find__median__mad_8hpp.html</filename>
     <class kind="struct">scran::find_median_mad::Options</class>
+    <class kind="struct">scran::find_median_mad::Results</class>
     <class kind="class">scran::find_median_mad::Workspace</class>
     <namespace>scran</namespace>
     <namespace>scran::find_median_mad</namespace>
@@ -24,6 +36,53 @@
     <path>scran/</path>
     <filename>scran_8hpp.html</filename>
     <namespace>scran</namespace>
+  </compound>
+  <compound kind="class">
+    <name>scran::choose_filter_thresholds::BlockThresholds</name>
+    <filename>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>BlockThresholds</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>a20eb122e4419312d925cf6f0a9f396ea</anchor>
+      <arglist>(const std::vector&lt; find_median_mad::Results&lt; Float_ &gt; &gt; &amp;mm, const Options &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_lower</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>ae23ef5a8ef97f87d4b9b5dec0ef4e5d0</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_upper</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>ab195c7a040d4e3794360730ba484286d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>ab541758a29e36e817a45458fcbe60934</anchor>
+      <arglist>(Float_ x, Block_ b) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>a9f3d0a315da1239fab7efddecf700d2b</anchor>
+      <arglist>(Index_ n, const Value_ *input, const Block_ *block, Output_ *output, bool overwrite) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
+      <anchor>a104b2d8cb24080308bdf25e8713bd4c8</anchor>
+      <arglist>(Index_ n, const Value_ *input, const Block_ *block)</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>scran::per_cell_qc_metrics::Buffers</name>
@@ -72,6 +131,45 @@
       <name>subset_detected</name>
       <anchorfile>structscran_1_1per__cell__qc__metrics_1_1Buffers.html</anchorfile>
       <anchor>a72b0bd35fcc484bc122be556e0e0aeee</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::choose_filter_thresholds::Options</name>
+    <filename>structscran_1_1choose__filter__thresholds_1_1Options.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>lower</name>
+      <anchorfile>structscran_1_1choose__filter__thresholds_1_1Options.html</anchorfile>
+      <anchor>a42b53952746e5cd3edb080e53c7e4e8f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>upper</name>
+      <anchorfile>structscran_1_1choose__filter__thresholds_1_1Options.html</anchorfile>
+      <anchor>a7e1b18a563d2706c3b4b0761d6805af9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>num_mads</name>
+      <anchorfile>structscran_1_1choose__filter__thresholds_1_1Options.html</anchorfile>
+      <anchor>aa7b2d771468088cb63e949f430644dc6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>min_diff</name>
+      <anchorfile>structscran_1_1choose__filter__thresholds_1_1Options.html</anchorfile>
+      <anchor>aefa36f1a53ef0ba54b0694e3c36c97d6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>unlog</name>
+      <anchorfile>structscran_1_1choose__filter__thresholds_1_1Options.html</anchorfile>
+      <anchor>af8ce5879b276cf22d228ed37d307e317</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -147,6 +245,25 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::find_median_mad::Results</name>
+    <filename>structscran_1_1find__median__mad_1_1Results.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="variable">
+      <type>Float_</type>
+      <name>median</name>
+      <anchorfile>structscran_1_1find__median__mad_1_1Results.html</anchorfile>
+      <anchor>a9f925639f3b8fd1adaa018647bea075b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Float_</type>
+      <name>mad</name>
+      <anchorfile>structscran_1_1find__median__mad_1_1Results.html</anchorfile>
+      <anchor>af781189174d0843fe5fccd75c50029da</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::per_cell_qc_metrics::Results</name>
     <filename>structscran_1_1per__cell__qc__metrics_1_1Results.html</filename>
     <templarg>typename Sum_</templarg>
@@ -197,6 +314,53 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>scran::choose_filter_thresholds::Thresholds</name>
+    <filename>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>Thresholds</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>ae45c66d5a2b2458283b4f546bafe760e</anchor>
+      <arglist>(const find_median_mad::Results&lt; Float_ &gt; &amp;mm, const Options &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_lower</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>a951a531ee7d08dac4a27105ea6f1dc4a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_upper</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>a48e7480877d17b404a02e5245e2ddc49</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>a4b38e4696698c230895e2efa181ac6fc</anchor>
+      <arglist>(Float_ x) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>ae54ddd357eeb1a1b720cf729519aca88</anchor>
+      <arglist>(Index_ n, const Value_ *input, Output_ *output, bool overwrite) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
+      <anchor>af5f12940b01bd94b79e800d79435e2a1</anchor>
+      <arglist>(Index_ n, const Value_ *input)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>scran::find_median_mad::Workspace</name>
     <filename>classscran_1_1find__median__mad_1_1Workspace.html</filename>
     <templarg>typename Float_</templarg>
@@ -226,27 +390,43 @@
   <compound kind="namespace">
     <name>scran</name>
     <filename>namespacescran.html</filename>
+    <namespace>scran::choose_filter_thresholds</namespace>
     <namespace>scran::find_median_mad</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::choose_filter_thresholds</name>
+    <filename>namespacescran_1_1choose__filter__thresholds.html</filename>
+    <class kind="class">scran::choose_filter_thresholds::BlockThresholds</class>
+    <class kind="struct">scran::choose_filter_thresholds::Options</class>
+    <class kind="class">scran::choose_filter_thresholds::Thresholds</class>
   </compound>
   <compound kind="namespace">
     <name>scran::find_median_mad</name>
     <filename>namespacescran_1_1find__median__mad.html</filename>
     <class kind="struct">scran::find_median_mad::Options</class>
+    <class kind="struct">scran::find_median_mad::Results</class>
     <class kind="class">scran::find_median_mad::Workspace</class>
     <member kind="function">
-      <type>std::pair&lt; Float_, Float_ &gt;</type>
+      <type>Results&lt; Float_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
-      <anchor>aadb11c580c47ac02e9874de5beb3eaf2</anchor>
+      <anchor>a71c945f9e24df90abf065cc20e4067ae</anchor>
       <arglist>(Index_ num, Float_ *metrics, const Options &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type>std::vector&lt; std::pair&lt; Output_, Output_ &gt; &gt;</type>
+      <type>std::vector&lt; Results&lt; Output_ &gt; &gt;</type>
       <name>compute_blocked</name>
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
-      <anchor>a4b8a98b40d32296a1089ec4d31148065</anchor>
+      <anchor>a699f28fdb08c525427b3f3e11a8c7864</anchor>
       <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, Workspace&lt; Output_, Index_ &gt; &amp;workspace, const Options &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Results&lt; Output_ &gt; &gt;</type>
+      <name>compute_blocked</name>
+      <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
+      <anchor>ac1e0f2888a7447842765ffc2861e07fa</anchor>
+      <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, const Options &amp;options)</arglist>
     </member>
   </compound>
   <compound kind="namespace">

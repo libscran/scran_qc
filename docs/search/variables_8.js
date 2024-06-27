@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['value_0',['value',['https://tatami-inc.github.io/tatami/structtatami_1_1CompressedSparseContents.html#a42f014b8d8da15e6c49511db087bebf7',1,'tatami::CompressedSparseContents::value'],['https://tatami-inc.github.io/tatami/structtatami_1_1FragmentedSparseContents.html#a24193eb145792effdc67d3e1425f1cd2',1,'tatami::FragmentedSparseContents::value'],['https://tatami-inc.github.io/tatami/structtatami_1_1has__data.html#a11170da5b517708a7102d54ca6815d9e',1,'tatami::has_data::value'],['https://tatami-inc.github.io/tatami/structtatami_1_1has__data_3_01T_00_01V_00_01decltype_07_07void_08_01std_1_1declval_3_01V_01_4_07_08_8data_07_08_00_010_08_4.html#a13d4f9e0cac2afe51fdde3c552cbf1a7',1,'tatami::has_data&lt; T, V, decltype((void) std::declval&lt; V &gt;().data(), 0)&gt;::value'],['https://tatami-inc.github.io/tatami/structtatami_1_1SparseRange.html#a79079e1a7c41b0528542ad9f3ffa3fbd',1,'tatami::SparseRange::value']]]
+  ['unlog_0',['unlog',['../structscran_1_1choose__filter__thresholds_1_1Options.html#af8ce5879b276cf22d228ed37d307e317',1,'scran::choose_filter_thresholds::Options']]],
+  ['upper_1',['upper',['../structscran_1_1choose__filter__thresholds_1_1Options.html#a7e1b18a563d2706c3b4b0761d6805af9',1,'scran::choose_filter_thresholds::Options']]]
 ];
