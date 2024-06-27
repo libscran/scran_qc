@@ -1,6 +1,15 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="file">
+    <name>find_median_mad.hpp</name>
+    <path>scran/</path>
+    <filename>find__median__mad_8hpp.html</filename>
+    <class kind="struct">scran::find_median_mad::Options</class>
+    <class kind="class">scran::find_median_mad::Workspace</class>
+    <namespace>scran</namespace>
+    <namespace>scran::find_median_mad</namespace>
+  </compound>
+  <compound kind="file">
     <name>per_cell_qc_metrics.hpp</name>
     <path>scran/</path>
     <filename>per__cell__qc__metrics_8hpp.html</filename>
@@ -63,6 +72,24 @@
       <name>subset_detected</name>
       <anchorfile>structscran_1_1per__cell__qc__metrics_1_1Buffers.html</anchorfile>
       <anchor>a72b0bd35fcc484bc122be556e0e0aeee</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::find_median_mad::Options</name>
+    <filename>structscran_1_1find__median__mad_1_1Options.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>log</name>
+      <anchorfile>structscran_1_1find__median__mad_1_1Options.html</anchorfile>
+      <anchor>a1af43eeea4b45f4f6b7847affbbeefc5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>median_only</name>
+      <anchorfile>structscran_1_1find__median__mad_1_1Options.html</anchorfile>
+      <anchor>aafc3f5f04ebf8ca926c1c4cc65e05175</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -169,10 +196,58 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>scran::find_median_mad::Workspace</name>
+    <filename>classscran_1_1find__median__mad_1_1Workspace.html</filename>
+    <templarg>typename Value_</templarg>
+    <templarg>typename Index_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>Workspace</name>
+      <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
+      <anchor>afdbea56a9d375b9bbe2630606d07237e</anchor>
+      <arglist>(Index_ num, const Block_ *block)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Workspace</name>
+      <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
+      <anchor>ab7d5b7dcf673cd5cc9f298274f1bc1a6</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>set</name>
+      <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
+      <anchor>af2756170b6b28f2711a35283d9a37e77</anchor>
+      <arglist>(Index_ num, const Block_ *block)</arglist>
+    </member>
+  </compound>
   <compound kind="namespace">
     <name>scran</name>
     <filename>namespacescran.html</filename>
+    <namespace>scran::find_median_mad</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::find_median_mad</name>
+    <filename>namespacescran_1_1find__median__mad.html</filename>
+    <class kind="struct">scran::find_median_mad::Options</class>
+    <class kind="class">scran::find_median_mad::Workspace</class>
+    <member kind="function">
+      <type>std::pair&lt; Value_, Value_ &gt;</type>
+      <name>compute</name>
+      <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
+      <anchor>ac8795940e464a71c9be6969b9919b037</anchor>
+      <arglist>(Index_ num, Value_ *metrics, const Options &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; std::pair&lt; Value_, Value_ &gt; &gt;</type>
+      <name>compute_blocked</name>
+      <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
+      <anchor>a559ce304323c302de8853c21cb620204</anchor>
+      <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, Workspace&lt; Value_, Index_ &gt; &amp;workspace, const Options &amp;options)</arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>scran::per_cell_qc_metrics</name>
