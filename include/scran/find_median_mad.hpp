@@ -45,8 +45,8 @@ struct Options {
 };
 
 /**
- * @tparam Value_ Floating-point type for the input.
  * @tparam Index_ Integer type for array indices.
+ * @tparam Float_ Floating-point type for input and output.
  *
  * @param num Number of observations.
  * @param[in] metrics Pointer to an array of observations of length `n`.
@@ -56,8 +56,10 @@ struct Options {
  *
  * @return Pair containing the median and MAD for the `metrics`.
  */
-template<typename Value_, typename Index_> 
-std::pair<Value_, Value_> compute(Index_ num, Value_* metrics, const Options& options) {
+template<typename Index_, typename Float_> 
+std::pair<Float_, Float_> compute(Index_ num, Float_* metrics, const Options& options) {
+    static_assert(std::is_floating_point<Float_>::value);
+
     // Rotate all the NaNs to the front of the buffer and ignore them.
     Index_ lost = 0;
     for (Index_ i = 0; i < num; ++i) {
@@ -83,22 +85,24 @@ std::pair<Value_, Value_> compute(Index_ num, Value_* metrics, const Options& op
     }
 
     // No need to skip the NaNs again.
-    auto median = tatami_stats::medians::direct(metrics, num, /* skip_nan = */ false);
+    auto median = tatami_stats::medians::direct<Float_>(metrics, num, /* skip_nan = */ false);
 
     if (options.median_only || std::isnan(median)) {
         // Giving up.
-        return std::make_pair(median, std::numeric_limits<Value_>::quiet_NaN());
+        return std::make_pair(median, std::numeric_limits<Float_>::quiet_NaN());
     } else if (std::isinf(median)) {
         // MADs should be no-ops when added/subtracted from infinity. Any
         // finite value will do here, so might as well keep it simple.
-        return std::make_pair(median, static_cast<Value_>(0));
+        return std::make_pair(median, static_cast<Float_>(0));
     }
 
     auto copy = metrics;
     for (Index_ i = 0; i < num; ++i, ++copy) {
         *copy = std::abs(*copy - median);
+        std::cout << *copy << std::endl;
     }
-    auto mad = tatami_stats::medians::direct(metrics, num, /* skip_nan = */ false);
+    auto mad = tatami_stats::medians::direct<Float_>(metrics, num, /* skip_nan = */ false);
+    std::cout << num << "\t" << mad << std::endl;
     mad *= 1.4826; // for equivalence with the standard deviation under normality.
 
     return std::make_pair(median, mad);
@@ -109,10 +113,10 @@ std::pair<Value_, Value_> compute(Index_ num, Value_* metrics, const Options& op
  *
  * This can be re-used across multiple `compute_blocked()` calls to avoid reallocation.
  *
- * @tparam Value_ Floating-point type for the input.
- * @tparam Index_ Integer type for array indices
+ * @tparam Float_ Floating-point type for buffering.
+ * @tparam Index_ Integer type for array indices.
  */
-template<typename Value_, typename Index_>
+template<typename Float_, typename Index_>
 class Workspace {
 public:
     /**
@@ -168,7 +172,7 @@ public:
 public:
     // Can't figure out how to make compute_blocked() a friend,
     // so these puppies are public for simplicity.
-    std::vector<Value_> my_buffer;
+    std::vector<Float_> my_buffer;
     std::vector<Index_> my_block_starts;
     std::vector<Index_> my_block_ends;
 /**
@@ -177,9 +181,10 @@ public:
 };
 
 /**
- * @tparam Index_ Integer type for array indices
+ * @tparam Output_ Floating-point type for the output.
+ * @tparam Index_ Integer type for array indices.
  * @tparam Block_ Integer type, containing the block IDs.
- * @tparam Value_ Floating-point type for the input.
+ * @tparam Value_ Numeric type for the input.
  *
  * @param num Number of observations.
  * @param[in] block Optional pointer to an array of block identifiers.
@@ -193,9 +198,9 @@ public:
  *
  * @return Vector of length \f$N\f$, where each entry is a pair containing the median and MAD for each block in `block`.
  */
-template<typename Index_, typename Block_, typename Value_>
-std::vector<std::pair<Value_, Value_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, Workspace<Value_, Index_>& workspace, const Options& options) {
-    std::vector<std::pair<Value_, Value_> > output;
+template<typename Output_ = double, typename Index_ = int, typename Block_ = int, typename Value_ = double>
+std::vector<std::pair<Output_, Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, Workspace<Output_, Index_>& workspace, const Options& options) {
+    std::vector<std::pair<Output_, Output_> > output;
 
     auto& buffer = workspace.my_buffer;
     if (!block) {
@@ -226,9 +231,10 @@ std::vector<std::pair<Value_, Value_> > compute_blocked(Index_ num, const Block_
 /**
  * Overload that handles the creation of the `Workspace`.
  *
+ * @tparam Output_ Floating-point type for the output.
  * @tparam Index_ Integer type for array indices
  * @tparam Block_ Integer type, containing the block IDs.
- * @tparam Value_ Floating-point type for the input.
+ * @tparam Value_ Numeric type for the input.
  *
  * @param num Number of observations.
  * @param[in] block Pointer to an array of block identifiers, see `compute_blocked()`.
@@ -237,10 +243,10 @@ std::vector<std::pair<Value_, Value_> > compute_blocked(Index_ num, const Block_
  *
  * @return Vector of length \f$N\$f, where each entry is a pair containing the median and MAD for each block in `block`.
  */
-template<typename Index_, typename Block_, typename Value_>
-std::vector<std::pair<Value_, Value_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, const Options& options) {
-    Workspace<Value_, Index_> wrk(num, block);
-    return compute_blocked(num, block, metrics, wrk, options);
+template<typename Output_ = double, typename Index_ = int, typename Block_ = int, typename Value_ = double>
+std::vector<std::pair<Output_, Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, const Options& options) {
+    Workspace<Output_, Index_> wrk(num, block);
+    return compute_blocked<Output_>(num, block, metrics, wrk, options);
 }
 
 }

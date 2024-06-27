@@ -168,15 +168,25 @@ TEST(FindMedianMad, WorkspaceReuse) {
 
     scran::find_median_mad::Options opt;
     scran::find_median_mad::Workspace<double, int> work(block.size(), block.data());
-    auto isres = scran::find_median_mad::compute_blocked<int>(even_values.size(), block.data(), even_values.data(), work, opt);
-    auto isres2 = scran::find_median_mad::compute_blocked<int>(even_values.size(), block.data(), even_values.data(), work, opt);
+    auto isres = scran::find_median_mad::compute_blocked<double, int>(even_values.size(), block.data(), even_values.data(), work, opt);
+    auto isres2 = scran::find_median_mad::compute_blocked<double, int>(even_values.size(), block.data(), even_values.data(), work, opt);
     EXPECT_EQ(isres, isres2);
 
     // Now trying to reuse the same workspace but with different blocking.
     std::reverse(block.begin(), block.end());
     auto ref = scran::find_median_mad::compute_blocked(even_values.size(), block.data(), even_values.data(), opt);
     work.set(block.size(), block.data());
-    isres = scran::find_median_mad::compute_blocked<int>(even_values.size(), block.data(), even_values.data(), work, opt);
-    isres2 = scran::find_median_mad::compute_blocked<int>(even_values.size(), block.data(), even_values.data(), work, opt);
+    isres = scran::find_median_mad::compute_blocked<double, int>(even_values.size(), block.data(), even_values.data(), work, opt);
+    isres2 = scran::find_median_mad::compute_blocked<double, int>(even_values.size(), block.data(), even_values.data(), work, opt);
     EXPECT_EQ(isres, isres2);
+}
+
+TEST(FindMedianMad, DifferentType) {
+    std::vector<int> foobar { 1, 2, 4, 3, 6, 9, 8, 7 };
+    std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
+    auto out = scran::find_median_mad::compute_blocked<float>(foobar.size(), block.data(), foobar.data(), scran::find_median_mad::Options());
+    EXPECT_FLOAT_EQ(out[0].first, 2.5);
+    EXPECT_FLOAT_EQ(out[0].second, 1.4826);
+    EXPECT_FLOAT_EQ(out[1].first, 7.5);
+    EXPECT_FLOAT_EQ(out[1].second, 1.4826);
 }
