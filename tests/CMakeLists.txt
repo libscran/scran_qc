@@ -30,6 +30,7 @@ macro(create_test name)
     add_executable(
         ${name} 
         src/per_cell_qc_metrics.cpp
+        src/find_median_mad.cpp
     )
 
     target_link_libraries(
