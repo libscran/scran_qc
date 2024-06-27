@@ -199,27 +199,27 @@
   <compound kind="class">
     <name>scran::find_median_mad::Workspace</name>
     <filename>classscran_1_1find__median__mad_1_1Workspace.html</filename>
-    <templarg>typename Value_</templarg>
+    <templarg>typename Float_</templarg>
     <templarg>typename Index_</templarg>
     <member kind="function">
       <type></type>
       <name>Workspace</name>
       <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
-      <anchor>afdbea56a9d375b9bbe2630606d07237e</anchor>
+      <anchor>a45a397c249671eb70e250b5dbb40dbf7</anchor>
       <arglist>(Index_ num, const Block_ *block)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>Workspace</name>
       <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
-      <anchor>ab7d5b7dcf673cd5cc9f298274f1bc1a6</anchor>
+      <anchor>a8a74c27c9e317651f82b82a92dcca831</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>set</name>
       <anchorfile>classscran_1_1find__median__mad_1_1Workspace.html</anchorfile>
-      <anchor>af2756170b6b28f2711a35283d9a37e77</anchor>
+      <anchor>a25d259a276111845207b37236569d346</anchor>
       <arglist>(Index_ num, const Block_ *block)</arglist>
     </member>
   </compound>
@@ -235,18 +235,18 @@
     <class kind="struct">scran::find_median_mad::Options</class>
     <class kind="class">scran::find_median_mad::Workspace</class>
     <member kind="function">
-      <type>std::pair&lt; Value_, Value_ &gt;</type>
+      <type>std::pair&lt; Float_, Float_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
-      <anchor>ac8795940e464a71c9be6969b9919b037</anchor>
-      <arglist>(Index_ num, Value_ *metrics, const Options &amp;options)</arglist>
+      <anchor>aadb11c580c47ac02e9874de5beb3eaf2</anchor>
+      <arglist>(Index_ num, Float_ *metrics, const Options &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type>std::vector&lt; std::pair&lt; Value_, Value_ &gt; &gt;</type>
+      <type>std::vector&lt; std::pair&lt; Output_, Output_ &gt; &gt;</type>
       <name>compute_blocked</name>
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
-      <anchor>a559ce304323c302de8853c21cb620204</anchor>
-      <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, Workspace&lt; Value_, Index_ &gt; &amp;workspace, const Options &amp;options)</arglist>
+      <anchor>a4b8a98b40d32296a1089ec4d31148065</anchor>
+      <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, Workspace&lt; Output_, Index_ &gt; &amp;workspace, const Options &amp;options)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
