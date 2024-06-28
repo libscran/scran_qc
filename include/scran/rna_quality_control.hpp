@@ -268,80 +268,231 @@ struct FiltersOptions {
      * Number of MADs above the median, to define the threshold for outliers in the subset proportions.
      * This should be non-negative.
      */
-    double subset_num_mads = 3;
+    double subset_proportion_num_mads = 3;
 };
 
+/**
+ * @cond
+ */
+namespace internal {
+
+template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
+void populate(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block) {
+    constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
+    auto buffer = [&]() {
+        if constexpr(unblocked) {
+            return std::vector<Float_>(n);
+        } else {
+            return scran::find_median_mad::Workspace(n, block);
+        }
+    }();
+
+    if (res.sum) {
+        scran::find_median_mad::Options mopts;
+        mopts.log = true;
+        auto mm = [&]() {
+            if constexpr(unblocked) {
+                std::copy_n(res.sum, n, buffer.data());
+                return scran::find_median_mad::compute(n, buffer.data(), mopt);
+            } else {
+                return scran::find_median_mad::compute_blocked(n, res.sum, block, buffer, mopt);
+            }
+        }();
+
+        scran::choose_filter_thresholds::Options copts;
+        copts.num_mads = sum_num_mads;
+        copts.unlog = true;
+        copts.upper = false;
+        output.sum = scran::choose_filter_thresholds::compute(std::move(mm), copts);
+    }
+
+    if (results.detected) {
+        scran::find_median_mad::Options mopts;
+        mopts.log = true;
+        auto mm = [&]() {
+            if constexpr(unblocked) {
+                std::copy_n(res.detected, n, buffer.data());
+                return scran::find_median_mad::compute(buffer.data(), mopt);
+            } else {
+                return scran::find_median_mad::compute(res.detected, block, work, mopt);
+            }
+        }();
+
+        scran::choose_filter_thresholds::Options copts;
+        copts.num_mads = detected_num_mads;
+        copts.unlog = true;
+        copts.upper = false;
+        output.detected = scran::choose_filter_thresholds::compute(std::move(mm), copts);
+    }
+
+    size_t nsubsets = buffer.subset_proportion.size();
+    output.subset_proportion.resize(nsubset);
+    for (size_t s = 0; s < nsubsets; ++s) {
+        auto sub = buffer.subset_proportion[s];
+        if (sub) {
+            scran::find_median_mad::Options mopts;
+            auto mm = [&]() {
+                if constexpr(unblocked) {
+                    std::copy_n(sub, n, buffer.data());
+                    return scran::find_median_mad::compute(n, buffer.data(), mopt);
+                } else {
+                    return scran::find_median_mad::compute(n, sub, block, work, mopt);
+                }
+            }();
+
+            scran::choose_filter_thresholds::Options copts;
+            copts.num_mads = subset_proportion_num_mads;
+            copts.lower = false;
+            output.subset_proportion = scran::choose_filter_thresholds::compute(std::move(mm), copts);
+        }
+    }
+}
+
+}
+/**
+ * @endcond
+ */
+
+/**
+ * @brief Thresholds to define outliers on each metric.
+ */
+template<typename Float_ = double>
+class FilterThresholds {
+public:
+    /**
+     * Default constructor.
+     */
+    FilterThresholds() = default;
+
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
+    FilterThresholds(Index_ n, const MetricsBuffer<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) {
+        compute(*this, n, results, options);
+    }
+
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
+    FilterThresholds(const MetricsResults<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) :
+        FilterThresholds(internal::infer_size(results), internal::to_buffer(results), options) {}
 
 public:
     /**
-     * @brief Thresholds to define outliers on each metric.
-     *
-     * `SuggestRnaQcFilters::run()` and related methods will suggest some (hopefully) sensible thresholds based on outlier calls.
-     * Users can directly modify the thresholds in instances of this class if the default suggestions are not suitable. 
-     * These thresholds can then be used to generate calls for low-quality cells via the `filter()` methods.
+     * @return Thresholds to apply to the sums.
      */
-    struct Thresholds {
-        /**
-         * Lower thresholds to define small outliers on the total counts.
-         * Each entry contains the threshold used for the corresponding block.
-         * For unblocked analyses, this will be of length 1 as all cells are assumed to belong to the same block.
-         */
-        std::vector<double> sums;
+    const choose_filter_thresholds::Thresholds<Float_>& sum() const {
+        return my_sum;
+    }
 
-        /**
-         * Lower thresholds to define small outliers on the number of detected features.
-         * Each entry contains the threshold used for the corresponding block.
-         * For unblocked analyses, this will be of length 1 as all cells are assumed to belong to the same block.
-         */
-        std::vector<double> detected;
+    /**
+     * @return Thresholds to apply to the number of detected genes.
+     */
+    const choose_filter_thresholds::Thresholds<Float_>& get_detected() const {
+        return my_detected;
+    }
 
-        /**
-         * Upper thresholds to define large outliers on the subset proportions.
-         * Each vector corresponds to a feature subset while each entry of the inner vector corresponds to a block of cells.
-         * For unblocked analyses, all cells are assumed to belong to a single block, i.e., all inner vectors have length 1.
-         */
-        std::vector<std::vector<double> > subset_proportions;
+    /**
+     * @return Thresholds to apply to the subset proportions.
+     */
+    const std::vector<choose_filter_thresholds::Thresholds<Float_> > >& get_subset_proportion() const {
+        return my_subset_proportion;
+    }
 
-    public:
-        /**
-         * @tparam overwrite Whether to overwrite existing truthy entries in `output`.
-         * @tparam Float Floating point type for the metrics.
-         * @tparam Integer Integer for the metrics.
-         * @tparam Output Boolean type for the low-quality calls.
-         *
-         * @param n Number of cells.
-         * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
-         * These should be comparable to the values used to create this `Thresholds` object.
-         * @param[out] output Pointer to an array of length `n`, to store the low-quality calls.
-         * Values are set to `true` for low-quality cells.
-         * If `overwrite = true`, values are set to `false` for high-quality cells, otherwise the existing entry is preserved.
-         *
-         * Use `filter_blocked()` instead for multi-block datasets. 
-         */
-        template<bool overwrite = true, typename Float, typename Integer, typename Output>
-        void filter(size_t n, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers, Output* output) const {
-            if (detected.size() != 1) {
-                throw std::runtime_error("should use filter_blocked() for multiple batches");
+private:
+    choose_filter_thresholds::Thresholds<Float_> my_sum;
+    choose_filter_thresholds::Thresholds<Float_> my_detected;
+    std::vector<choose_filter_thresholds::Thresholds<Float_> > > my_subset_proportion;
+
+public:
+    /**
+     * @tparam Index_ Integer type for the array indices.
+     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
+     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Output_ Boolean type for the outlier calls.
+     *
+     * @param n Number of observations.
+     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
+     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
+     * Each entry should be less than the `mm.size()` in the constructor.
+     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
+     * If `overwrite = false`, entries are only set to false for low-quality cells;
+     * this effectively performs AND'ing of high-quality calls across multiple calls to `filter()`.
+     * @param overwrite Whether to overwrite existing false-y entries in `output`.
+     */
+    template<typename Index_, typename Value_, typename Block_, typename Output_>
+    void filter(Index_ n, const Value_* input, const Block_* block, Output_* output, bool overwrite) const {
+        if (overwrite) {
+            for (Index_ i = 0; i < n; ++i) {
+                output[i] = filter(input[i], block[i]);
             }
-            filter_<overwrite>(n, buffers, output, [](size_t i) -> size_t { return 0; });
+        } else {
+            for (Index_ i = 0; i < n; ++i) {
+                if (!filter(input[i], block[i])) {
+                    output[i] = false;
+                }
+            }
         }
+    }
 
-        /**
-         * @overload
-         *
-         * @tparam Output Boolean type for the low-quality calls.
-         *
-         * @param metrics Collection of arrays of per-cell RNA metrics.
-         * These should be comparable to the values used to create this `Thresholds` object.
-         *
-         * @return Vector of low-quality calls, of length equal to the number of cells in `metrics`.
-         */
-        template<typename Output = uint8_t>
-        std::vector<Output> filter(const PerCellRnaQcMetrics::Results& metrics) const {
-            std::vector<Output> output(metrics.detected.size());
-            filter(output.size(), metrics.buffers(), output.data());
-            return output;
+    /**
+     * @tparam Output_ Boolean type for the outlier calls.
+     * @tparam Index_ Integer type for the array indices.
+     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
+     *
+     * @param n Number of observations.
+     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
+     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
+     *
+     * @return Vector of length `n`, specifying whether a cell is of high quality.
+     */
+    template<typename Output_ = uint8_t, typename Index_, typename Value_, typename Block_>
+    std::vector<Output_> filter(Index_ n, const Value_* input, const Block_* block) {
+        std::vector<Output_> output(n);
+        filter(n, input, block, output.data(), true);
+        return output;
+    }
+
+
+};
+
+public:
+    /**
+     * @tparam overwrite Whether to overwrite existing truthy entries in `output`.
+     * @tparam Float Floating point type for the metrics.
+     * @tparam Integer Integer for the metrics.
+     * @tparam Output Boolean type for the low-quality calls.
+     *
+     * @param n Number of cells.
+     * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
+     * These should be comparable to the values used to create this `Thresholds` object.
+     * @param[out] output Pointer to an array of length `n`, to store the low-quality calls.
+     * Values are set to `true` for low-quality cells.
+     * If `overwrite = true`, values are set to `false` for high-quality cells, otherwise the existing entry is preserved.
+     *
+     * Use `filter_blocked()` instead for multi-block datasets. 
+     */
+    template<bool overwrite = true, typename Float, typename Integer, typename Output>
+    void filter(size_t n, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers, Output* output) const {
+        if (detected.size() != 1) {
+            throw std::runtime_error("should use filter_blocked() for multiple batches");
         }
+        filter_<overwrite>(n, buffers, output, [](size_t i) -> size_t { return 0; });
+    }
+
+    /**
+     * @overload
+     *
+     * @tparam Output Boolean type for the low-quality calls.
+     *
+     * @param metrics Collection of arrays of per-cell RNA metrics.
+     * These should be comparable to the values used to create this `Thresholds` object.
+     *
+     * @return Vector of low-quality calls, of length equal to the number of cells in `metrics`.
+     */
+    template<typename Output = uint8_t>
+    std::vector<Output> filter(const PerCellRnaQcMetrics::Results& metrics) const {
+        std::vector<Output> output(metrics.detected.size());
+        filter(output.size(), metrics.buffers(), output.data());
+        return output;
+    }
 
     public:
         /**
