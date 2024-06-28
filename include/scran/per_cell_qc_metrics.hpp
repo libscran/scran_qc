@@ -199,12 +199,16 @@ void compute_direct_dense(const tatami::Matrix<Value_, Index_>* mat, const std::
             }
 
             if (do_max) {
-                auto max_value = std::numeric_limits<Value_>::lowest();
-                Detected_ max_index = 0;
-                for (Index_ r = 0; r < NR; ++r) {
-                    if (max_value < ptr[r]) {
-                        max_value = ptr[r];
-                        max_index = r;
+                Index_ max_index = 0;
+                Value_ max_value = 0;
+
+                if (NR) {
+                    max_value = ptr[0];
+                    for (Index_ r = 1; r < NR; ++r) {
+                        if (max_value < ptr[r]) {
+                            max_value = ptr[r];
+                            max_index = r;
+                        }
                     }
                 }
 
@@ -269,18 +273,15 @@ std::vector<std::vector<uint8_t> > boolify_subsets(Index_ NR, const std::vector<
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
 void compute_direct_sparse(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
-    tatami::Options opt;
-    opt.sparse_ordered_index = false;
     auto is_in_subset = boolify_subsets(mat->nrow(), subsets, output);
 
     tatami::parallelize([&](size_t, Index_ start, Index_ length) {
         auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<true>(mat, false, start, length, opt);
+        auto ext = tatami::consecutive_extractor<true>(mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
         std::vector<Index_> ibuffer(NR);
 
         bool do_max = output.max_index || output.max_value;
-        std::vector<unsigned char> internal_is_nonzero(output.max_index ? NR : 0);
 
         size_t nsubsets = subsets.size();
 
@@ -300,40 +301,37 @@ void compute_direct_sparse(const tatami::Matrix<Value_, Index_>* mat, const std:
             }
 
             if (do_max) {
-                auto max_value = std::numeric_limits<Value_>::lowest();
-                Detected_ max_index = 0;
-                for (Index_ i = 0; i < range.number; ++i) {
-                    if (max_value < range.value[i]) {
-                        max_value = range.value[i];
-                        max_index = range.index[i];
-                    }
-                }
+                Index_ max_index = 0;
+                Value_ max_value = 0;
 
-                if (max_value <= 0 && range.number < NR) {
-                    // Zero is the max.
+                if (range.number) {
+                    max_value = range.value[0];
+                    max_index = range.index[0];
+                    for (Index_ i = 1; i < range.number; ++i) {
+                        if (max_value < range.value[i]) {
+                            max_value = range.value[i];
+                            max_index = range.index[i];
+                        }
+                    }
+
+                    if (max_value <= 0 && range.number < NR) {
+                        if (output.max_index) {
+                            // Figuring out the index of the first zero, assuming range.index is sorted.
+                            Index_ last = 0;
+                            for (Index_ i = 0; i < range.number; ++i) {
+                                if (range.index[i] > last) { // must be at least one intervening structural zero.
+                                    break;
+                                } else if (range.value[i] == 0) { // appears earlier than any structural zero, so it's already the maximum.
+                                    break;
+                                }
+                                last = range.index[i] + 1;
+                            }
+                            max_index = last;
+                        }
+                        max_value = 0;
+                    }
+                } else if (NR) {
                     max_value = 0;
-
-                    // Finding the index of the first zero by tracking all
-                    // indices with non-zero values. This isn't the fastest
-                    // approach but it's simple and avoids assuming that
-                    // indices are sorted. Hopefully we don't have to hit
-                    // this section often.
-                    if (output.max_index) {
-                        for (Index_ i = 0; i < range.number; ++i) {
-                            if (range.value[i]) {
-                                internal_is_nonzero[range.index[i]] = 1;
-                            }
-                        }
-                        for (Index_ r = 0; r < NR; ++r) {
-                            if (internal_is_nonzero[r] == 0) {
-                                max_index = r;
-                                break;
-                            }
-                        }
-                        for (Index_ i = 0; i < range.number; ++i) { // setting back to zero.
-                            internal_is_nonzero[range.index[i]] = 0;
-                        }
-                    }
                 }
 
                 if (output.max_index) {
@@ -387,11 +385,10 @@ public:
             my_detected = tatami_stats::LocalOutputBuffer<Detected_>(thread, start, len, output.detected);
         }
 
-        constexpr Value_ lowest = std::numeric_limits<Value_>::lowest();
         if (output.max_value) {
-            my_max_value = tatami_stats::LocalOutputBuffer<Value_>(thread, start, len, output.max_value, lowest);
+            my_max_value = tatami_stats::LocalOutputBuffer<Value_>(thread, start, len, output.max_value);
         } else if (output.max_index) {
-            my_holding_max_value.resize(len, lowest);
+            my_holding_max_value.resize(len);
         }
 
         if (output.max_index) {
@@ -510,7 +507,7 @@ void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std:
         size_t nsubsets = subsets.size();
 
         for (Index_ r = 0; r < NR; ++r) {
-            auto ptr = ext->fetch(r, vbuffer.data());
+            auto ptr = ext->fetch(vbuffer.data());
 
             if (outt) {
                 for (Index_ i = 0; i < len; ++i) {
@@ -527,7 +524,7 @@ void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std:
             if (do_max) {
                 if (r == 0) {
                     std::copy_n(ptr, len, outmc);
-                    if (output.max_index) {
+                    if (outmi) {
                         std::fill_n(outmi, len, 0);
                     }
                 } else {
@@ -535,7 +532,7 @@ void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std:
                         auto& curmax = outmc[i];
                         if (curmax < ptr[i]) {
                             curmax = ptr[i];
-                            if (output.max_index) {
+                            if (outmi) {
                                 outmi[i] = r;
                             }
                         }
@@ -600,7 +597,7 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
 
         size_t nsubsets = subsets.size();
 
-        std::vector<Index_> last_consecutive_nonzero(len);
+        std::vector<Index_> last_consecutive_nonzero(do_max ? len : 0);
 
         for (Index_ r = 0; r < NR; ++r) {
             auto range = ext->fetch(vbuffer.data(), ibuffer.data());
@@ -618,21 +615,35 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
             }
 
             if (do_max) {
-                for (Index_ i = 0; i < range.number; ++i) {
-                    auto j = range.index[i] - start;
-                    auto& curmax = outmc[j];
-                    if (curmax < range.value[i]) {
-                        curmax = range.value[i];
-                        if (output.max_index) {
-                            outmi[j] = r;
-                        }
+                if (r == 0) {
+                    std::fill_n(outmc, len, 0);
+                    for (Index_ i = 0; i < range.number; ++i) {
+                        auto j = range.index[i] - start;
+                        outmc[j] = range.value[i];
+                        last_consecutive_nonzero[j] = 1; // see below
+                    }
+                    if (outmi) {
+                        std::fill_n(outmi, len, 0);
                     }
 
-                    // Getting the index of the last consecutive non-zero entry, so that
-                    // we can check if zero is the max and gets its first occurrence, if necessary.
-                    auto& last = last_consecutive_nonzero[j];
-                    if (last == r) {
-                        if (range.value[i] != 0) {
+                } else {
+                    for (Index_ i = 0; i < range.number; ++i) {
+                        auto j = range.index[i] - start;
+                        auto& curmax = outmc[j];
+
+                        auto val = range.value[i];
+                        if (curmax < val) {
+                            curmax = val;
+                            if (outmi) {
+                                outmi[j] = r;
+                            }
+                        }
+
+                        // Getting the index of the last consecutive structural
+                        // non-zero, so that we can check if zero is the max
+                        // and gets its first occurrence, if necessary.
+                        auto& last = last_consecutive_nonzero[j];
+                        if (last == r) {
                             ++last;
                         }
                     }
@@ -672,16 +683,16 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
         if (do_max) {
             auto NR = mat->nrow();
 
-            // Checking anything with non-positive maximum, and replacing it with zero
-            // if there are any zeros (i.e., consecutive non-zeros is not equal to the number of rows).
+            // Checking anything with non-positive maximum, and replacing it
+            // with zero if there are any structural zeros.
             for (Index_ c = 0; c < len; ++c) {
-                auto& current = outmc[c];
-                if (current > 0) {
+                auto last_nz = last_consecutive_nonzero[c];
+                if (last_nz == NR) { // i.e., no structural zeros.
                     continue;
                 }
 
-                auto last_nz = last_consecutive_nonzero[c];
-                if (last_nz == NR) {
+                auto& current = outmc[c];
+                if (current > 0) { // doesn't defeat the current maximum.
                     continue;
                 }
 

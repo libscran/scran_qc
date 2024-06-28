@@ -441,6 +441,29 @@ INSTANTIATE_TEST_SUITE_P(
     ::testing::Values(1, 3) // number of threads
 );
 
+TEST(PerCellQcMetrics, Empty) {
+    size_t nr = 0, nc = 50;
+    scran::per_cell_qc_metrics::Options opt;
+
+    auto dense_row = std::make_shared<tatami::DenseRowMatrix<double, int> >(nr, nc, std::vector<double>{});
+    auto dense_column = tatami::convert_to_dense(dense_row.get(), false);
+    auto sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
+    auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);
+
+    std::vector<double> expected(nc);
+    auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res1.max_value, expected);
+
+    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res2.max_value, expected);
+
+    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res3.max_value, expected);
+
+    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res4.max_value, expected);
+}
+
 TEST(PerCellQcMetrics, Disabled) {
     size_t nr = 100, nc = 50;
     auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100, /* seed */ 42);
