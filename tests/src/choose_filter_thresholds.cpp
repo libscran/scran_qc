@@ -123,10 +123,10 @@ TEST(ChooseFilterThresholds, Blocked) {
     scran::choose_filter_thresholds::Options opt;
     scran::choose_filter_thresholds::BlockThresholds<double> thresholds(mms, opt);
 
-    EXPECT_DOUBLE_EQ(thresholds.get_lower()[0], 0.4);
-    EXPECT_DOUBLE_EQ(thresholds.get_upper()[0], 1.6);
-    EXPECT_DOUBLE_EQ(thresholds.get_lower()[1], 1.7);
-    EXPECT_DOUBLE_EQ(thresholds.get_upper()[1], 2.3);
+    EXPECT_DOUBLE_EQ(thresholds.get_thresholds()[0].get_lower(), 0.4);
+    EXPECT_DOUBLE_EQ(thresholds.get_thresholds()[0].get_upper(), 1.6);
+    EXPECT_DOUBLE_EQ(thresholds.get_thresholds()[1].get_lower(), 1.7);
+    EXPECT_DOUBLE_EQ(thresholds.get_thresholds()[1].get_upper(), 2.3);
 
     std::vector<double> metrics { 0, 0.5, 1.0, 1.5, 1.8, 2.1, 3.0, std::numeric_limits<double>::quiet_NaN() };
 
@@ -190,3 +190,17 @@ TEST(ChooseFilterThresholds, Overwrite) {
         EXPECT_EQ(buffer, expected);
     }
 }
+
+TEST(ChooseFilterThresholds, Constructors) {
+    scran::choose_filter_thresholds::Thresholds<double> def;
+    def = scran::choose_filter_thresholds::Thresholds<double>(1, 2);
+    EXPECT_EQ(def.get_lower(), 1);
+    EXPECT_EQ(def.get_upper(), 2);
+
+    scran::choose_filter_thresholds::BlockThresholds<double> bdef;
+    bdef = scran::choose_filter_thresholds::BlockThresholds<double>({ def });
+    EXPECT_EQ(bdef.get_thresholds().size(), 1);
+    EXPECT_EQ(bdef.get_thresholds().front().get_lower(), 1);
+    EXPECT_EQ(bdef.get_thresholds().front().get_upper(), 2);
+}
+
