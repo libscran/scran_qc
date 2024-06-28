@@ -22,6 +22,12 @@ namespace scran {
  * Any outlier values are indicative of low-quality cells that should be filtered out.
  * Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value.
  * Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.
+ *
+ * For datasets with multiple blocks, we can also compute block-specific thresholds for each metric.
+ * This assumes that differences in the metric distributions between blocks are driven by uninteresting causes (e.g., differences in sequencing depth);
+ * variable thresholds can adapt to each block's distribution for effective removal of outliers.
+ * However, if the differences in the distributions between blocks are interesting,
+ * it may be preferable to ignore the blocking factor so that the MADs are correctly increased to reflect that variation.
  */
 namespace choose_filter_thresholds {
 
@@ -114,15 +120,6 @@ template<typename Float_>
 class Thresholds {
 public:
     /**
-     * @cond
-     */
-    Thresholds() = default;
-    static_assert(std::is_floating_point<Float_>::value);
-    /**
-     * @endcond
-     */
-
-    /**
      * @param mm Median and MAD, typically from `find_median_mad::compute()`.
      * @param options Further options.
      */
@@ -132,8 +129,21 @@ public:
         my_upper = choice.second;
     }
 
+    /**
+     * @param lower Lower threshold.
+     * @param upper Upper threshold.
+     */
+    Thresholds(Float_ lower, Float_ upper) : my_lower(lower), my_upper(upper) {}
+
+    /**
+     * Default constructor.
+     */
+    Thresholds() = default;
+
 private:
-    Float_ my_lower, my_upper;
+    Float_ my_lower = 0;
+    Float_ my_upper = 0;
+    static_assert(std::is_floating_point<Float_>::value);
 
 public:
     /**
@@ -218,48 +228,37 @@ template<typename Float_>
 class BlockThresholds {
 public:
     /**
-     * @cond
-     */
-    BlockThresholds() = default;
-    static_assert(std::is_floating_point<Float_>::value);
-    /**
-     * @endcond
-     */
-
-    /**
      * @param mm Median and MAD for each block, typically from `find_median_mad::compute_blocked()`.
      * @param options Further options.
      */
     BlockThresholds(const std::vector<find_median_mad::Results<Float_> >& mm, const Options& options) {
         size_t nblocks = mm.size();
-        my_lower.reserve(nblocks);
-        my_upper.reserve(nblocks);
-
+        my_thresholds.reserve(nblocks);
         for (size_t b = 0; b < nblocks; ++b) {
-            auto out = internal::choose(mm[b].median, mm[b].mad, options);
-            my_lower.push_back(out.first);
-            my_upper.push_back(out.second);
+            my_thresholds.emplace_back(mm[b], options);
         }
     }
 
+    /**
+     * @param thresholds Vector of thresholds, one per block.
+     */
+    BlockThresholds(std::vector<Thresholds<Float_> > thresholds) : my_thresholds(std::move(thresholds)) {}
+
+    /**
+     * Default constructor.
+     */
+    BlockThresholds() = default;
+
 private:
-    std::vector<Float_> my_lower, my_upper;
+    std::vector<Thresholds<Float_> > my_thresholds;
 
 public:
     /**
      * @return Vector of lower thresholds, one per batch.
      * Cells where the relevant QC metric is below this threshold are considered to be low quality.
      */
-    const std::vector<Float_>& get_lower() const {
-        return my_lower;
-    }
-
-    /**
-     * @return Vector of upper thresholds, one per batch.
-     * Cells where the relevant QC metric is above this threshold are considered to be low quality.
-     */
-    const std::vector<Float_>& get_upper() const {
-        return my_upper;
+    const std::vector<Thresholds<Float_> >& get_thresholds() const {
+        return my_thresholds;
     }
 
 public:
@@ -273,7 +272,7 @@ public:
      */
     template<typename Block_>
     bool filter(Float_ x, Block_ b) const {
-        return x >= my_lower[b] && x <= my_upper[b]; // NaNs don't compare true in any comparison so they get auto-discarded here.
+        return my_thresholds[b].filter(x);
     }
 
     /**
