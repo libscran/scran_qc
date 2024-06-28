@@ -492,7 +492,7 @@ void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std:
 
     tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
         auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<false>(mat, true, 0, NR, start, len);
+        auto ext = tatami::consecutive_extractor<false>(mat, true, static_cast<Index_>(0), NR, start, len);
         std::vector<Value_> vbuffer(len);
 
         RunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
@@ -582,7 +582,7 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
 
     tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
         auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<true>(mat, true, 0, NR, start, len, opt);
+        auto ext = tatami::consecutive_extractor<true>(mat, true, static_cast<Index_>(0), NR, start, len, opt);
         std::vector<Value_> vbuffer(len);
         std::vector<Index_> ibuffer(len);
 

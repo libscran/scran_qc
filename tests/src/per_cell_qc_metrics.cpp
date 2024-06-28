@@ -464,6 +464,56 @@ TEST(PerCellQcMetrics, Empty) {
     EXPECT_EQ(res4.max_value, expected);
 }
 
+TEST(PerCellQcMetrics, NewType) {
+    std::vector<std::vector<int> > subs;
+    subs.push_back({ 0, 5, 7, 8, 9, 10, 16, 17 });
+    subs.push_back({ 1, 2, 5, 6, 8, 11, 18, 19});
+
+    size_t nr = 200, nc = 60;
+    auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100);
+    for (auto& v : vec) {
+        v = std::round(v);
+    }
+    auto ref = std::make_shared<tatami::DenseRowMatrix<double, int> >(nr, nc, vec);
+
+    std::vector<uint8_t> uvec(vec.begin(), vec.end());
+    auto dense_row = std::make_shared<tatami::DenseRowMatrix<uint8_t, uint8_t> >(nr, nc, std::move(uvec));
+    auto dense_column = tatami::convert_to_dense(dense_row.get(), false);
+    auto sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
+    auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);
+
+    scran::per_cell_qc_metrics::Options opt;
+    auto refres = scran::per_cell_qc_metrics::compute(ref.get(), subs, opt);
+    auto compare = [&](const auto& other) {
+        EXPECT_EQ(refres.sum, other.sum);
+        EXPECT_EQ(refres.detected, other.detected);
+        EXPECT_EQ(refres.max_value, std::vector<double>(other.max_value.begin(), other.max_value.end()));
+        EXPECT_EQ(refres.max_index, std::vector<int>(other.max_index.begin(), other.max_index.end()));
+
+        ASSERT_EQ(refres.subset_sum.size(), other.subset_sum.size());
+        for (size_t i = 0; i < refres.subset_sum.size(); ++i) {
+            EXPECT_EQ(refres.subset_sum[i], other.subset_sum[i]);
+        }
+
+        ASSERT_EQ(refres.subset_detected.size(), other.subset_detected.size());
+        for (size_t i = 0; i < refres.subset_detected.size(); ++i) {
+            EXPECT_EQ(refres.subset_detected[i], other.subset_detected[i]);
+        }
+    };
+
+    auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+    compare(res1);
+
+    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), subs, opt);
+    compare(res2);
+
+    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), subs, opt);
+    compare(res3);
+
+    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), subs, opt);
+    compare(res4);
+}
+
 TEST(PerCellQcMetrics, Disabled) {
     size_t nr = 100, nc = 50;
     auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100, /* seed */ 42);
