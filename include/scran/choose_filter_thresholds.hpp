@@ -18,9 +18,10 @@ namespace scran {
  * @namespace scran::choose_filter_thresholds
  * @brief Define QC filter thresholds using a MAD-based approach.
  *
- * We define filter thresholds on the QC metrics by assuming that cells with extreme values for the metrics are of low quality.
+ * We define filter thresholds on the QC metrics by assuming that most cells in the experiment are of high (or at least acceptable) quality.
+ * Any outlier values are indicative of low-quality cells that should be filtered out.
  * Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value.
- * Outliers can be defined in both directions, or just a single direction, depending on the interpretation of the QC metric.
+ * Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.
  */
 namespace choose_filter_thresholds {
 

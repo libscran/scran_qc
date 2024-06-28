@@ -47,7 +47,6 @@ struct Options {
     /**
      * Whether to compute the sum of expression values for each cell.
      * This option only affects the `compute()` overload that returns a `Results` object.
-     *
      */
     bool compute_sum = true;
 
