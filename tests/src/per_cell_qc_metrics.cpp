@@ -377,21 +377,6 @@ TEST_P(PerCellQcMetricsTestMaxed, StructuralZeros) {
     EXPECT_EQ(res1.max_value, ref.max_value);
     EXPECT_EQ(res1.max_index, ref.max_index);
 
-    auto ext = dense_row->dense_column();
-    std::vector<double> buffer(9);
-    for (size_t c = 0; c < 1001; ++c) {
-        if (res1.max_index[c] != ref.max_index[c]) {
-            std::cout << c << "\t" << ref.max_index[c] << "\t" << res1.max_index[c] << std::endl;
-            auto ptr = ext->fetch(c, buffer.data());
-            for (size_t r = 0; r < 9; ++r) {
-                std::cout << ptr[r] << ",";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-
-
     auto res2 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
@@ -456,20 +441,28 @@ INSTANTIATE_TEST_SUITE_P(
     ::testing::Values(1, 3) // number of threads
 );
 
-//TEST(PerCellQcMetrics, Empty) {
-//    size_t nr = 0, nc = 50;
-//
-//    {
-//        tatami::DenseRowMatrix<double, int> mat(nr, nc, std::move(vec));
-//        auto dense_column = tatami::convert_to_dense(&mat, false);
-//        auto sparse_row = tatami::convert_to_compressed_sparse(&mat, true);
-//        auto sparse_column = tatami::convert_to_compressed_sparse(&mat, false);
-//
-//        std::vector<double> expected(nc, -std::numeric_limits<double>::infinity());
-//        EXPECT_EQ(
-//    }
-//
-//}
+TEST(PerCellQcMetrics, Empty) {
+    size_t nr = 0, nc = 50;
+    scran::per_cell_qc_metrics::Options opt;
+
+    auto dense_row = std::make_shared<tatami::DenseRowMatrix<double, int> >(nr, nc, std::vector<double>{});
+    auto dense_column = tatami::convert_to_dense(dense_row.get(), false);
+    auto sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
+    auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);
+
+    std::vector<double> expected(nc);
+    auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res1.max_value, expected);
+
+    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res2.max_value, expected);
+
+    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res3.max_value, expected);
+
+    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    EXPECT_EQ(res4.max_value, expected);
+}
 
 TEST(PerCellQcMetrics, Disabled) {
     size_t nr = 100, nc = 50;
