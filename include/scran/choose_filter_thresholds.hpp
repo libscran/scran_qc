@@ -108,6 +108,20 @@ Float_ sanitize(Float_ val, bool unlog) {
     return val;
 }
 
+template<bool lower_, typename Float_>
+std::vector<Float_> strip(const std::vector<Results<Float_> >& res) {
+    std::vector<Float_> output;
+    output.reserve(res.size());
+    for (const auto& r : res) {
+        if constexpr(lower_) {
+            output.push_back(r.lower);
+        } else {
+            output.push_back(r.upper);
+        }
+    }
+    return output;
+}
+
 }
 /**
  * @endcond
