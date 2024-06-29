@@ -383,8 +383,8 @@
       <type>std::vector&lt; Results&lt; Output_ &gt; &gt;</type>
       <name>compute_blocked</name>
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
-      <anchor>af9634d6e6357cccbebb0e7f9bc1dd49a</anchor>
-      <arglist>(Index_ num, const Block_ *block, const Value_ *metrics, Workspace&lt; Output_, Index_ &gt; *workspace, const Options &amp;options)</arglist>
+      <anchor>a31771db5590e3de43e2ffed92f03fc93</anchor>
+      <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, Workspace&lt; Output_, Index_ &gt; *workspace, const Options &amp;options)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
