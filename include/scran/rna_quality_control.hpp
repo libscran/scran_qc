@@ -1,7 +1,7 @@
 #ifndef SCRAN_PER_CELL_RNA_QC_METRICS_HPP
 #define SCRAN_PER_CELL_RNA_QC_METRICS_HPP
 
-#include "../utils/macros.hpp"
+#include "find_median_mad.hpp"
 
 #include <vector>
 #include <limits>
@@ -277,75 +277,125 @@ struct FiltersOptions {
 namespace internal {
 
 template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
-void populate(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block) {
+void populate(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const Options& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
-            return scran::find_median_mad::Workspace(n, block);
+            return find_median_mad::Workspace<Float_, Index_>(n, block);
         }
     }();
 
     if (res.sum) {
-        scran::find_median_mad::Options mopts;
-        mopts.log = true;
-        auto mm = [&]() {
+        choose_filter_thresholds::Options opts;
+        opts.num_mads = sum_num_mads;
+        opts.log = true;
+        opts.upper = false;
+        output.my_sum = [&]() {
             if constexpr(unblocked) {
-                std::copy_n(res.sum, n, buffer.data());
-                return scran::find_median_mad::compute(n, buffer.data(), mopt);
+                return choose_filter_thresholds::compute(n, res.sum, buffer.data(), opts).lower;
             } else {
-                return scran::find_median_mad::compute_blocked(n, res.sum, block, buffer, mopt);
+                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.sum, block, &buffer, opts))
             }
         }();
-
-        scran::choose_filter_thresholds::Options copts;
-        copts.num_mads = sum_num_mads;
-        copts.unlog = true;
-        copts.upper = false;
-        output.sum = scran::choose_filter_thresholds::compute(std::move(mm), copts);
     }
 
     if (results.detected) {
-        scran::find_median_mad::Options mopts;
-        mopts.log = true;
-        auto mm = [&]() {
+        choose_filter_thresholds::Options opts;
+        opts.num_mads = detected_num_mads;
+        opts.log = true;
+        opts.upper = false;
+        output.my_detected = [&]() {
             if constexpr(unblocked) {
-                std::copy_n(res.detected, n, buffer.data());
-                return scran::find_median_mad::compute(buffer.data(), mopt);
+                return choose_filter_thresholds::compute(n, res.detected, buffer.data(), opts).lower;
             } else {
-                return scran::find_median_mad::compute(res.detected, block, work, mopt);
+                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.detected, block, &buffer, opts))
             }
         }();
-
-        scran::choose_filter_thresholds::Options copts;
-        copts.num_mads = detected_num_mads;
-        copts.unlog = true;
-        copts.upper = false;
-        output.detected = scran::choose_filter_thresholds::compute(std::move(mm), copts);
     }
 
     size_t nsubsets = buffer.subset_proportion.size();
-    output.subset_proportion.resize(nsubset);
+    output.my_subset_proportion.resize(nsubset);
     for (size_t s = 0; s < nsubsets; ++s) {
         auto sub = buffer.subset_proportion[s];
         if (sub) {
-            scran::find_median_mad::Options mopts;
-            auto mm = [&]() {
+            choose_filter_thresholds::Options opts;
+            opts.num_mads = subset_proportion_num_mads;
+            opts.lower = false;
+            output.my_subset_proportion[s] = [&]() {
                 if constexpr(unblocked) {
-                    std::copy_n(sub, n, buffer.data());
-                    return scran::find_median_mad::compute(n, buffer.data(), mopt);
+                    return choose_filter_thresholds::compute(n, sub, buffer.data(), mopt).upper;
                 } else {
-                    return scran::find_median_mad::compute(n, sub, block, work, mopt);
+                    return choose_filter_thresholds::internal::strip<false>(choose_filter_thresholds::compute_blocked(n, sub, block, &buffer, opts));
                 }
             }();
-
-            scran::choose_filter_thresholds::Options copts;
-            copts.num_mads = subset_proportion_num_mads;
-            copts.lower = false;
-            output.subset_proportion = scran::choose_filter_thresholds::compute(std::move(mm), copts);
         }
     }
+}
+
+template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
+void filter(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, Output_* output) {
+    constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
+    std::fill_n(output, num, 1);
+
+    if (metrics.sum) {
+        for (Index_ i = 0; i < n; ++i) {
+            auto thresh = [&]() {
+                if constexpr(unblocked) {
+                    return my_sum;
+                } else {
+                    return my_sum[block[i]];
+                }
+            }();
+            output[i] = output[i] && (metrics.sum[i] >= thresh);
+        }
+    }
+
+    if (metrics.detected) {
+        for (Index_ i = 0; i < n; ++i) {
+            auto thresh = [&]() {
+                if constexpr(unblocked) {
+                    return my_detected;
+                } else {
+                    return my_detected[block[i]];
+                }
+            }();
+            output[i] = output[i] && (metrics.detected[i] >= thresh);
+        }
+    }
+
+    size_t nsubsets = metrics.subset_proportions.size();
+    if (nsubsets) {
+        for (size_t s = 0; s < nsubsets; ++s) {
+            auto sub = metrics.subset_proportions[s];
+            if (sub) {
+                const auto& sthresh = my_subset_proportions[s];
+                for (Index_ i = 0; i < n; ++i) {
+                    auto thresh = [&]() {
+                        if constexpr(unblocked) {
+                            return sthresh;
+                        } else {
+                            return sthresh[block[i]];
+                        }
+                    }();
+                    output[i] = output[i] && (metrics.subset_proportions[i] <= thresh);
+                }
+            }
+        }
+    }
+}
+
+template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
+MetricsBuffer<const Sum_, const Detected_, const Proportion_> to_buffer(const MetricsResults<Sum_, Detected_, Proportion_>& metrics) {
+    MetricsBuffer<const Sum_, const Detected_, const Proportion_> buffer;
+    buffer.sum = (metrics.sum.empty() ? NULL : metrics.sum.data());
+    buffer.detected = (metrics.detected.empty() ? NULL : metrics.detected.data());
+    buffer.subset_proportion.reserve(metrics.subset_proportion.size());
+    for (const auto& s : metrics.subset_proportion) {
+        buffer.subset_proportion.push_back(s.empty() ? NULL : s.data());
+    }
+    return buffer;
 }
 
 }
@@ -366,39 +416,39 @@ public:
 
     template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
     FilterThresholds(Index_ n, const MetricsBuffer<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) {
-        compute(*this, n, results, options);
+        internal::populate(*this, n, results, false, options);
     }
 
     template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
-    FilterThresholds(const MetricsResults<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) :
-        FilterThresholds(internal::infer_size(results), internal::to_buffer(results), options) {}
+    FilterThresholds(Index_ n, const MetricsResults<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) :
+        FilterThresholds(n, internal::to_buffer(results), options) {}
 
 public:
     /**
-     * @return Thresholds to apply to the sums.
+     * @return Lower threshold to apply to the sums.
      */
-    const choose_filter_thresholds::Thresholds<Float_>& sum() const {
+    Float_ get_sum() const {
         return my_sum;
     }
 
     /**
      * @return Thresholds to apply to the number of detected genes.
      */
-    const choose_filter_thresholds::Thresholds<Float_>& get_detected() const {
+    Float_ get_detected() const {
         return my_detected;
     }
 
     /**
      * @return Thresholds to apply to the subset proportions.
      */
-    const std::vector<choose_filter_thresholds::Thresholds<Float_> > >& get_subset_proportion() const {
+    const std::vector<Float_>& get_subset_proportion() const {
         return my_subset_proportion;
     }
 
 private:
-    choose_filter_thresholds::Thresholds<Float_> my_sum;
-    choose_filter_thresholds::Thresholds<Float_> my_detected;
-    std::vector<choose_filter_thresholds::Thresholds<Float_> > > my_subset_proportion;
+    Float_ my_sum = 0;
+    Float_ my_detected = 0;
+    std::vector<Float_> my_subset_proportion;
 
 public:
     /**
@@ -412,23 +462,11 @@ public:
      * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
      * Each entry should be less than the `mm.size()` in the constructor.
      * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
-     * If `overwrite = false`, entries are only set to false for low-quality cells;
-     * this effectively performs AND'ing of high-quality calls across multiple calls to `filter()`.
      * @param overwrite Whether to overwrite existing false-y entries in `output`.
      */
     template<typename Index_, typename Value_, typename Block_, typename Output_>
-    void filter(Index_ n, const Value_* input, const Block_* block, Output_* output, bool overwrite) const {
-        if (overwrite) {
-            for (Index_ i = 0; i < n; ++i) {
-                output[i] = filter(input[i], block[i]);
-            }
-        } else {
-            for (Index_ i = 0; i < n; ++i) {
-                if (!filter(input[i], block[i])) {
-                    output[i] = false;
-                }
-            }
-        }
+    void filter(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
+        internal::filter(num, metrics, false, output);
     }
 
     /**
@@ -443,252 +481,109 @@ public:
      *
      * @return Vector of length `n`, specifying whether a cell is of high quality.
      */
-    template<typename Output_ = uint8_t, typename Index_, typename Value_, typename Block_>
-    std::vector<Output_> filter(Index_ n, const Value_* input, const Block_* block) {
-        std::vector<Output_> output(n);
-        filter(n, input, block, output.data(), true);
+    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Output_>
+    void filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
+        return filter(n, internal::to_buffer(metrics), output);
+    }
+
+    template<typename Output_, typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_>
+    std::vector<Output_> filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics) const {
+        std::vector<Output_> output(num);
+        filter(num, metrics, output.data());
         return output;
-    }
-
-
-};
-
-public:
-    /**
-     * @tparam overwrite Whether to overwrite existing truthy entries in `output`.
-     * @tparam Float Floating point type for the metrics.
-     * @tparam Integer Integer for the metrics.
-     * @tparam Output Boolean type for the low-quality calls.
-     *
-     * @param n Number of cells.
-     * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
-     * These should be comparable to the values used to create this `Thresholds` object.
-     * @param[out] output Pointer to an array of length `n`, to store the low-quality calls.
-     * Values are set to `true` for low-quality cells.
-     * If `overwrite = true`, values are set to `false` for high-quality cells, otherwise the existing entry is preserved.
-     *
-     * Use `filter_blocked()` instead for multi-block datasets. 
-     */
-    template<bool overwrite = true, typename Float, typename Integer, typename Output>
-    void filter(size_t n, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers, Output* output) const {
-        if (detected.size() != 1) {
-            throw std::runtime_error("should use filter_blocked() for multiple batches");
-        }
-        filter_<overwrite>(n, buffers, output, [](size_t i) -> size_t { return 0; });
-    }
-
-    /**
-     * @overload
-     *
-     * @tparam Output Boolean type for the low-quality calls.
-     *
-     * @param metrics Collection of arrays of per-cell RNA metrics.
-     * These should be comparable to the values used to create this `Thresholds` object.
-     *
-     * @return Vector of low-quality calls, of length equal to the number of cells in `metrics`.
-     */
-    template<typename Output = uint8_t>
-    std::vector<Output> filter(const PerCellRnaQcMetrics::Results& metrics) const {
-        std::vector<Output> output(metrics.detected.size());
-        filter(output.size(), metrics.buffers(), output.data());
-        return output;
-    }
-
-    public:
-        /**
-         * @tparam overwrite Whether to overwrite existing truthy entries in `output`.
-         * @tparam Block Integer type for the block assignments.
-         * @tparam Float Floating point type for the metrics.
-         * @tparam Integer Integer for the metrics.
-         * @tparam Output Boolean type for the low-quality calls.
-         *
-         * @param n Number of cells.
-         * @param[in] block Pointer to an array of length `n`, containing the block assignment for each cell.
-         * This may be `NULL`, in which case all cells are assumed to belong to the same block.
-         * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
-         * These should be comparable to the values used to create this `Thresholds` object.
-         * @param[out] output Pointer to an array of length `n`, to store the low-quality calls.
-         * Values are set to `true` for low-quality cells.
-         * If `overwrite = true`, values are set to `false` for high-quality cells, otherwise the existing entry is preserved.
-         */
-        template<bool overwrite = true, typename Block, typename Float, typename Integer, typename Output>
-        void filter_blocked(size_t n, const Block* block, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers, Output* output) const {
-            if (block) {
-                filter_<overwrite>(n, buffers, output, [&](size_t i) -> Block { return block[i]; });
-            } else {
-                filter<overwrite>(n, buffers, output);
-            }
-        }
-
-        /**
-         * @overload
-         *
-         * @tparam Block Integer type for the block assignments.
-         * @tparam Output Boolean type for the low-quality calls.
-         *
-         * @param metrics Collection of arrays of per-cell RNA metrics.
-         * These should be comparable to the values used to create this `Thresholds` object.
-         * @param[in] block Pointer to an array of length `n`, containing the block assignment for each cell.
-         * This may be `NULL`, in which case all cells are assumed to belong to the same block.
-         *
-         * @return Vector of low-quality calls, of length equal to the number of cells in `metrics`.
-         */
-        template<typename Output = uint8_t, typename Block>
-        std::vector<Output> filter_blocked(const PerCellRnaQcMetrics::Results& metrics, const Block* block) const {
-            std::vector<Output> output(metrics.detected.size());
-            filter_blocked(output.size(), block, metrics.buffers(), output.data());
-            return output;
-        }
-
-    private:
-        template<bool overwrite, typename Float, typename Integer, typename Output, typename Function>
-        void filter_(size_t n, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers, Output* output, Function indexer) const {
-            size_t nsubsets = subset_proportions.size();
-
-            for (size_t i = 0; i < n; ++i) {
-                auto b = indexer(i);
-                if (quality_control::is_less_than(buffers.sums[i], sums[b])) {
-                    output[i] = true;
-                    continue;
-                }
-
-                if (quality_control::is_less_than<double>(buffers.detected[i], detected[b])) {
-                    output[i] = true;
-                    continue;
-                }
-
-                bool fail = false;
-                for (size_t s = 0; s < nsubsets; ++s) {
-                    if (quality_control::is_greater_than(buffers.subset_proportions[s][i], subset_proportions[s][b])) {
-                        fail = true;
-                        break;
-                    }
-                }
-                if (fail) {
-                    output[i] = true;
-                    continue;
-                }
-
-                if constexpr(overwrite) {
-                    output[i] = false;
-                }
-            }
-
-            return;
-        }
-    };
-
-public:
-    /**
-     * @tparam Float Floating point type for the metrics.
-     * @tparam Integer Integer for the metrics.
-     *
-     * @param n Number of cells.
-     * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
-     *
-     * @return Filtering thresholds for each metric.
-     */
-    template<typename Float, typename Integer>
-    Thresholds run(size_t n, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers) const {
-        return run_blocked(n, static_cast<int*>(NULL), buffers);
-    }
-
-    /**
-     * @overload
-     * @param metrics Collection of arrays of length equal to the number of cells, containing the per-cell RNA-derived metrics.
-     *
-     * @return Filtering thresholds for each metric.
-     */
-    Thresholds run(const PerCellRnaQcMetrics::Results& metrics) const {
-        return run(metrics.detected.size(), metrics.buffers());
-    }
-
-public:
-    /**
-     * @tparam Block Integer type for the block assignments.
-     * @tparam Float Floating point type for the metrics.
-     * @tparam Integer Integer for the metrics.
-     *
-     * @param n Number of cells.
-     * @param[in] block Pointer to an array of length `n`, containing the block assignments for each cell.
-     * This may be `NULL`, in which case all cells are assumed to belong to the same block.
-     * @param[in] buffers Pointers to arrays of length `n`, containing the per-cell RNA-derived metrics.
-     *
-     * @return Filtering thresholds for each metric in each block.
-     */
-    template<typename Block, typename Float, typename Integer>
-    Thresholds run_blocked(size_t n, const Block* block, const PerCellRnaQcMetrics::Buffers<Float, Integer>& buffers) const {
-        Thresholds output;
-        std::vector<double> workspace(n);
-        std::vector<int> starts;
-        if (block) {
-            starts = ComputeMedianMad::compute_block_starts(n, block);
-        }
-
-        // Filtering on the total counts.
-        {
-            ComputeMedianMad meddler;
-            meddler.set_log(true);
-            auto sums_res = meddler.run_blocked(n, block, starts, buffers.sums, workspace.data());
-
-            ChooseOutlierFilters filter;
-            filter.set_num_mads(sums_num_mads);
-            filter.set_upper(false);
-            auto sums_filt = filter.run(std::move(sums_res));
-
-            output.sums = std::move(sums_filt.lower);
-        }
-
-        // Filtering on the detected features.
-        {
-            ComputeMedianMad meddler;
-            meddler.set_log(true);
-            auto detected_res = meddler.run_blocked(n, block, starts, buffers.detected, workspace.data());
-
-            ChooseOutlierFilters filter;
-            filter.set_num_mads(sums_num_mads);
-            filter.set_upper(false);
-            auto detected_filt = filter.run(std::move(detected_res));
-
-            output.detected = std::move(detected_filt.lower);
-        }
-
-        // Filtering on the subset proportions (no log). 
-        {
-            ComputeMedianMad meddler;
-
-            ChooseOutlierFilters filter;
-            filter.set_num_mads(subset_num_mads);
-            filter.set_lower(false);
-
-            size_t nsubsets = buffers.subset_proportions.size();
-            for (size_t s = 0; s < nsubsets; ++s) {
-                auto subset_res = meddler.run_blocked(n, block, starts, buffers.subset_proportions[s], workspace.data());
-                auto subset_filt = filter.run(std::move(subset_res));
-                output.subset_proportions.push_back(std::move(subset_filt.upper));
-            }
-        }
-
-        return output;
-    }
-
-    /**
-     * @overload
-     * @tparam Block Integer type for the block assignments.
-     *
-     * @param metrics Collection of arrays of length equal to the number of cells, containing the per-cell RNA-derived metrics.
-     * @param[in] block Pointer to an array of length equal to the number of cells, containing the block assignments for each cell.
-     * This may be `NULL`, in which case all cells are assumed to belong to the same block.
-     *
-     * @return Filtering thresholds for each metric in each block.
-     */
-    template<typename Block>
-    Thresholds run_blocked(const PerCellRnaQcMetrics::Results& metrics, const Block* block) const {
-        return run_blocked(metrics.detected.size(), block, metrics.buffers());
     }
 };
 
+/**
+ * @brief Thresholds to define outliers on each metric.
+ */
+template<typename Float_ = double>
+class BlockedFilterThresholds {
+public:
+    /**
+     * Default constructor.
+     */
+    BlockedFilterThresholds() = default;
 
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_>
+    BlockedFilterThresholds(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& results, const Block_* block, const FiltersOptions& options) {
+        internal::populate(*this, num, results, block, options);
+    }
+
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_>
+    BlockedFilterThresholds(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& results, const Block_* block, const FiltersOptions& options) :
+        FilterThresholds(num, internal::to_buffer(results), block, options) {}
+
+public:
+    /**
+     * @return Lower threshold to apply to the sums.
+     */
+    const std::vector<Float_> get_sum() const {
+        return my_sum;
+    }
+
+    /**
+     * @return Thresholds to apply to the number of detected genes.
+     */
+    const std::vector<Float_> get_detected() const {
+        return my_detected;
+    }
+
+    /**
+     * @return Thresholds to apply to the subset proportions.
+     */
+    const std::vector<std::vector<Float_> >& get_subset_proportion() const {
+        return my_subset_proportion;
+    }
+
+private:
+    std::vector<Float_> my_sum = 0;
+    std::vector<Float_> my_detected = 0;
+    std::vector<std::vector<Float_> > my_subset_proportion;
+
+public:
+    /**
+     * @tparam Index_ Integer type for the array indices.
+     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
+     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Output_ Boolean type for the outlier calls.
+     *
+     * @param n Number of observations.
+     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
+     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
+     * Each entry should be less than the `mm.size()` in the constructor.
+     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
+     * @param overwrite Whether to overwrite existing false-y entries in `output`.
+     */
+    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
+    void filter(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
+        internal::filter(num, metrics, block, output);
+    }
+
+    /**
+     * @tparam Output_ Boolean type for the outlier calls.
+     * @tparam Index_ Integer type for the array indices.
+     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
+     *
+     * @param n Number of observations.
+     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
+     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
+     *
+     * @return Vector of length `n`, specifying whether a cell is of high quality.
+     */
+    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
+    void filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
+        return filter(num, internal::to_buffer(metrics), block, output);
+    }
+
+    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
+    std::vector<Output_> filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block) const {
+        std::vector<Output_> output(num);
+        filter(num, metrics, block, output.data());
+        return output;
+    }
+};
 
 }
 
