@@ -49,24 +49,17 @@
       <arglist>(const std::vector&lt; find_median_mad::Results&lt; Float_ &gt; &gt; &amp;mm, const Options &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>BlockThresholds</name>
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_lower</name>
       <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
-      <anchor>a3d0acbb55eccfea4d754eab30582a35f</anchor>
-      <arglist>(std::vector&lt; Thresholds&lt; Float_ &gt; &gt; thresholds)</arglist>
+      <anchor>ae23ef5a8ef97f87d4b9b5dec0ef4e5d0</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>BlockThresholds</name>
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_upper</name>
       <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
-      <anchor>a424228ed5d9971fb80f040627e8d6e7e</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type>const std::vector&lt; Thresholds&lt; Float_ &gt; &gt; &amp;</type>
-      <name>get_thresholds</name>
-      <anchorfile>classscran_1_1choose__filter__thresholds_1_1BlockThresholds.html</anchorfile>
-      <anchor>a46cb24c8bf43c4edbe7378b1dae89fb0</anchor>
+      <anchor>ab195c7a040d4e3794360730ba484286d</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -330,20 +323,6 @@
       <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
       <anchor>ae45c66d5a2b2458283b4f546bafe760e</anchor>
       <arglist>(const find_median_mad::Results&lt; Float_ &gt; &amp;mm, const Options &amp;options)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Thresholds</name>
-      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
-      <anchor>ac19dca1000a85058d42502181b0944f7</anchor>
-      <arglist>(Float_ lower, Float_ upper)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Thresholds</name>
-      <anchorfile>classscran_1_1choose__filter__thresholds_1_1Thresholds.html</anchorfile>
-      <anchor>adb2ac511f67350e4946918c712304764</anchor>
-      <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>Float_</type>

@@ -98,8 +98,7 @@ Classes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Define QC filter thresholds using a MAD-based approach. </p>
-<p>We define filter thresholds on the QC metrics by assuming that most cells in the experiment are of high (or at least acceptable) quality. Any outlier values are indicative of low-quality cells that should be filtered out. Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value. Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.</p>
-<p>For datasets with multiple blocks, we can also compute block-specific thresholds for each metric. This assumes that differences in the metric distributions between blocks are driven by uninteresting causes (e.g., differences in sequencing depth); variable thresholds can adapt to each block's distribution for effective removal of outliers. However, if the differences in the distributions between blocks are interesting, it may be preferable to ignore the blocking factor so that the MADs are correctly increased to reflect that variation. </p>
+<p>We define filter thresholds on the QC metrics by assuming that most cells in the experiment are of high (or at least acceptable) quality. Any outlier values are indicative of low-quality cells that should be filtered out. Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value. Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
