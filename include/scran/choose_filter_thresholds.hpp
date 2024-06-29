@@ -22,11 +22,17 @@ namespace scran {
  * Any outlier values are indicative of low-quality cells that should be filtered out.
  * Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value.
  * Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.
+ *
+ * For datasets with multiple blocks, we can also compute block-specific thresholds for each metric.
+ * This assumes that differences in the metric distributions between blocks are driven by uninteresting causes (e.g., differences in sequencing depth);
+ * variable thresholds can adapt to each block's distribution for effective removal of outliers.
+ * However, if the differences in the distributions between blocks are interesting,
+ * it may be preferable to ignore the blocking factor so that the MADs are correctly increased to reflect that variation.
  */
 namespace choose_filter_thresholds {
 
 /**
- * @brief Options for `prepare()`.
+ * @brief Options for `compute()`.
  */
 struct Options {
     /**
@@ -51,7 +57,7 @@ struct Options {
     /**
      * Minimum difference from the median to define outliers.
      * This enforces a more relaxed threshold in cases where the MAD may be too small.
-     * If `Options::unlog = true`, this difference is interpreted as a unit on the log-scale.
+     * If `Options::log = true`, this difference is interpreted as a unit on the log-scale.
      */
     double min_diff = 0;
 
@@ -59,7 +65,28 @@ struct Options {
      * Whether the supplied median and MAD were computed on the log-scale (i.e., `find_median_mad::Options::log = true`).
      * If true, the thresholds are converted back to the original scale of the metrics prior to filtering.
      */
-    bool unlog = false;
+    bool log = false;
+};
+
+/**
+ * @brief Results of `compute()`.
+ * @tparam Float_ Floating-point type for the thresholds.
+ */
+template<typename Float_>
+struct Results {
+    /**
+     * Lower threshold.
+     * Cells where the relevant QC metric is below this threshold are considered to be low quality.j
+     * This is set to negative infinity if `Options::lower = false`.
+     */
+    Float_ lower = 0;
+
+    /**
+     * Upper threshold.
+     * Cells where the relevant QC metric is above this threshold are considered to be low quality.
+     * This is set to positive infinity if `Options::upper = false`.
+     */
+    Float_ upper = 0;
 };
 
 /**
@@ -81,250 +108,127 @@ Float_ sanitize(Float_ val, bool unlog) {
     return val;
 }
 
-template<typename Float_>
-std::pair<Float_, Float_> choose(Float_ median, Float_ mad, const Options& options) {
-    static_assert(std::is_floating_point<Float_>::value);
-    Float_ lthresh = -std::numeric_limits<Float_>::infinity();
-    Float_ uthresh = std::numeric_limits<double>::infinity();
-
-    if (!std::isnan(median) && !std::isnan(mad)) {
-        auto delta = std::max(static_cast<Float_>(options.min_diff), options.num_mads * mad);
-        if (options.lower) {
-            lthresh = sanitize(median - delta, options.unlog);
-        }
-        if (options.upper) {
-            uthresh = sanitize(median + delta, options.unlog);
-        }
-    }
-
-    return std::make_pair(lthresh, uthresh);
-}
-
 }
 /**
  * @endcond
  */
 
 /**
- * @brief Outlier thresholds for QC filtering.
- * 
  * @tparam Float_ Floating-point type for the thresholds.
+ * @param mm Median and MAD from `find_median_mad::compute()`.
+ * If `Options::log = true`, it is expected that the median and MAD are computed on the log-transformed metrics
+ * (i.e., `find_median_mad::Options::log` was also set to true).
+ * @param options Further options.
+ * @return The upper and lower thresholds derived from `mm`.
  */
 template<typename Float_>
-class Thresholds {
-public:
-    /**
-     * @cond
-     */
-    Thresholds() = default;
+Results<Float_> compute(const find_median_mad::Results<Float_>& mm, const Options& options) {
     static_assert(std::is_floating_point<Float_>::value);
-    /**
-     * @endcond
-     */
+    Results<Float_> output;
+    Float_& lthresh = output.lower;
+    Float_& uthresh = output.upper;
+    lthresh = -std::numeric_limits<Float_>::infinity();
+    uthresh = std::numeric_limits<double>::infinity();
 
-    /**
-     * @param mm Median and MAD, typically from `find_median_mad::compute()`.
-     * @param options Further options.
-     */
-    Thresholds(const find_median_mad::Results<Float_>& mm, const Options& options) {
-        auto choice = internal::choose(mm.median, mm.mad, options);
-        my_lower = choice.first;
-        my_upper = choice.second;
-    }
-
-private:
-    Float_ my_lower, my_upper;
-
-public:
-    /**
-     * @return Lower threshold.
-     * Cells where the relevant QC metric is below this threshold are considered to be low quality.j
-     * This is set to negative infinity if `Options::lower = false`.
-     */
-    Float_ get_lower() const {
-        return my_lower;
-    }
-
-    /**
-     * @return Upper threshold.
-     * Cells where the relevant QC metric is above this threshold are considered to be low quality.
-     * This is set to positive infinity if `Options::upper = false`.
-     */
-    Float_ get_upper() const {
-        return my_upper;
-    }
-
-public:
-    /**
-     * @param x Value of the metric for a single cell.
-     * @return Whether the cell is of high quality, i.e., not NaN, not an outlier.
-     * This is true if `x` is not below `get_lower()` and not above `get_upper()`.
-     */
-    bool filter(Float_ x) const {
-        return x >= my_lower && x <= my_upper; // NaNs don't compare true in any comparison so they get auto-discarded here.
-    }
-
-    /**
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     * @tparam Output_ Boolean type for the outlier calls.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
-     * If `overwrite = false`, entries are only set to false for low-quality cells;
-     * this effectively performs AND'ing of high-quality calls across multiple calls to `filter()`.
-     * @param overwrite Whether to overwrite existing false-y entries in `output`.
-     */
-    template<typename Index_, typename Value_, typename Output_>
-    void filter(Index_ n, const Value_* input, Output_* output, bool overwrite) const {
-        if (overwrite) {
-            for (Index_ i = 0; i < n; ++i) {
-                output[i] = filter(input[i]);
-            }
-        } else {
-            for (Index_ i = 0; i < n; ++i) {
-                if (!filter(input[i])) {
-                    output[i] = false;
-                }
-            }
+    auto median = mm.median;
+    auto mad = mm.mad;
+    if (!std::isnan(median) && !std::isnan(mad)) {
+        auto delta = std::max(static_cast<Float_>(options.min_diff), options.num_mads * mad);
+        if (options.lower) {
+            lthresh = internal::sanitize(median - delta, options.log);
+        }
+        if (options.upper) {
+            uthresh = internal::sanitize(median + delta, options.log);
         }
     }
 
-    /**
-     * @tparam Output_ Boolean type for the outlier calls.
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     *
-     * @return Vector of length `n`, specifying whether a cell is of high quality.
-     */
-    template<typename Output_ = uint8_t, typename Index_, typename Value_>
-    std::vector<Output_> filter(Index_ n, const Value_* input) {
-        std::vector<Output_> output(n);
-        filter(n, input, output.data(), true);
-        return output;
-    }
-};
+    return output;
+}
 
 /**
- * @brief Outlier thresholds for QC filtering with blocks.
+ * This overload computes the median and MAD via `find_median_mad::compute()` before deriving thresholds with `compute()`.
  *
+ * @tparam Index_ Integer type for the array indices. 
+ * @tparam Float_ Floating-point type for the metrics and thresholds.
+ *
+ * @param num Number of cells.
+ * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
+ * This is modified arbitrarily on output.
+ * @param options Further options.
+ *
+ * @return The upper and lower thresholds derived from `metrics`.
+ */
+template<typename Index_, typename Float_>
+Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
+    find_median_mad::Options fopt;
+    fopt.log = options.log;
+    auto mm = find_median_mad::compute(num, metrics, fopt);
+    return compute(mm, options);
+}
+
+/**
+ * This overload computes the median and MAD via `find_median_mad::compute()` with automatic buffer allocation,
+ * before deriving thresholds with `compute()`.
+ *
+ * @tparam Index_ Integer type for the array indices. 
+ * @tparam Value_ Type for the input data.
+ * @tparam Float_ Floating-point type for the metrics and thresholds.
+ *
+ * @param num Number of cells.
+ * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
+ * @param buffer Pointer to an array of length `num` in which to store intermediate results.
+ * Alternatively NULL, in which case a buffer is automatically allocated.
+ * @param options Further options.
+ *
+ * @return The upper and lower thresholds derived from `metrics`.
+ */
+template<typename Index_, typename Value_, typename Float_>
+Results<Float_> compute(Index_ num, const Value_* metrics, Float_* buffer, const Options& options) {
+    find_median_mad::Options fopt;
+    fopt.log = options.log;
+    auto mm = find_median_mad::compute(num, metrics, buffer, fopt);
+    return compute(mm, options);
+}
+
+/**
  * @tparam Float_ Floating-point type for the thresholds.
+ * @param mms Vector of medians and MADs for each block.
+ * @param options Further options.
+ *
+ * @return A vector containing the upper and lower thresholds for each block.
  */
 template<typename Float_>
-class BlockThresholds {
-public:
-    /**
-     * @cond
-     */
-    BlockThresholds() = default;
-    static_assert(std::is_floating_point<Float_>::value);
-    /**
-     * @endcond
-     */
-
-    /**
-     * @param mm Median and MAD for each block, typically from `find_median_mad::compute_blocked()`.
-     * @param options Further options.
-     */
-    BlockThresholds(const std::vector<find_median_mad::Results<Float_> >& mm, const Options& options) {
-        size_t nblocks = mm.size();
-        my_lower.reserve(nblocks);
-        my_upper.reserve(nblocks);
-
-        for (size_t b = 0; b < nblocks; ++b) {
-            auto out = internal::choose(mm[b].median, mm[b].mad, options);
-            my_lower.push_back(out.first);
-            my_upper.push_back(out.second);
-        }
+std::vector<Results<Float_> > compute_blocked(const std::vector<find_median_mad::Results<Float_> > mms, const Options& options) {
+    std::vector<Results<Float_> > output;
+    output.reserve(mms.size());
+    for (auto& mm : mms) {
+        output.emplace_back(compute(mm, options));
     }
+    return output;
+}
 
-private:
-    std::vector<Float_> my_lower, my_upper;
-
-public:
-    /**
-     * @return Vector of lower thresholds, one per batch.
-     * Cells where the relevant QC metric is below this threshold are considered to be low quality.
-     */
-    const std::vector<Float_>& get_lower() const {
-        return my_lower;
-    }
-
-    /**
-     * @return Vector of upper thresholds, one per batch.
-     * Cells where the relevant QC metric is above this threshold are considered to be low quality.
-     */
-    const std::vector<Float_>& get_upper() const {
-        return my_upper;
-    }
-
-public:
-    /**
-     * @tparam Block_ Integer type for the block assignment.
-     * @param x Value of the metric for a single cell.
-     * @param b Block of origin for the cell.
-     * This should be less than the `mm.size()` in the constructor.
-     * @return Whether the cell is of high quality, i.e., not NaN, not an outlier.
-     * This is true if `x` is not below `get_lower()` and not above `get_upper()` for its block.
-     */
-    template<typename Block_>
-    bool filter(Float_ x, Block_ b) const {
-        return x >= my_lower[b] && x <= my_upper[b]; // NaNs don't compare true in any comparison so they get auto-discarded here.
-    }
-
-    /**
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     * @tparam Block_ Integer type for the block assignment.
-     * @tparam Output_ Boolean type for the outlier calls.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     * Each entry should be less than the `mm.size()` in the constructor.
-     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
-     * If `overwrite = false`, entries are only set to false for low-quality cells;
-     * this effectively performs AND'ing of high-quality calls across multiple calls to `filter()`.
-     * @param overwrite Whether to overwrite existing false-y entries in `output`.
-     */
-    template<typename Index_, typename Value_, typename Block_, typename Output_>
-    void filter(Index_ n, const Value_* input, const Block_* block, Output_* output, bool overwrite) const {
-        if (overwrite) {
-            for (Index_ i = 0; i < n; ++i) {
-                output[i] = filter(input[i], block[i]);
-            }
-        } else {
-            for (Index_ i = 0; i < n; ++i) {
-                if (!filter(input[i], block[i])) {
-                    output[i] = false;
-                }
-            }
-        }
-    }
-
-    /**
-     * @tparam Output_ Boolean type for the outlier calls.
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Block_ Integer type for the block assignment.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     *
-     * @return Vector of length `n`, specifying whether a cell is of high quality.
-     */
-    template<typename Output_ = uint8_t, typename Index_, typename Value_, typename Block_>
-    std::vector<Output_> filter(Index_ n, const Value_* input, const Block_* block) {
-        std::vector<Output_> output(n);
-        filter(n, input, block, output.data(), true);
-        return output;
-    }
-};
+/**
+ * This overload computes the median and MAD for each block via `find_median_mad::compute_blocked()` before deriving thresholds in each block with `compute_blocked()`.
+ *
+ * @tparam Index_ Integer type for the array indices. 
+ * @tparam Value_ Type for the input data.
+ * @tparam Float_ Floating-point type for the metrics and thresholds.
+ *
+ * @param num Number of cells.
+ * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
+ * @param[in] block Optional pointer to an array of block identifiers, see `find_median_mad::compute_blocked()` for details.
+ * @param workspace Pointer to a workspace object, see `find_median_mad::compute_blocked()` for details.
+ * @param options Further options.
+ *
+ * @return A vector containing the upper and lower thresholds for each block.
+ */
+template<typename Index_, typename Value_, typename Block_, typename Float_>
+std::vector<Results<Float_> > compute_blocked(Index_ n, const Value_* metrics, const Block_* block, find_median_mad::Workspace<Float_, Index_>* work, const Options& options) {
+    find_median_mad::Options fopt;
+    fopt.log = options.log;
+    auto mms = find_median_mad::compute_blocked(n, metrics, block, work, fopt);
+    return compute_blocked(mms, options);
+}
 
 }
 
