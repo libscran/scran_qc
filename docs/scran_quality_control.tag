@@ -355,8 +355,8 @@
       <type>std::vector&lt; Results&lt; Float_ &gt; &gt;</type>
       <name>compute_blocked</name>
       <anchorfile>namespacescran_1_1choose__filter__thresholds.html</anchorfile>
-      <anchor>a19da44956d412fca8aff773c97045dee</anchor>
-      <arglist>(Index_ n, const Value_ *metrics, const Block_ *block, find_median_mad::Workspace&lt; Float_, Index_ &gt; *work, const Options &amp;options)</arglist>
+      <anchor>ac23c9e27e19730fda2ca0d7d70339c1f</anchor>
+      <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, find_median_mad::Workspace&lt; Float_, Index_ &gt; *workspace, const Options &amp;options)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
