@@ -245,14 +245,14 @@ struct FiltersOptions {
  */
 namespace internal {
 
-template<typename Float_, class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
-void populate(Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const FiltersOptions& options) {
+template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
+void populate(Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const FiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
-            return find_median_mad::Workspace<Float_, Index_>(n, block);
+            return find_median_mad::Workspace<Float_, size_t>(n, block);
         }
     }();
 
@@ -301,12 +301,12 @@ void populate(Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, Propo
     }
 }
 
-template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
-void filter(const Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, BlockSource_ block, Output_* output) {
+template<class Host_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
+void filter(const Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, BlockSource_ block, Output_* output) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
-    for (Index_ i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         auto thresh = [&]() {
             if constexpr(unblocked) {
                 return host.get_sum();
@@ -317,7 +317,7 @@ void filter(const Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, P
         output[i] = output[i] && (metrics.sum[i] >= thresh);
     }
 
-    for (Index_ i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         auto thresh = [&]() {
             if constexpr(unblocked) {
                 return host.get_detected();
@@ -332,7 +332,7 @@ void filter(const Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, P
     for (size_t s = 0; s < nsubsets; ++s) {
         auto sub = metrics.subset_proportion[s];
         const auto& sthresh = host.get_subset_proportion()[s];
-        for (Index_ i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             auto thresh = [&]() {
                 if constexpr(unblocked) {
                     return sthresh;
@@ -363,7 +363,8 @@ MetricsBuffers<const Sum_, const Detected_, const Proportion_> to_buffer(const M
  */
 
 /**
- * @brief Thresholds to define outliers on each metric.
+ * @brief Filter for high-quality cells using RNA-based metrics. 
+ * @tparam Float_ Floating-point type for filter thresholds.
  */
 template<typename Float_ = double>
 class Filters {
@@ -373,11 +374,26 @@ public:
      */
     Filters() = default;
 
-    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
-    Filters(Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
-        internal::populate<Float_>(*this, n, metrics, false, options);
+    /**
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @param num Number of cells.
+     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * @param options Further options for filtering.
+     */
+    template<typename Sum_, typename Detected_, typename Proportion_>
+    Filters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
+        internal::populate<Float_>(*this, num, metrics, false, options);
     }
 
+    /**
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @param metrics RNA-based QC metrics from `compute_metrics()`.
+     * @param options Further options for filtering.
+     */
     template<typename Sum_, typename Detected_, typename Proportion_>
     Filters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) :
         Filters(metrics.sum.size(), internal::to_buffer(metrics), options) {}
@@ -434,40 +450,42 @@ private:
 
 public:
     /**
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     * @tparam Block_ Integer type for the block assignment.
-     * @tparam Output_ Boolean type for the outlier calls.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     * Each entry should be less than the `mm.size()` in the constructor.
-     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
-     * @param overwrite Whether to overwrite existing false-y entries in `output`.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @param num Number of cells.
+     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * @param[out] output Pointer to an array of length `num`.
+     * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
-    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Output_>
-    void filter(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
+    template<typename Sum_, typename Detected_, typename Proportion_, typename Output_>
+    void filter(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
         internal::filter(*this, num, metrics, false, output);
     }
 
     /**
-     * @tparam Output_ Boolean type for the outlier calls.
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Block_ Integer type for the block assignment.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     *
-     * @return Vector of length `n`, specifying whether a cell is of high quality.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @param metrics RNA-based QC metrics returned by `compute_metrics()`.
+     * @param[out] output Pointer to an array of length `num`. 
+     * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Proportion_, typename Output_>
     void filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
         return filter(metrics.sum.size(), internal::to_buffer(metrics), output);
     }
 
+    /**
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @param metrics RNA-based QC metrics returned by `compute_metrics()`.
+     * @return Vector of length `num`, containing the high-quality calls.
+     */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
     std::vector<Output_> filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics) const {
         std::vector<Output_> output(metrics.sum.size());
@@ -477,7 +495,8 @@ public:
 };
 
 /**
- * @brief Thresholds to define outliers on each metric.
+ * @brief Filter for high-quality cells using RNA-based metrics with blocking.
+ * @tparam Float_ Floating-point type for filter thresholds.
  */
 template<typename Float_ = double>
 class BlockedFilters {
@@ -487,11 +506,32 @@ public:
      */
     BlockedFilters() = default;
 
-    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_>
-    BlockedFilters(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
+    /**
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Block_ Integer type for the block assignments.
+     * @param num Number of cells.
+     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * @param[in] block Pointer to an array of length `num` containing block identifiers.
+     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+     * @param options Further options for filtering.
+     */
+    template<typename Sum_, typename Detected_, typename Proportion_, typename Block_>
+    BlockedFilters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
         internal::populate<Float_>(*this, num, metrics, block, options);
     }
 
+    /**
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Block_ Integer type for the block assignments.
+     * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+     * @param[in] block Pointer to an array of length `num` containing block identifiers.
+     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+     * @param options Further options for filtering.
+     */
     template<typename Sum_, typename Detected_, typename Proportion_, typename Block_>
     BlockedFilters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) :
         BlockedFilters(metrics.sum.size(), internal::to_buffer(metrics), block, options) {}
@@ -554,17 +594,17 @@ private:
 
 public:
     /**
-     * @tparam Index_ Integer type for the array indices.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Block_ Integer type for the block assignment.
-     * @tparam Output_ Boolean type for the outlier calls.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     * Each entry should be less than the `mm.size()` in the constructor.
-     * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
-     * @param overwrite Whether to overwrite existing false-y entries in `output`.
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @param num Number of cells.
+     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * @param[in] block Pointer to an array of length `num` containing block identifiers.
+     * Each identifier should correspond to the same blocks used in the constructor.
+     * @param[out] output Pointer to an array of length `num`.
+     * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
     void filter(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
@@ -572,23 +612,34 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type for the outlier calls.
-     * @tparam Index_ Integer type for the array indices.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Block_ Integer type for the block assignment.
-     * @tparam Value_ Type for the metrics, to be compared to the thresholds.
-     *
-     * @param n Number of observations.
-     * @param[in] input Pointer to an array of length `n`, containing the values to be filtered.
-     * @param[in] block Pointer to an array of length `n`, containing the block of origin for each cell.
-     *
-     * @return Vector of length `n`, specifying whether a cell is of high quality.
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+     * @param[in] block Pointer to an array of length `num` containing block identifiers.
+     * Each identifier should correspond to the same blocks used in the constructor.
+     * @param[out] output Pointer to an array of length `num`.
+     * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
     void filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
         return filter(metrics.sum.size(), internal::to_buffer(metrics), block, output);
     }
 
-    template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Block_ = int, typename Proportion_ = double>
+    /**
+     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type to store the summed expression.
+     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Block_ Integer type for the block assignment.
+     * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+     * @param[in] block Pointer to an array of length `num` containing block identifiers.
+     * Each identifier should correspond to the same blocks used in the constructor.
+     * @return Vector of length `num`, containing the high-quality calls.
+     */
+    template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
     std::vector<Output_> filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block) const {
         std::vector<Output_> output(metrics.sum.size());
         filter(metrics, block, output.data());

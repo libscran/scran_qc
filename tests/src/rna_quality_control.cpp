@@ -134,11 +134,6 @@ TEST(RnaQualityControlFilters, Blocked) {
         EXPECT_GT(bthresholds.get_subset_proportion()[0][1], 1);
         EXPECT_GT(bthresholds.get_subset_proportion()[1][1], 1);
 
-        std::cout << bthresholds.get_sum()[1] << std::endl;
-        std::cout << bthresholds.get_detected()[1] << std::endl;
-        std::cout << bthresholds.get_subset_proportion()[0][1] << std::endl;
-        std::cout << bthresholds.get_subset_proportion()[1][1] << std::endl;
-
         auto keep = bthresholds.filter(results, block.data());
         std::vector<uint8_t> expected { 0, 0, 0, 0, 1, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
