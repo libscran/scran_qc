@@ -75,7 +75,7 @@ struct Results {
  * @tparam Float_ Floating-point type for input and output.
  *
  * @param num Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `n`.
+ * @param[in] metrics Pointer to an array of observations of length `num`.
  * NaNs are ignored.
  * Array contents are arbitrarily modified on function return and should not be used afterwards.
  * @param options Further options.
@@ -122,6 +122,13 @@ Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
         return Results<Float_>(median, static_cast<Float_>(0));
     }
 
+    // As an aside, there's no way to avoid passing in 'metrics' as a Float_,
+    // even if the original values were integers, because we need to do this
+    // subtraction here that could cast integers to floats. So at some point we
+    // will need a floating-point buffer, and so we might as well just pass the
+    // metrics in as floats in the first place. Technically the first sort
+    // could be done with an integer buffer but then we'd need an extra argument.
+
     auto copy = metrics;
     for (Index_ i = 0; i < num; ++i, ++copy) {
         *copy = std::abs(*copy - median);
@@ -130,6 +137,32 @@ Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
     mad *= 1.4826; // for equivalence with the standard deviation under normality.
 
     return Results<Float_>(median, mad);
+}
+
+/**
+ * @tparam Index_ Integer type for array indices.
+ * @tparam Value_ Type for the input.
+ * @tparam Float_ Floating-point type for output.
+ *
+ * @param num Number of observations.
+ * @param[in] metrics Pointer to an array of observations of length `num`.
+ * NaNs are ignored.
+ * Array contents are arbitrarily modified on function return and should not be used afterwards.
+ * @param[out] buffer Pointer to an array of length `num`, containing a buffer to use for storing intermediate results.
+ * This can also be NULL in which case a buffer is allocated.
+ * @param options Further options.
+ *
+ * @return Median and MAD for `metrics`, possibly after log-transformation.
+ */
+template<typename Float_ = double, typename Index_ = int, typename Value_ = double> 
+Results<Float_> compute(Index_ num, const Value_* metrics, Float_* buffer, const Options& options) {
+    std::unique_ptr<std::vector<Float_> > xbuffer;
+    if (buffer == NULL) {
+        xbuffer = std::make_unique<std::vector<Float_> >(num);
+        buffer = xbuffer->data();
+    }
+    std::copy_n(metrics, num, buffer);
+    return compute(num, buffer, options);
 }
 
 /**
@@ -215,26 +248,33 @@ public:
  * If provided, the array should be of length equal to `num`.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * If a null pointer is supplied, all observations are assumed to belong to the same block.
- * @param[in] metrics Pointer to an array of observations of length `num`.
- * @param workspace A workspace object, either (i) constructed on `num` and `block` or (ii) configured using `Workspace::set()` on `num` and `block`.
+ * @param[in] metrics Pointer to an array of observations of length `num`, see `compute()`.
+ * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `Workspace::set()` on `num` and `block`.
  * The same object can be re-used across multiple calls to `compute_blocked()` with the same `num` and `block`.
+ * This can also be NULL in which case a new workspace is allocated. 
  * @param options Further options.
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
  */
 template<typename Output_ = double, typename Index_ = int, typename Block_ = int, typename Value_ = double>
-std::vector<Results<Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, Workspace<Output_, Index_>& workspace, const Options& options) {
+std::vector<Results<Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, Workspace<Output_, Index_>* workspace, const Options& options) {
+    std::unique_ptr<Workspace<Output_, Index_> > xworkspace;
+    if (workspace == NULL) {
+        xworkspace = std::make_unique<Workspace<Output_, Index_> >(num, block);
+        workspace = xworkspace.get();
+    }
+
     std::vector<Results<Output_> > output;
 
-    auto& buffer = workspace.my_buffer;
+    auto& buffer = workspace->my_buffer;
     if (!block) {
         std::copy_n(metrics, num, buffer.begin());
         output.push_back(compute(num, buffer.data(), options));
         return output;
     }
 
-    const auto& starts = workspace.my_block_starts;
-    auto& ends = workspace.my_block_ends;
+    const auto& starts = workspace->my_block_starts;
+    auto& ends = workspace->my_block_ends;
     std::copy(starts.begin(), starts.end(), ends.begin());
     for (Index_ i = 0; i < num; ++i) {
         auto& pos = ends[block[i]];
@@ -250,27 +290,6 @@ std::vector<Results<Output_> > compute_blocked(Index_ num, const Block_* block, 
     }
 
     return output;
-}
-
-/**
- * Overload that handles the creation of the `Workspace`.
- *
- * @tparam Output_ Floating-point type for the output.
- * @tparam Index_ Integer type for array indices
- * @tparam Block_ Integer type, containing the block IDs.
- * @tparam Value_ Numeric type for the input.
- *
- * @param num Number of observations.
- * @param[in] block Pointer to an array of block identifiers, see `compute_blocked()`.
- * @param[in] metrics Pointer to an array of observations of length `num`.
- * @param options Further options.
- *
- * @return Vector of length \f$N\f$, where each entry is a pair containing the median and MAD for each block in `block`.
- */
-template<typename Output_ = double, typename Index_ = int, typename Block_ = int, typename Value_ = double>
-std::vector<Results<Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, const Options& options) {
-    Workspace<Output_, Index_> wrk(num, block);
-    return compute_blocked<Output_>(num, block, metrics, wrk, options);
 }
 
 }
