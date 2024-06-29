@@ -244,11 +244,11 @@ public:
  * @tparam Value_ Numeric type for the input.
  *
  * @param num Number of observations.
+ * @param[in] metrics Pointer to an array of observations of length `num`, see `compute()`.
  * @param[in] block Optional pointer to an array of block identifiers.
  * If provided, the array should be of length equal to `num`.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * If a null pointer is supplied, all observations are assumed to belong to the same block.
- * @param[in] metrics Pointer to an array of observations of length `num`, see `compute()`.
  * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `Workspace::set()` on `num` and `block`.
  * The same object can be re-used across multiple calls to `compute_blocked()` with the same `num` and `block`.
  * This can also be NULL in which case a new workspace is allocated. 
@@ -256,8 +256,8 @@ public:
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
  */
-template<typename Output_ = double, typename Index_ = int, typename Block_ = int, typename Value_ = double>
-std::vector<Results<Output_> > compute_blocked(Index_ num, const Block_* block, const Value_* metrics, Workspace<Output_, Index_>* workspace, const Options& options) {
+template<typename Output_ = double, typename Index_ = int, typename Value_ = double, typename Block_ = int>
+std::vector<Results<Output_> > compute_blocked(Index_ num, const Value_* metrics, const Block_* block, Workspace<Output_, Index_>* workspace, const Options& options) {
     std::unique_ptr<Workspace<Output_, Index_> > xworkspace;
     if (workspace == NULL) {
         xworkspace = std::make_unique<Workspace<Output_, Index_> >(num, block);

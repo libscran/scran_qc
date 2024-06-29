@@ -128,7 +128,7 @@ TEST(ChooseFilterThresholds, FromMetrics) {
 
     std::vector<int> imetrics { 0, 1, 2, 3, 4, 5 };
     std::vector<int> block { 0, 0, 0, 1, 1, 1 };
-    auto bthresholds = scran::choose_filter_thresholds::compute_blocked<int, int, int, double>(imetrics.size(), block.data(), imetrics.data(), NULL, opt);
+    auto bthresholds = scran::choose_filter_thresholds::compute_blocked<int, int, int, double>(imetrics.size(), imetrics.data(), block.data(), NULL, opt);
     ASSERT_EQ(bthresholds.size(), 2);
     EXPECT_DOUBLE_EQ(bthresholds[0].lower, 1 - 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[0].upper, 1 + 1.4826 * 3);
