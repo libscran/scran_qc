@@ -90,8 +90,11 @@ var searchData=
   ['maybeoracle_87',['MaybeOracle',['https://tatami-inc.github.io/tatami/namespacetatami.html#aab9d426a238a93d02635b4172c725808',1,'tatami']]],
   ['median_88',['median',['../structscran_1_1find__median__mad_1_1Results.html#a9f925639f3b8fd1adaa018647bea075b',1,'scran::find_median_mad::Results']]],
   ['median_5fonly_89',['median_only',['../structscran_1_1find__median__mad_1_1Options.html#aafc3f5f04ebf8ca926c1c4cc65e05175',1,'scran::find_median_mad::Options']]],
-  ['min_5fdiff_90',['min_diff',['../structscran_1_1choose__filter__thresholds_1_1Options.html#aefa36f1a53ef0ba54b0694e3c36c97d6',1,'scran::choose_filter_thresholds::Options']]],
-  ['mock_5fhelpers_2ehpp_91',['mock_helpers.hpp',['https://tatami-inc.github.io/tatami/unary_2mock__helpers_8hpp.html',1,'(Global Namespace)'],['https://tatami-inc.github.io/tatami/binary_2mock__helpers_8hpp.html',1,'(Global Namespace)']]],
-  ['myopicdenseextractor_92',['MyopicDenseExtractor',['https://tatami-inc.github.io/tatami/classtatami_1_1MyopicDenseExtractor.html',1,'tatami']]],
-  ['myopicsparseextractor_93',['MyopicSparseExtractor',['https://tatami-inc.github.io/tatami/classtatami_1_1MyopicSparseExtractor.html',1,'tatami']]]
+  ['metricsbuffers_90',['MetricsBuffers',['../structscran_1_1rna__quality__control_1_1MetricsBuffers.html',1,'scran::rna_quality_control']]],
+  ['metricsoptions_91',['MetricsOptions',['../structscran_1_1rna__quality__control_1_1MetricsOptions.html',1,'scran::rna_quality_control']]],
+  ['metricsresults_92',['MetricsResults',['../structscran_1_1rna__quality__control_1_1MetricsResults.html',1,'scran::rna_quality_control']]],
+  ['min_5fdiff_93',['min_diff',['../structscran_1_1choose__filter__thresholds_1_1Options.html#aefa36f1a53ef0ba54b0694e3c36c97d6',1,'scran::choose_filter_thresholds::Options']]],
+  ['mock_5fhelpers_2ehpp_94',['mock_helpers.hpp',['https://tatami-inc.github.io/tatami/binary_2mock__helpers_8hpp.html',1,'(Global Namespace)'],['https://tatami-inc.github.io/tatami/unary_2mock__helpers_8hpp.html',1,'(Global Namespace)']]],
+  ['myopicdenseextractor_95',['MyopicDenseExtractor',['https://tatami-inc.github.io/tatami/classtatami_1_1MyopicDenseExtractor.html',1,'tatami']]],
+  ['myopicsparseextractor_96',['MyopicSparseExtractor',['https://tatami-inc.github.io/tatami/classtatami_1_1MyopicSparseExtractor.html',1,'tatami']]]
 ];

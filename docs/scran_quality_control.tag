@@ -31,10 +31,101 @@
     <namespace>scran::per_cell_qc_metrics</namespace>
   </compound>
   <compound kind="file">
+    <name>rna_quality_control.hpp</name>
+    <path>scran/</path>
+    <filename>rna__quality__control_8hpp.html</filename>
+    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
+    <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
+    <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
+    <class kind="struct">scran::rna_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::rna_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::rna_quality_control::MetricsResults</class>
+    <class kind="struct">scran::rna_quality_control::FiltersOptions</class>
+    <class kind="class">scran::rna_quality_control::Filters</class>
+    <class kind="class">scran::rna_quality_control::BlockedFilters</class>
+    <namespace>scran</namespace>
+    <namespace>scran::rna_quality_control</namespace>
+  </compound>
+  <compound kind="file">
     <name>scran.hpp</name>
     <path>scran/</path>
     <filename>scran_8hpp.html</filename>
     <namespace>scran</namespace>
+  </compound>
+  <compound kind="class">
+    <name>scran::rna_quality_control::BlockedFilters</name>
+    <filename>classscran_1_1rna__quality__control_1_1BlockedFilters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>BlockedFilters</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a8cb9f3b425e8bc82adf24ccbf24fec47</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_sum</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a0e53c97f301448f5c8ca64a641aed74b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>abca2ae9ce6ef91f8f87ee411dceaf23c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; std::vector&lt; Float_ &gt; &gt; &amp;</type>
+      <name>get_subset_proportion</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a5b6b7457fa31a49f3d2894a21098dd2b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_sum</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>af1bf77f244d02e1335c1b87f27cd6360</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a9a6502aa1d2451c14051ca4c87005931</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; std::vector&lt; Float_ &gt; &gt; &amp;</type>
+      <name>get_subset_proportion</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a7e1010303176c36a122f88a77dbc4595</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a5a86beff22297abe4fa54976f1bbc0b9</anchor>
+      <arglist>(Index_ num, const MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a4870fd40911f71133f4f3289264aaaaf</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a58a34d66a4b2b1acdfe3989a28263bdd</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block) const</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>scran::per_cell_qc_metrics::Buffers</name>
@@ -83,6 +174,173 @@
       <name>subset_detected</name>
       <anchorfile>structscran_1_1per__cell__qc__metrics_1_1Buffers.html</anchorfile>
       <anchor>a72b0bd35fcc484bc122be556e0e0aeee</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>scran::rna_quality_control::Filters</name>
+    <filename>classscran_1_1rna__quality__control_1_1Filters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>Filters</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aa3adcab2d39bae88a0c22e1cf0728b24</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_sum</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a812babea7b69476ab116bbdf3791472f</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aa42537d9f4787c90dfa3ea84f5eecf09</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_subset_proportion</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a61f4eb22f81c8059a1104e19cd744d18</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_ &amp;</type>
+      <name>get_sum</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>ac4849304286a619c2f62aadf4bf15518</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_ &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a1c64a9a79a10747eaa1e3f28c38011a5</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_subset_proportion</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aad69475f6440fbbddf1ca2c08f7f0f17</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a5f15147ad61823b604e03fc25fcc7934</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a88ca11272e6020be6c9a19ae733077a8</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1rna__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a3a7f21353957e5b1e23148b389ef2a19</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics) const</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::rna_quality_control::FiltersOptions</name>
+    <filename>structscran_1_1rna__quality__control_1_1FiltersOptions.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>detected_num_mads</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a4da99582d858c72167ede987b2f45290</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>sum_num_mads</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a480b86353d40466e6a4dc133379f2998</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>subset_proportion_num_mads</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a163a0b9c2e9aebf5f685ed854ed9df5e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::rna_quality_control::MetricsBuffers</name>
+    <filename>structscran_1_1rna__quality__control_1_1MetricsBuffers.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <templarg>typename Proportion_</templarg>
+    <member kind="variable">
+      <type>Sum_ *</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>a4ed06dee15efb5cc2fa9c8956ea67423</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Detected_ *</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>aa1e96bff07ad427e8dcd261be8234baf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Proportion_ * &gt;</type>
+      <name>subset_proportion</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>a6efba9276b83dfa777da8a60aa2bd7b7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::rna_quality_control::MetricsOptions</name>
+    <filename>structscran_1_1rna__quality__control_1_1MetricsOptions.html</filename>
+    <member kind="variable">
+      <type>int</type>
+      <name>num_threads</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsOptions.html</anchorfile>
+      <anchor>ad6706ba6127762f0894342d70237b8fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::rna_quality_control::MetricsResults</name>
+    <filename>structscran_1_1rna__quality__control_1_1MetricsResults.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <templarg>typename Proportion_</templarg>
+    <member kind="variable">
+      <type>std::vector&lt; Sum_ &gt;</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a8970e6008c65965f0b852e7ae0f0e32e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Detected_ &gt;</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a5a2c8a5976c7f651e7bd3b6979c4cd5b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; std::vector&lt; Proportion_ &gt; &gt;</type>
+      <name>subset_proportion</name>
+      <anchorfile>structscran_1_1rna__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>ad8fc92dd666c24bd0d5b4cd66b16d745</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -317,6 +575,7 @@
     <namespace>scran::choose_filter_thresholds</namespace>
     <namespace>scran::find_median_mad</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
+    <namespace>scran::rna_quality_control</namespace>
   </compound>
   <compound kind="namespace">
     <name>scran::choose_filter_thresholds</name>
@@ -406,6 +665,58 @@
       <anchorfile>namespacescran_1_1per__cell__qc__metrics.html</anchorfile>
       <anchor>aee1bf82509fd11171f94679e7eeb096d</anchor>
       <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const Options &amp;options)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::rna_quality_control</name>
+    <filename>namespacescran_1_1rna__quality__control.html</filename>
+    <class kind="class">scran::rna_quality_control::BlockedFilters</class>
+    <class kind="class">scran::rna_quality_control::Filters</class>
+    <class kind="struct">scran::rna_quality_control::FiltersOptions</class>
+    <class kind="struct">scran::rna_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::rna_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::rna_quality_control::MetricsResults</class>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>af46c0710c8d28bd27cae80f79d482ae1</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;output, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>MetricsResults&lt; Sum_, Detected_, Proportion_ &gt;</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>ab533f23fa45aa86c93b4a32fc85be106</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>a5167e6827b051b450cd7f381f46835ca</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>a160dc977011c3cf639e39568d0cca6aa</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>acd74c87f5984c6d4eb50d3370373ff13</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1rna__quality__control.html</anchorfile>
+      <anchor>ab59c03c5dd92fede69594411f0fc7b93</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
     </member>
   </compound>
 </tagfile>

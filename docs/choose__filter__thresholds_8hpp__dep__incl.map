@@ -1,0 +1,5 @@
+<map id="scran/choose_filter_thresholds.hpp" name="scran/choose_filter_thresholds.hpp">
+<area shape="rect" id="Node000001" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="35,5,165,46"/>
+<area shape="rect" id="Node000002" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="5,94,195,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,62,103,93,97,93,97,62"/>
+</map>
