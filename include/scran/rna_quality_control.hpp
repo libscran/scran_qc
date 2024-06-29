@@ -1,14 +1,16 @@
-#ifndef SCRAN_PER_CELL_RNA_QC_METRICS_HPP
-#define SCRAN_PER_CELL_RNA_QC_METRICS_HPP
-
-#include "find_median_mad.hpp"
+#ifndef SCRAN_RNA_QUALITY_CONTROL_HPP
+#define SCRAN_RNA_QUALITY_CONTROL_HPP
 
 #include <vector>
 #include <limits>
+#include <algorithm>
+#include <type_traits>
 
-#include "tatami/base/Matrix.hpp"
-#include "PerCellQcMetrics.hpp"
-#include "utils.hpp"
+#include "tatami/tatami.hpp"
+
+#include "find_median_mad.hpp"
+#include "per_cell_qc_metrics.hpp"
+#include "choose_filter_thresholds.hpp"
 
 /**
  * @file rna_quality_control.hpp
@@ -46,24 +48,6 @@ namespace rna_quality_control {
  */
 struct MetricsOptions {
     /**
-     * Whether to compute the sum of expression values for each cell.
-     * This option only affects the `compute_metrics()` overload that returns a `MetricsResults` object.
-     */
-    bool compute_sum = true;
-
-    /**
-     * Whether to compute the number of detected features for each cell.
-     * This option only affects the `compute_metrics()` overload that returns a `MetricsResults` object.
-     */
-    bool compute_detected = true;
-
-    /**
-     * Whether to compute the proportion of expression in each feature subset.
-     * This option only affects the `compute_metrics()` overload that returns a `MetricsResults` object.
-     */
-    bool compute_subset_proportion = true;
-
-    /**
      * Number of threads to use.
      */
     int num_threads = 1;
@@ -79,21 +63,20 @@ template<typename Sum_ = double, typename Detected_ = int, typename Proportion_ 
 struct MetricsBuffers {
     /**
      * Pointer to an array of length equal to the number of cells, see `MetricsResults::sum`.
-     * This can be set to NULL to omit the calculation of the sums.
+     * This should not be NULL when calling `compute_metrics()`.
      */
     Sum_* sum = NULL;
 
     /**
      * Pointer to an array of length equal to the number of cells, see `MetricsResults::detected`.
-     * This can be set to NULL to omit the calculation of the number of detected cells.
+     * This should not be NULL when calling `compute_metrics()`.
      */
     Detected_* detected = NULL;
 
     /**
      * Vector of pointers of length equal to the number of feature subsets.
      * Each entry should point to an array of length equal to the number of cells, see `MetricsResults::subset_proportion`.
-     * This can be left empty to omit calculation of all subset proportions,
-     * or individual pointers may be set to NULL to omit calculation of the corresponding subset.
+     * This should have length equal to the `subsets` used in `compute_metrics()` and all pointers should be non-NULL.
      */
     std::vector<Proportion_*> subset_proportion;
 };
@@ -119,21 +102,14 @@ void compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vecto
     auto NC = mat->ncol();
     size_t nsubsets = subsets.size();
 
-    per_cell_qc_metrics::Buffers<Sum_, Detected_> tmp;
+    per_cell_qc_metrics::Buffers<Sum_, Detected_, Value_, Index_> tmp;
     tmp.sum = output.sum;
     tmp.detected = output.detected;
 
-    std::vector<Sum_> placeholder_sum;
     constexpr bool same_type = std::is_same<Sum_, Proportion_>::value;
     typename std::conditional<same_type, bool, std::vector<std::vector<Sum_> > >::type placeholder_subset;
 
     if (output.subset_proportion.size()) {
-        // Make sure that sums are computed for the proportion calculations.
-        if (!tmp.total) {
-            placeholder_sum.resize(NC);
-            tmp.total = placeholder.data();            
-        }
-
         // Providing space for the subset sums if they're not the same type.
         if constexpr(same_type) {
             tmp.subset_sum = output.subset_proportion;
@@ -141,11 +117,9 @@ void compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vecto
             placeholder_subset.resize(nsubsets);
             tmp.subset_sum.resize(nsubsets);
             for (size_t s = 0; s < nsubsets; ++s) {
-                if (output.subset_proportion[s]) {
-                    auto& b = placeholder_subset[s];
-                    b.resize(NC);
-                    tmp.subset_sum[s] = b.data();
-                }
+                auto& b = placeholder_subset[s];
+                b.resize(NC);
+                tmp.subset_sum[s] = b.data();
             }
         }
     }
@@ -159,7 +133,7 @@ void compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vecto
         if (dest) {
             auto src = tmp.subset_sum[s];
             for (Index_ c = 0; c < NC; ++c) {
-                dest[c] = static_cast<Proportion_>(src[c]) / static_cast<Proportion_>(tmp.total[c]);
+                dest[c] = static_cast<Proportion_>(src[c]) / static_cast<Proportion_>(tmp.sum[c]);
             }
         }
     }
@@ -180,18 +154,18 @@ struct MetricsResults {
     /**
      * @cond
      */
-    Results() = default;
+    MetricsResults() = default;
     /**
      * @endcond
      */
 
     /**
-     * Sum of counts for each cell.
+     * Vector of length equal to the number of cells in the dataset, containing the sum of counts for each cell.
      */
     std::vector<Sum_> sum;
 
     /**
-     * Number of detected features in each cell.
+     * Vector of length equal to the number of cells in the dataset, containing the number of detected features in each cell.
      */
     std::vector<Detected_> detected;
 
@@ -219,29 +193,24 @@ struct MetricsResults {
  * @return A `PerCellRnaQcMetrics::Results` object containing the QC metrics.
  * Subset proportions are returned depending on the `subsets`.
  */
-template<typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Value_ = double, typename Index_ = int, typename Subset = const uint8_t*>
+template<typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Value_ = double, typename Index_ = int, typename Subset_ = const uint8_t*>
 MetricsResults<Sum_, Detected_, Proportion_> compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, const MetricsOptions& options) {
     auto NC = mat->ncol();
     MetricsBuffers<Sum_, Detected_, Proportion_> x;
     MetricsResults<Sum_, Detected_, Proportion_> output;
 
-    if (options.compute_sum) {
-        output.sum.resize(NC);
-        x.sum = output.sum.data();
-    }
+    output.sum.resize(NC);
+    x.sum = output.sum.data();
 
-    if (options.compute_detected) {
-        output.detected.resize(NC);
-        x.detected = output.detected.data();
-    }
+    output.detected.resize(NC);
+    x.detected = output.detected.data();
 
-    if (options.compute_subset_proportion) {
-        size_t nsubsets = subsets.size();
-        x.subset_proportion.resize(nsubsets);
-        for (size_t s = 0; s < nsubsets; ++s) {
-            output.subset_proportion[s].resize(NC);
-            x.subset_proportion[s] = output.subset_proportion[s].data();
-        }
+    size_t nsubsets = subsets.size();
+    x.subset_proportion.resize(nsubsets);
+    output.subset_proportion.resize(nsubsets);
+    for (size_t s = 0; s < nsubsets; ++s) {
+        output.subset_proportion[s].resize(NC);
+        x.subset_proportion[s] = output.subset_proportion[s].data();
     }
 
     compute_metrics(mat, subsets, x, options);
@@ -249,7 +218,7 @@ MetricsResults<Sum_, Detected_, Proportion_> compute_metrics(const tatami::Matri
 }
 
 /**
- * @brief Options for `compute_filters()`.
+ * @brief Options for `Filters()`.
  */
 struct FiltersOptions {
     /**
@@ -276,8 +245,8 @@ struct FiltersOptions {
  */
 namespace internal {
 
-template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
-void populate(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const Options& options) {
+template<typename Float_, class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
+void populate(Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const FiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
@@ -287,113 +256,103 @@ void populate(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_
         }
     }();
 
-    if (res.sum) {
+    {
         choose_filter_thresholds::Options opts;
-        opts.num_mads = sum_num_mads;
+        opts.num_mads = options.sum_num_mads;
         opts.log = true;
         opts.upper = false;
-        output.my_sum = [&]() {
+        host.get_sum() = [&]() {
             if constexpr(unblocked) {
                 return choose_filter_thresholds::compute(n, res.sum, buffer.data(), opts).lower;
             } else {
-                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.sum, block, &buffer, opts))
+                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.sum, block, &buffer, opts));
             }
         }();
     }
 
-    if (results.detected) {
+    {
         choose_filter_thresholds::Options opts;
-        opts.num_mads = detected_num_mads;
+        opts.num_mads = options.detected_num_mads;
         opts.log = true;
         opts.upper = false;
-        output.my_detected = [&]() {
+        host.get_detected() = [&]() {
             if constexpr(unblocked) {
                 return choose_filter_thresholds::compute(n, res.detected, buffer.data(), opts).lower;
             } else {
-                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.detected, block, &buffer, opts))
+                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.detected, block, &buffer, opts));
             }
         }();
     }
 
-    size_t nsubsets = buffer.subset_proportion.size();
-    output.my_subset_proportion.resize(nsubset);
+    size_t nsubsets = res.subset_proportion.size();
+    host.get_subset_proportion().resize(nsubsets);
     for (size_t s = 0; s < nsubsets; ++s) {
-        auto sub = buffer.subset_proportion[s];
-        if (sub) {
-            choose_filter_thresholds::Options opts;
-            opts.num_mads = subset_proportion_num_mads;
-            opts.lower = false;
-            output.my_subset_proportion[s] = [&]() {
-                if constexpr(unblocked) {
-                    return choose_filter_thresholds::compute(n, sub, buffer.data(), mopt).upper;
-                } else {
-                    return choose_filter_thresholds::internal::strip<false>(choose_filter_thresholds::compute_blocked(n, sub, block, &buffer, opts));
-                }
-            }();
-        }
+        auto sub = res.subset_proportion[s];
+        choose_filter_thresholds::Options opts;
+        opts.num_mads = options.subset_proportion_num_mads;
+        opts.lower = false;
+        host.get_subset_proportion()[s] = [&]() {
+            if constexpr(unblocked) {
+                return choose_filter_thresholds::compute(n, sub, buffer.data(), opts).upper;
+            } else {
+                return choose_filter_thresholds::internal::strip<false>(choose_filter_thresholds::compute_blocked(n, sub, block, &buffer, opts));
+            }
+        }();
     }
 }
 
 template<class Host_, typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
-void filter(Host_& host, Index_ n, MetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, Output_* output) {
+void filter(const Host_& host, Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, BlockSource_ block, Output_* output) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
-    std::fill_n(output, num, 1);
+    std::fill_n(output, n, 1);
 
-    if (metrics.sum) {
-        for (Index_ i = 0; i < n; ++i) {
-            auto thresh = [&]() {
-                if constexpr(unblocked) {
-                    return my_sum;
-                } else {
-                    return my_sum[block[i]];
-                }
-            }();
-            output[i] = output[i] && (metrics.sum[i] >= thresh);
-        }
-    }
-
-    if (metrics.detected) {
-        for (Index_ i = 0; i < n; ++i) {
-            auto thresh = [&]() {
-                if constexpr(unblocked) {
-                    return my_detected;
-                } else {
-                    return my_detected[block[i]];
-                }
-            }();
-            output[i] = output[i] && (metrics.detected[i] >= thresh);
-        }
-    }
-
-    size_t nsubsets = metrics.subset_proportions.size();
-    if (nsubsets) {
-        for (size_t s = 0; s < nsubsets; ++s) {
-            auto sub = metrics.subset_proportions[s];
-            if (sub) {
-                const auto& sthresh = my_subset_proportions[s];
-                for (Index_ i = 0; i < n; ++i) {
-                    auto thresh = [&]() {
-                        if constexpr(unblocked) {
-                            return sthresh;
-                        } else {
-                            return sthresh[block[i]];
-                        }
-                    }();
-                    output[i] = output[i] && (metrics.subset_proportions[i] <= thresh);
-                }
+    for (Index_ i = 0; i < n; ++i) {
+        auto thresh = [&]() {
+            if constexpr(unblocked) {
+                return host.get_sum();
+            } else {
+                return host.get_sum()[block[i]];
             }
+        }();
+        output[i] = output[i] && (metrics.sum[i] >= thresh);
+    }
+
+    for (Index_ i = 0; i < n; ++i) {
+        auto thresh = [&]() {
+            if constexpr(unblocked) {
+                return host.get_detected();
+            } else {
+                return host.get_detected()[block[i]];
+            }
+        }();
+        output[i] = output[i] && (metrics.detected[i] >= thresh);
+    }
+
+    size_t nsubsets = metrics.subset_proportion.size();
+    for (size_t s = 0; s < nsubsets; ++s) {
+        auto sub = metrics.subset_proportion[s];
+        const auto& sthresh = host.get_subset_proportion()[s];
+        for (Index_ i = 0; i < n; ++i) {
+            auto thresh = [&]() {
+                if constexpr(unblocked) {
+                    return sthresh;
+                } else {
+                    return sthresh[block[i]];
+                }
+            }();
+            output[i] = output[i] && (sub[i] <= thresh);
         }
     }
 }
 
-template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_, typename Output_>
-MetricsBuffer<const Sum_, const Detected_, const Proportion_> to_buffer(const MetricsResults<Sum_, Detected_, Proportion_>& metrics) {
-    MetricsBuffer<const Sum_, const Detected_, const Proportion_> buffer;
-    buffer.sum = (metrics.sum.empty() ? NULL : metrics.sum.data());
-    buffer.detected = (metrics.detected.empty() ? NULL : metrics.detected.data());
+template<typename Sum_, typename Detected_, typename Proportion_>
+MetricsBuffers<const Sum_, const Detected_, const Proportion_> to_buffer(const MetricsResults<Sum_, Detected_, Proportion_>& metrics) {
+    MetricsBuffers<const Sum_, const Detected_, const Proportion_> buffer;
+    buffer.sum = metrics.sum.data();
+    buffer.detected = metrics.detected.data();
     buffer.subset_proportion.reserve(metrics.subset_proportion.size());
     for (const auto& s : metrics.subset_proportion) {
-        buffer.subset_proportion.push_back(s.empty() ? NULL : s.data());
+        buffer.subset_proportion.push_back(s.data());
     }
     return buffer;
 }
@@ -407,21 +366,21 @@ MetricsBuffer<const Sum_, const Detected_, const Proportion_> to_buffer(const Me
  * @brief Thresholds to define outliers on each metric.
  */
 template<typename Float_ = double>
-class FilterThresholds {
+class Filters {
 public:
     /**
      * Default constructor.
      */
-    FilterThresholds() = default;
+    Filters() = default;
 
     template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
-    FilterThresholds(Index_ n, const MetricsBuffer<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) {
-        internal::populate(*this, n, results, false, options);
+    Filters(Index_ n, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
+        internal::populate<Float_>(*this, n, metrics, false, options);
     }
 
-    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_>
-    FilterThresholds(Index_ n, const MetricsResults<Sum_, Detected_, Proportion_>& results, const FiltersOptions& options) :
-        FilterThresholds(n, internal::to_buffer(results), options) {}
+    template<typename Sum_, typename Detected_, typename Proportion_>
+    Filters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) :
+        Filters(metrics.sum.size(), internal::to_buffer(metrics), options) {}
 
 public:
     /**
@@ -432,16 +391,39 @@ public:
     }
 
     /**
-     * @return Thresholds to apply to the number of detected genes.
+     * @return Lower threshold to apply to the number of detected genes.
      */
     Float_ get_detected() const {
         return my_detected;
     }
 
     /**
-     * @return Thresholds to apply to the subset proportions.
+     * @return Vector of length equal to the number of feature subsets,
+     * containing the upper threshold to apply to each subset proportion.
      */
     const std::vector<Float_>& get_subset_proportion() const {
+        return my_subset_proportion;
+    }
+
+    /**
+     * @return Lower threshold to apply to the sums.
+     */
+    Float_& get_sum() {
+        return my_sum;
+    }
+
+    /**
+     * @return Lower threshold to apply to the number of detected genes.
+     */
+    Float_& get_detected() {
+        return my_detected;
+    }
+
+    /**
+     * @return Vector of length equal to the number of feature subsets,
+     * containing the upper threshold to apply to each subset proportion.
+     */
+    std::vector<Float_>& get_subset_proportion() {
         return my_subset_proportion;
     }
 
@@ -464,9 +446,9 @@ public:
      * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
      * @param overwrite Whether to overwrite existing false-y entries in `output`.
      */
-    template<typename Index_, typename Value_, typename Block_, typename Output_>
-    void filter(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
-        internal::filter(num, metrics, false, output);
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Output_>
+    void filter(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
+        internal::filter(*this, num, metrics, false, output);
     }
 
     /**
@@ -481,15 +463,15 @@ public:
      *
      * @return Vector of length `n`, specifying whether a cell is of high quality.
      */
-    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Output_>
-    void filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
-        return filter(n, internal::to_buffer(metrics), output);
+    template<typename Sum_, typename Detected_, typename Proportion_, typename Output_>
+    void filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, Output_* output) const {
+        return filter(metrics.sum.size(), internal::to_buffer(metrics), output);
     }
 
-    template<typename Output_, typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_>
-    std::vector<Output_> filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics) const {
-        std::vector<Output_> output(num);
-        filter(num, metrics, output.data());
+    template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
+    std::vector<Output_> filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics) const {
+        std::vector<Output_> output(metrics.sum.size());
+        filter(metrics, output.data());
         return output;
     }
 };
@@ -498,47 +480,76 @@ public:
  * @brief Thresholds to define outliers on each metric.
  */
 template<typename Float_ = double>
-class BlockedFilterThresholds {
+class BlockedFilters {
 public:
     /**
      * Default constructor.
      */
-    BlockedFilterThresholds() = default;
+    BlockedFilters() = default;
 
     template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_>
-    BlockedFilterThresholds(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& results, const Block_* block, const FiltersOptions& options) {
-        internal::populate(*this, num, results, block, options);
+    BlockedFilters(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
+        internal::populate<Float_>(*this, num, metrics, block, options);
     }
 
-    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_>
-    BlockedFilterThresholds(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& results, const Block_* block, const FiltersOptions& options) :
-        FilterThresholds(num, internal::to_buffer(results), block, options) {}
+    template<typename Sum_, typename Detected_, typename Proportion_, typename Block_>
+    BlockedFilters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) :
+        BlockedFilters(metrics.sum.size(), internal::to_buffer(metrics), block, options) {}
 
 public:
     /**
-     * @return Lower threshold to apply to the sums.
+     * @return Vector of length equal to the number of blocks,
+     * containing the lower threshold on the sums in each block.
      */
-    const std::vector<Float_> get_sum() const {
+    const std::vector<Float_>& get_sum() const {
         return my_sum;
     }
 
     /**
-     * @return Thresholds to apply to the number of detected genes.
+     * @return Vector of length equal to the number of blocks,
+     * containing the lower threshold on the number of detected genes in each block.
      */
-    const std::vector<Float_> get_detected() const {
+    const std::vector<Float_>& get_detected() const {
         return my_detected;
     }
 
     /**
-     * @return Thresholds to apply to the subset proportions.
+     * @return Vector of length equal to the number of blocks.
+     * Each entry is a vector of length equal to the number of feature subsets,
+     * containing the upper threshold to apply to the each subset proportion.
      */
     const std::vector<std::vector<Float_> >& get_subset_proportion() const {
         return my_subset_proportion;
     }
 
+    /**
+     * @return Vector of length equal to the number of blocks,
+     * containing the lower threshold on the sums in each block.
+     */
+    std::vector<Float_>& get_sum() {
+        return my_sum;
+    }
+
+    /**
+     * @return Vector of length equal to the number of blocks,
+     * containing the lower threshold on the number of detected genes in each block.
+     */
+    std::vector<Float_>& get_detected() {
+        return my_detected;
+    }
+
+    /**
+     * @return Vector of length equal to the number of feature subsets.
+     * Each entry is a vector of length equal to the number of blocks,
+     * containing the upper threshold to apply to the subset proportion for that block.
+     */
+    std::vector<std::vector<Float_> >& get_subset_proportion() {
+        return my_subset_proportion;
+    }
+
 private:
-    std::vector<Float_> my_sum = 0;
-    std::vector<Float_> my_detected = 0;
+    std::vector<Float_> my_sum;
+    std::vector<Float_> my_detected;
     std::vector<std::vector<Float_> > my_subset_proportion;
 
 public:
@@ -555,9 +566,9 @@ public:
      * @param[out] output Pointer to an array of length `n`, to store the high-quality calls (see the other `filter()` overload).
      * @param overwrite Whether to overwrite existing false-y entries in `output`.
      */
-    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
-    void filter(Index_ num, const MetricsBuffer<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
-        internal::filter(num, metrics, block, output);
+    template<typename Index_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
+    void filter(Index_ num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
+        internal::filter(*this, num, metrics, block, output);
     }
 
     /**
@@ -572,15 +583,15 @@ public:
      *
      * @return Vector of length `n`, specifying whether a cell is of high quality.
      */
-    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
-    void filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
-        return filter(num, internal::to_buffer(metrics), block, output);
+    template<typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
+    void filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, Output_* output) const {
+        return filter(metrics.sum.size(), internal::to_buffer(metrics), block, output);
     }
 
-    template<typename Index_, typename Value_, typename Sum_, typename Detected_, typename Proportion_, typename Block_, typename Output_>
-    std::vector<Output_> filter(Index_ num, const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block) const {
-        std::vector<Output_> output(num);
-        filter(num, metrics, block, output.data());
+    template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Block_ = int, typename Proportion_ = double>
+    std::vector<Output_> filter(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block) const {
+        std::vector<Output_> output(metrics.sum.size());
+        filter(metrics, block, output.data());
         return output;
     }
 };

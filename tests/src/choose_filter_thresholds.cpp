@@ -128,24 +128,10 @@ TEST(ChooseFilterThresholds, FromMetrics) {
 
     std::vector<int> imetrics { 0, 1, 2, 3, 4, 5 };
     std::vector<int> block { 0, 0, 0, 1, 1, 1 };
-    auto bthresholds = scran::choose_filter_thresholds::compute_blocked<int, int, int, double>(imetrics.size(), block.data(), imetrics.data(), NULL, opt);
+    auto bthresholds = scran::choose_filter_thresholds::compute_blocked<int, int, int, double>(imetrics.size(), imetrics.data(), block.data(), NULL, opt);
     ASSERT_EQ(bthresholds.size(), 2);
     EXPECT_DOUBLE_EQ(bthresholds[0].lower, 1 - 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[0].upper, 1 + 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[1].lower, 4 - 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[1].upper, 4 + 1.4826 * 3);
 }
-
-TEST(ChooseFilterThresholds, Constructors) {
-    scran::choose_filter_thresholds::Thresholds<double> def;
-    def = scran::choose_filter_thresholds::Thresholds<double>(1, 2);
-    EXPECT_EQ(def.get_lower(), 1);
-    EXPECT_EQ(def.get_upper(), 2);
-
-    scran::choose_filter_thresholds::BlockThresholds<double> bdef;
-    bdef = scran::choose_filter_thresholds::BlockThresholds<double>({ def });
-    EXPECT_EQ(bdef.get_thresholds().size(), 1);
-    EXPECT_EQ(bdef.get_thresholds().front().get_lower(), 1);
-    EXPECT_EQ(bdef.get_thresholds().front().get_upper(), 2);
-}
-

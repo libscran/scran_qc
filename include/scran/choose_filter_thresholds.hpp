@@ -240,7 +240,7 @@ template<typename Index_, typename Value_, typename Block_, typename Float_>
 std::vector<Results<Float_> > compute_blocked(Index_ n, const Value_* metrics, const Block_* block, find_median_mad::Workspace<Float_, Index_>* work, const Options& options) {
     find_median_mad::Options fopt;
     fopt.log = options.log;
-    auto mms = find_median_mad::compute_blocked(n, metrics, block, work, fopt);
+    auto mms = find_median_mad::compute_blocked(n, block, metrics, work, fopt);
     return compute_blocked(mms, options);
 }
 
