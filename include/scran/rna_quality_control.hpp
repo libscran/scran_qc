@@ -374,30 +374,6 @@ public:
      */
     Filters() = default;
 
-    /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @param num Number of cells.
-     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
-     * @param options Further options for filtering.
-     */
-    template<typename Sum_, typename Detected_, typename Proportion_>
-    Filters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
-        internal::populate<Float_>(*this, num, metrics, false, options);
-    }
-
-    /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @param metrics RNA-based QC metrics from `compute_metrics()`.
-     * @param options Further options for filtering.
-     */
-    template<typename Sum_, typename Detected_, typename Proportion_>
-    Filters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) :
-        Filters(metrics.sum.size(), internal::to_buffer(metrics), options) {}
-
 public:
     /**
      * @return Lower threshold to apply to the sums.
@@ -495,6 +471,35 @@ public:
 };
 
 /**
+ * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Sum_ Numeric type to store the summed expression.
+ * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Proportion_ Floating-point type to store the proportions.
+ * @param num Number of cells.
+ * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+ * @param options Further options for filtering.
+ */
+template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
+Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
+    Filters<Float_> output;
+    internal::populate<Float_>(output, num, metrics, false, options);
+    return output;
+}
+
+/**
+ * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Sum_ Numeric type to store the summed expression.
+ * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Proportion_ Floating-point type to store the proportions.
+ * @param metrics RNA-based QC metrics from `compute_metrics()`.
+ * @param options Further options for filtering.
+ */
+template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
+Filters<Float_> compute_filters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
+    return compute_filters(metrics.sum.size(), internal::to_buffer(metrics), options);
+}
+
+/**
  * @brief Filter for high-quality cells using RNA-based metrics with blocking.
  * @tparam Float_ Floating-point type for filter thresholds.
  */
@@ -505,36 +510,6 @@ public:
      * Default constructor.
      */
     BlockedFilters() = default;
-
-    /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @tparam Block_ Integer type for the block assignments.
-     * @param num Number of cells.
-     * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
-     * @param[in] block Pointer to an array of length `num` containing block identifiers.
-     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
-     * @param options Further options for filtering.
-     */
-    template<typename Sum_, typename Detected_, typename Proportion_, typename Block_>
-    BlockedFilters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
-        internal::populate<Float_>(*this, num, metrics, block, options);
-    }
-
-    /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @tparam Block_ Integer type for the block assignments.
-     * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
-     * @param[in] block Pointer to an array of length `num` containing block identifiers.
-     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
-     * @param options Further options for filtering.
-     */
-    template<typename Sum_, typename Detected_, typename Proportion_, typename Block_>
-    BlockedFilters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) :
-        BlockedFilters(metrics.sum.size(), internal::to_buffer(metrics), block, options) {}
 
 public:
     /**
@@ -646,6 +621,39 @@ public:
         return output;
     }
 };
+
+/**
+ * @tparam Sum_ Numeric type to store the summed expression.
+ * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Block_ Integer type for the block assignments.
+ * @param num Number of cells.
+ * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+ * @param[in] block Pointer to an array of length `num` containing block identifiers.
+ * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param options Further options for filtering.
+ */
+template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
+BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
+    BlockedFilters<Float_> output;
+    internal::populate<Float_>(output, num, metrics, block, options);
+    return output;
+}
+
+/**
+ * @tparam Sum_ Numeric type to store the summed expression.
+ * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Block_ Integer type for the block assignments.
+ * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+ * @param[in] block Pointer to an array of length `num` containing block identifiers.
+ * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param options Further options for filtering.
+ */
+template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
+BlockedFilters<Float_> compute_filters_blocked(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
+    return compute_filters_blocked(metrics.sum.size(), internal::to_buffer(metrics), block, options);
+}
 
 }
 

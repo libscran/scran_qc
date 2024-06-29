@@ -79,7 +79,7 @@ TEST(RnaQualityControlFilters, Basic) {
     results.subset_proportion.push_back({ 0.1, 0.2, 0.05, 1, 0.1, 0.15 });
 
     scran::rna_quality_control::FiltersOptions opt;
-    scran::rna_quality_control::Filters<double> thresholds(results, opt);
+    auto thresholds = scran::rna_quality_control::compute_filters(results, opt);
     EXPECT_TRUE(thresholds.get_sum() > 0);
     EXPECT_TRUE(thresholds.get_detected() > 0);
     EXPECT_TRUE(thresholds.get_subset_proportion()[0] < 1);
@@ -99,10 +99,10 @@ TEST(RnaQualityControlFilters, Blocked) {
         results.subset_proportion.push_back({ 0.1, 0.2, 0.05, 1, 0.1, 0.15 });
 
         scran::rna_quality_control::FiltersOptions opt;
-        scran::rna_quality_control::Filters<double> thresholds(results, opt);
+        auto thresholds = scran::rna_quality_control::compute_filters(results, opt);
 
         std::vector<int> block(6);
-        scran::rna_quality_control::BlockedFilters<double> bthresholds(results, block.data(), opt);
+        auto bthresholds = scran::rna_quality_control::compute_filters_blocked(results, block.data(), opt);
         EXPECT_EQ(thresholds.get_sum(), bthresholds.get_sum()[0]);
         EXPECT_EQ(thresholds.get_detected(), bthresholds.get_detected()[0]);
         EXPECT_EQ(thresholds.get_subset_proportion()[0], bthresholds.get_subset_proportion()[0][0]);
@@ -122,7 +122,7 @@ TEST(RnaQualityControlFilters, Blocked) {
 
         scran::rna_quality_control::FiltersOptions opt;
         std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-        scran::rna_quality_control::BlockedFilters<double> bthresholds(results, block.data(), opt);
+        auto bthresholds = scran::rna_quality_control::compute_filters_blocked(results, block.data(), opt);
 
         EXPECT_GT(bthresholds.get_sum()[0], 100);
         EXPECT_GT(bthresholds.get_detected()[0], 100);
