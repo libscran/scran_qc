@@ -1,5 +1,7 @@
 <map id="scran/per_cell_qc_metrics.hpp" name="scran/per_cell_qc_metrics.hpp">
-<area shape="rect" id="Node000001" title="Compute per&#45;cell quality control metrics." alt="" coords="5,5,203,31"/>
-<area shape="rect" id="Node000002" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="9,79,199,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,46,107,79,101,79,101,46"/>
+<area shape="rect" id="Node000001" title="Compute per&#45;cell quality control metrics." alt="" coords="108,5,305,31"/>
+<area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,79,195,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,42,120,81,117,76,174,38"/>
+<area shape="rect" id="Node000003" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="219,79,408,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,38,297,76,294,81,236,42"/>
 </map>

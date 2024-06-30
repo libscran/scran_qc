@@ -1,6 +1,22 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="file">
+    <name>adt_quality_control.hpp</name>
+    <path>scran/</path>
+    <filename>adt__quality__control_8hpp.html</filename>
+    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
+    <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
+    <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
+    <class kind="struct">scran::adt_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::adt_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::adt_quality_control::MetricsResults</class>
+    <class kind="struct">scran::adt_quality_control::FiltersOptions</class>
+    <class kind="class">scran::adt_quality_control::Filters</class>
+    <class kind="class">scran::adt_quality_control::BlockedFilters</class>
+    <namespace>scran</namespace>
+    <namespace>scran::adt_quality_control</namespace>
+  </compound>
+  <compound kind="file">
     <name>choose_filter_thresholds.hpp</name>
     <path>scran/</path>
     <filename>choose__filter__thresholds_8hpp.html</filename>
@@ -51,6 +67,67 @@
     <path>scran/</path>
     <filename>scran_8hpp.html</filename>
     <namespace>scran</namespace>
+  </compound>
+  <compound kind="class">
+    <name>scran::adt_quality_control::BlockedFilters</name>
+    <filename>classscran_1_1adt__quality__control_1_1BlockedFilters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>BlockedFilters</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a5eac681c579923c82b4cabf71bab6820</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a3def6eab5bf5adc4ec76ec731b7a513b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; std::vector&lt; Float_ &gt; &gt; &amp;</type>
+      <name>get_subset_sum</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a5b90e3a0d4bec366964dce033d62ca08</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>aab5bbaa3fa932811a042d086e7e55348</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; std::vector&lt; Float_ &gt; &gt; &amp;</type>
+      <name>get_subset_sum</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a73207969697a5295f0a2cbe21fdd5234</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>abbf03b12aead92a7a4a58d25a32e24dc</anchor>
+      <arglist>(Index_ num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>ac7a2de62de2b1d5f2a527abed3e800df</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a5853624608db126e2d99060cad4a667d</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block) const</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>scran::rna_quality_control::BlockedFilters</name>
@@ -178,6 +255,67 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>scran::adt_quality_control::Filters</name>
+    <filename>classscran_1_1adt__quality__control_1_1Filters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>Filters</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a0143dfc5db87663b47bd1c4ff1eaa127</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>ae006769b74ba85b4c70cbe7e4c12f3cb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_subset_sum</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a90e26131d503e5682d03cac8714e0024</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_ &amp;</type>
+      <name>get_detected</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aae164bfead594118c99b4f6e097e8dd8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_subset_sum</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aa80cc033cfb028b56cb113addd96ede9</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aca1a528ec6925618e03e350019bf8707</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>ab6f0b5bae60a75ac9745ea774bdf087a</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1adt__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a596712451b6f823d80c849805db519af</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>scran::rna_quality_control::Filters</name>
     <filename>classscran_1_1rna__quality__control_1_1Filters.html</filename>
     <templarg>typename Float_</templarg>
@@ -253,6 +391,31 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::adt_quality_control::FiltersOptions</name>
+    <filename>structscran_1_1adt__quality__control_1_1FiltersOptions.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>detected_num_mads</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a8b5a6d3eb5c03f1570c7cef066c3fe69</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>detected_min_drop</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a66c9d36cabca100bf03f87b8800ec896</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>subset_sum_num_mads</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a8ee277de412baee7b8015fb9a59a1e68</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::rna_quality_control::FiltersOptions</name>
     <filename>structscran_1_1rna__quality__control_1_1FiltersOptions.html</filename>
     <member kind="variable">
@@ -274,6 +437,33 @@
       <name>subset_proportion_num_mads</name>
       <anchorfile>structscran_1_1rna__quality__control_1_1FiltersOptions.html</anchorfile>
       <anchor>a163a0b9c2e9aebf5f685ed854ed9df5e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::adt_quality_control::MetricsBuffers</name>
+    <filename>structscran_1_1adt__quality__control_1_1MetricsBuffers.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <member kind="variable">
+      <type>Sum_ *</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>a57ccfc1f47a4443767fec76384a6f406</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Detected_ *</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>ab4cf91581e146da2be54139b6ee90953</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Sum_ * &gt;</type>
+      <name>subset_sum</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>a541c0a789650dc135e5c759041c4a1c3</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -306,6 +496,17 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::adt_quality_control::MetricsOptions</name>
+    <filename>structscran_1_1adt__quality__control_1_1MetricsOptions.html</filename>
+    <member kind="variable">
+      <type>int</type>
+      <name>num_threads</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsOptions.html</anchorfile>
+      <anchor>a7fab45d26198c9c7c2186a7d6f876af3</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::rna_quality_control::MetricsOptions</name>
     <filename>structscran_1_1rna__quality__control_1_1MetricsOptions.html</filename>
     <member kind="variable">
@@ -313,6 +514,33 @@
       <name>num_threads</name>
       <anchorfile>structscran_1_1rna__quality__control_1_1MetricsOptions.html</anchorfile>
       <anchor>ad6706ba6127762f0894342d70237b8fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::adt_quality_control::MetricsResults</name>
+    <filename>structscran_1_1adt__quality__control_1_1MetricsResults.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <member kind="variable">
+      <type>std::vector&lt; Sum_ &gt;</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a0f9d001a5c1e2e7908b1e62ec87acce8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Detected_ &gt;</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a8802d821de49cd05090e1b98423fb4da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; std::vector&lt; Sum_ &gt; &gt;</type>
+      <name>subset_sum</name>
+      <anchorfile>structscran_1_1adt__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a786ea3b7e1bc317d031e6f29b74ff7c8</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -572,10 +800,63 @@
   <compound kind="namespace">
     <name>scran</name>
     <filename>namespacescran.html</filename>
+    <namespace>scran::adt_quality_control</namespace>
     <namespace>scran::choose_filter_thresholds</namespace>
     <namespace>scran::find_median_mad</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
     <namespace>scran::rna_quality_control</namespace>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::adt_quality_control</name>
+    <filename>namespacescran_1_1adt__quality__control.html</filename>
+    <class kind="class">scran::adt_quality_control::BlockedFilters</class>
+    <class kind="class">scran::adt_quality_control::Filters</class>
+    <class kind="struct">scran::adt_quality_control::FiltersOptions</class>
+    <class kind="struct">scran::adt_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::adt_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::adt_quality_control::MetricsResults</class>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>a16d8e4add23d4a08431fde30264ea869</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;output, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>MetricsResults&lt; Sum_, Detected_ &gt;</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>a217e0138960775b917c05731ef18d246</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>ac2ed5bbd683cbf8731f6d2557924994d</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>a2934150ffb0ed08bfda09e95b48196bb</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>a61e264eff3efa03a66b8ee39df5d510c</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1adt__quality__control.html</anchorfile>
+      <anchor>aded7e02913640f70dd8e8fb25959f72d</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>scran::choose_filter_thresholds</name>

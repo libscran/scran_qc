@@ -1,0 +1,38 @@
+<map id="scran/adt_quality_control.hpp" name="scran/adt_quality_control.hpp">
+<area shape="rect" id="Node000001" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="340,5,529,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="193,234,250,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="405,34,366,52,321,78,277,112,241,154,228,186,224,219,218,218,223,185,236,151,273,108,318,74,363,47,402,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="35,234,87,260"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="340,22,250,26,155,35,74,53,43,65,23,81,14,96,9,113,13,151,28,188,46,219,41,222,23,191,8,152,4,113,9,94,19,77,41,61,72,48,154,30,249,20,340,17"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="516,234,590,260"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="461,29,494,48,533,75,569,110,597,152,601,171,597,190,578,223,573,220,592,188,596,171,592,154,565,113,529,79,492,53,459,34"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="709,79,790,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="489,29,694,75,693,81,488,34"/>
+<area shape="rect" id="Node000006" href="/github/workspace/docs/tatami.tag$tatami_8hpp.html" title=" " alt="" coords="614,234,735,260"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="477,29,522,48,567,77,600,111,628,149,666,218,661,221,623,152,596,114,564,81,520,53,475,34"/>
+<area shape="rect" id="Node000007" href="$find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="251,153,397,178"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="428,33,344,142,340,139,423,30"/>
+<area shape="rect" id="Node000011" href="$per__cell__qc__metrics_8hpp.html" title="Compute per&#45;cell quality control metrics." alt="" coords="421,153,582,178"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="442,30,492,137,487,140,438,32"/>
+<area shape="rect" id="Node000012" href="$choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="34,79,219,105"/>
+<area shape="poly" id="edge20_Node000001_Node000012" title=" " alt="" coords="383,34,195,78,193,72,381,29"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="310,181,251,226,248,222,307,177"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="267,182,187,201,101,229,98,230,96,225,99,224,186,196,265,176"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="363,176,505,224,509,225,508,231,503,229,362,181"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="111,234,169,260"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="295,181,182,229,180,230,178,225,180,224,293,176"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="274,234,334,260"/>
+<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="323,179,313,220,308,218,318,178"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="359,226,492,267"/>
+<area shape="poly" id="edge12_Node000007_Node000010" title=" " alt="" coords="341,177,390,215,387,219,338,181"/>
+<area shape="poly" id="edge14_Node000011_Node000002" title=" " alt="" coords="438,182,354,201,262,229,260,230,258,225,260,224,352,196,437,176"/>
+<area shape="poly" id="edge16_Node000011_Node000003" title=" " alt="" coords="420,180,231,206,101,229,98,230,96,225,99,224,230,201,420,175"/>
+<area shape="poly" id="edge15_Node000011_Node000004" title=" " alt="" coords="511,177,539,219,535,222,507,180"/>
+<area shape="poly" id="edge18_Node000011_Node000006" title=" " alt="" coords="529,176,636,225,633,230,527,181"/>
+<area shape="poly" id="edge17_Node000011_Node000009" title=" " alt="" coords="469,181,348,229,345,230,343,225,346,224,468,176"/>
+<area shape="poly" id="edge19_Node000011_Node000010" title=" " alt="" coords="492,181,456,217,452,213,488,177"/>
+<area shape="poly" id="edge21_Node000012_Node000002" title=" " alt="" coords="136,104,208,219,204,222,132,107"/>
+<area shape="poly" id="edge22_Node000012_Node000003" title=" " alt="" coords="124,106,75,221,70,219,119,104"/>
+<area shape="poly" id="edge24_Node000012_Node000007" title=" " alt="" coords="161,103,277,144,275,150,159,108"/>
+<area shape="poly" id="edge23_Node000012_Node000008" title=" " alt="" coords="130,105,140,218,135,218,125,105"/>
+</map>
