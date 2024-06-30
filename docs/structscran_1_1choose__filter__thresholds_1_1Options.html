@@ -174,7 +174,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether the supplied median and MAD were computed on the log-scale (i.e., <code><a class="el" href="structscran_1_1find__median__mad_1_1Options.html#a1af43eeea4b45f4f6b7847affbbeefc5">find_median_mad::Options::log</a> = true</code>). If true, the thresholds are converted back to the original scale of the metrics prior to filtering. </p>
+<p>Whether the supplied median and MAD should be computed on the log-scale (i.e., <code><a class="el" href="structscran_1_1find__median__mad_1_1Options.html#a1af43eeea4b45f4f6b7847affbbeefc5">find_median_mad::Options::log</a> = true</code>). This focuses on the fold-change from the median when defining outliers. In practice, this is useful for metrics that are always positive and have right-skewed distributions, as the log-transformation symmetrizes the distribution and makes it more normal-like such that the <code><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html#aa7b2d771468088cb63e949f430644dc6">Options::num_mads</a></code> interpretation can be applied. It also ensures that the defined threshold is always positive.</p>
+<p>If this is set to true, the thresholds are converted back to the original scale of the metrics prior to filtering. </p>
 
 </div>
 </div>

@@ -375,7 +375,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Proportion_ , typename
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing RNA-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing RNA-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">compute_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
@@ -431,7 +431,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Proportion_ , typename
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>RNA-based QC metrics returned by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>RNA-based QC metrics returned by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">compute_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
@@ -477,7 +477,7 @@ template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detec
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">metrics</td><td>RNA-based QC metrics returned by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramname">metrics</td><td>RNA-based QC metrics returned by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">compute_filters()</a></code>. </td></tr>
   </table>
   </dd>
 </dl>

@@ -1257,4 +1257,10 @@
       <arglist>(const MetricsResults&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
     </member>
   </compound>
+  <compound kind="page">
+    <name>index</name>
+    <title>Quality control on single-cell data</title>
+    <filename>index.html</filename>
+    <docanchor file="index.html">md__2github_2workspace_2README</docanchor>
+  </compound>
 </tagfile>

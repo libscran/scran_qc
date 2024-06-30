@@ -133,9 +133,9 @@ Functions</h2></td></tr>
 <ul>
 <li>The total sum of counts for each cell, which represents the efficiency of library preparation and sequencing. Low totals indicate that the library was not successfully captured.</li>
 <li>The number of detected features. This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.</li>
-<li>The proportion of counts in pre-defined feature subsets. The exact interpretation depends on the nature of the subset - most commonly, one subset will contain all genes on the mitochondrial chromosome, where higher proportions indicate cell damage due to loss of cytoplasmic transcripts. Spike-in proportions can be interpreted in a similar manner.</li>
+<li>The proportion of counts in pre-defined feature subsets, the exact interpretation of which depends on the nature of the subset. Typically, one subset contains all genes on the mitochondrial chromosome, where higher proportions are representative of cell damage; the assumption is that cytoplasmic transcripts leak through tears in the cell membrane while the mitochondria are still trapped inside. The prportion of spike-in transcripts can be interpreted in a similar manner, where the loss of endogenous transcripts results in higher spike-in proportions.</li>
 </ul>
-<p>Outliers are defined on each metric by counting the number of MADs from the median value across all cells, see <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae991983721dc1e71443f6ae641f67205">choose_filter_thresholds::compute()</a></code> for details. For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics. This improves resolution at low values and ensures that the defined threshold is not negative. Note that all thresholds are still reported on the original scale, so no further exponentiation is required. </p>
+<p>We consider low-quality cells to be those with a low sum, a low number of detected genes, and high subset proportions. We define thresholds for each metric using an MAD-based outlier approach, see <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html" title="Define QC filter thresholds using a MAD-based approach.">choose_filter_thresholds</a></code> for details. For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="af46c0710c8d28bd27cae80f79d482ae1" name="af46c0710c8d28bd27cae80f79d482ae1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af46c0710c8d28bd27cae80f79d482ae1">&#9670;&#160;</a></span>compute_metrics() <span class="overload">[1/2]</span></h2>
@@ -191,7 +191,7 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">mat</td><td>Pointer to a feature-by-cells matrix containing counts. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, see <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for details. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts (see comments in <code><a class="el" href="namespacescran_1_1rna__quality__control.html" title="Simple per-cell QC metrics from an RNA count matrix.">rna_quality_control</a></code>). See <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td><code><a class="el" href="structscran_1_1rna__quality__control_1_1MetricsBuffers.html" title="Buffers for direct storage of the calculated statistics.">MetricsBuffers</a></code> object in which to store the output. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options. </td></tr>
   </table>
@@ -248,12 +248,12 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">mat</td><td>Pointer to a feature-by-cells <b>tatami</b> matrix containing counts. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, see <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for details. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts (see comments in <code><a class="el" href="namespacescran_1_1rna__quality__control.html" title="Simple per-cell QC metrics from an RNA count matrix.">rna_quality_control</a></code>). See <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <code>PerCellRnaQcMetrics::Results</code> object containing the QC metrics. Subset proportions are returned depending on the <code>subsets</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the QC metrics. Subset proportions are returned depending on the <code>subsets</code>. </dd></dl>
 
 </div>
 </div>
@@ -295,7 +295,7 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
     <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
   </table>
   </dd>
 </dl>
@@ -303,10 +303,11 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="params">
     <tr><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramname">metrics</td><td>A collection of arrays containing RNA-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
-    <tr><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -342,17 +343,18 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
     <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">metrics</td><td>RNA-based QC metrics from <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
-    <tr><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -400,7 +402,7 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -409,10 +411,11 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing RNA-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[0, N)$" src="form_0.png"/></picture> where <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$N$" src="form_1.png"/></picture> is the number of blocks. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>
@@ -454,7 +457,7 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -462,10 +465,11 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>RNA-based QC metrics computed by <code><a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[0, N)$" src="form_0.png"/></picture> where <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$N$" src="form_1.png"/></picture> is the number of blocks. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>

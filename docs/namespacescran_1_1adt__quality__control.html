@@ -132,11 +132,11 @@ Functions</h2></td></tr>
 <p>Given a feature-by-cell ADT count matrix, this class computes several QC metrics:</p>
 <ul>
 <li>The sum of counts for each cell, which (in theory) represents the efficiency of library preparation and sequencing. This is less useful as a QC metric for ADT data given that the sum is strongly influenced by biological variation in the abundance of the targeted features. Nonetheless, we compute it for diagnostic purposes.</li>
-<li>The number of detected features per cell. Even though ADTs are commonly applied in situations where few features are highly abundant, we still expect detectable coverage of most features due to ambient contamination, non-specific binding or some background expression. The absence of detectable coverage indicates that library preparation or sequencing depth was suboptimal.</li>
+<li>The number of detected tags per cell. Even though ADTs are commonly applied in situations where few features are highly abundant, we still expect detectable coverage of most features due to ambient contamination, non-specific binding or some background expression. The absence of detectable coverage indicates that library preparation or sequencing depth was suboptimal.</li>
 <li>The sum of counts in pre-defined feature subsets. While the exact interpretation depends on the nature of the subset, the most common use case involves isotype control (IgG) features. IgG antibodies should not bind to anything, so high coverage suggests that non-specific binding is a problem, e.g., due to antibody conjugates.</li>
 </ul>
-<p>Outliers are defined on each metric by counting the number of MADs from the median value across all cells, see <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae991983721dc1e71443f6ae641f67205">choose_filter_thresholds::compute()</a></code> for details. For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics. This improves resolution at low values, symmetrizes long right tails, and ensures that the defined threshold is not negative. Note that all thresholds are still reported on the original scale, so no further exponentiation is required.</p>
-<p>For the number of detected features, we supplement the MAD-based threshold with a minimum drop. Cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage. By default, the number must drop by at least 10% from the median. This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags. </p>
+<p>We consider low-quality cells to be those with a low number of detected tags and high subset sums. We define thresholds for each metric using an MAD-based outlier approach, see <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html" title="Define QC filter thresholds using a MAD-based approach.">choose_filter_thresholds</a></code> for details. For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics.</p>
+<p>For the number of detected features, we supplement the MAD-based threshold with a minimum drop in the proportion from the median. That is, cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage. By default, the number must drop by at least 10% from the median. This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a16d8e4add23d4a08431fde30264ea869" name="a16d8e4add23d4a08431fde30264ea869"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16d8e4add23d4a08431fde30264ea869">&#9670;&#160;</a></span>compute_metrics() <span class="overload">[1/2]</span></h2>
@@ -191,7 +191,7 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">mat</td><td>Pointer to a feature-by-cells matrix containing counts. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, see <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for details. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically IgG controls (see comments in <code><a class="el" href="namespacescran_1_1adt__quality__control.html" title="Simple per-cell QC metrics from an ADT count matrix.">adt_quality_control</a></code>). See <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td><code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html" title="Buffers for direct storage of the calculated statistics.">MetricsBuffers</a></code> object in which to store the output. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options. </td></tr>
   </table>
@@ -247,12 +247,12 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">mat</td><td>Pointer to a feature-by-cells <b>tatami</b> matrix containing counts. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, see <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for details. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically IgG controls (see comments in <code><a class="el" href="namespacescran_1_1adt__quality__control.html" title="Simple per-cell QC metrics from an ADT count matrix.">adt_quality_control</a></code>). See <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <code>PerCellRnaQcMetrics::Results</code> object containing the QC metrics. Subset proportions are returned depending on the <code>subsets</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the QC metrics. </dd></dl>
 
 </div>
 </div>
@@ -293,18 +293,19 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
-    <tr><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -339,17 +340,18 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">metrics</td><td>ADT-based QC metrics from <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
-    <tr><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramname">metrics</td><td>ADT-based QC metrics from <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -396,19 +398,20 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="tparams">
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[0, N)$" src="form_0.png"/></picture> where <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$N$" src="form_1.png"/></picture> is the number of blocks. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>
@@ -449,18 +452,19 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   <table class="tparams">
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$[0, N)$" src="form_0.png"/></picture> where <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$N$" src="form_1.png"/></picture> is the number of blocks. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>

@@ -172,7 +172,7 @@ template&lt;typename Float_  = double&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Vector of length equal to the number of blocks, containing the lower threshold on the number of detected genes in each block. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of length equal to the number of blocks, containing the lower threshold on the number of detected tags in each block. </dd></dl>
 
 </div>
 </div>
@@ -228,7 +228,7 @@ template&lt;typename Float_  = double&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Vector of length equal to the number of blocks, containing the lower threshold on the number of detected genes in each block. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of length equal to the number of blocks, containing the lower threshold on the number of detected tags in each block. </dd></dl>
 
 </div>
 </div>
@@ -314,14 +314,14 @@ template&lt;typename Index_ , typename Sum_ , typename Detected_ , typename Bloc
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type for the block assignment. </td></tr>
-    <tr><td class="paramname">Output_</td><td>Boolean type to store the high quality flags. </td></tr>
+    <tr><td class="paramname">Output_</td><td>Boolean type to store the high quality flags.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">compute_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
@@ -378,13 +378,13 @@ template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Outp
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type for the block assignment. </td></tr>
-    <tr><td class="paramname">Output_</td><td>Boolean type to store the high quality flags. </td></tr>
+    <tr><td class="paramname">Output_</td><td>Boolean type to store the high quality flags.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">compute_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
@@ -435,14 +435,14 @@ template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detec
     <tr><td class="paramname">Output_</td><td>Boolean type to store the high quality flags. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignment. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type for the block assignment.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. <code><a class="el" href="structscran_1_1adt__quality__control_1_1MetricsBuffers.html#a541c0a789650dc135e5c759041c4a1c3">MetricsBuffers::subset_sum</a></code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">compute_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">compute_filters()</a></code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor.</td></tr>
   </table>
   </dd>
 </dl>

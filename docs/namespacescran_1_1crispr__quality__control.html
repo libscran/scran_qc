@@ -238,13 +238,12 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>Pointer to a feature-by-cells <b>tatami</b> matrix containing counts. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, see <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">per_cell_qc_metrics::compute()</a></code> for details. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
+    <tr><td class="paramname">mat</td><td>Pointer to a feature-by-cells <b>tatami</b> matrix containing counts. </td></tr>
+    <tr><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <code>PerCellRnaQcMetrics::Results</code> object containing the QC metrics. Subset proportions are returned depending on the <code>subsets</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An object containing the QC metrics. </dd></dl>
 
 </div>
 </div>
@@ -294,12 +293,12 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramname">metrics</td><td>A collection of arrays containing CRISPR-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1crispr__quality__control.html#a5e0a41f185fd86479db5ef8a7e5d4116">compute_metrics()</a></code>. <code>MetricsBuffers::subset_sum</code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
+    <tr><td class="paramname">metrics</td><td>A collection of arrays containing CRISPR-based QC metrics, filled by <code><a class="el" href="namespacescran_1_1crispr__quality__control.html#a5e0a41f185fd86479db5ef8a7e5d4116">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
-    <tr><td class="paramname"><a class="el" href="classscran_1_1crispr__quality__control_1_1Filters.html" title="Filter for high-quality cells using CRISPR-based metrics.">Filters</a></td><td>to be applied to CRISPR-based QC metrics. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -342,12 +341,12 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">metrics</td><td>CRISPR-based QC metrics from <code><a class="el" href="namespacescran_1_1crispr__quality__control.html#a5e0a41f185fd86479db5ef8a7e5d4116">compute_metrics()</a></code>. <code>MetricsBuffers::subset_sum</code> is assumed to contain the sums of negative control feature subsets like IgG antibodies. </td></tr>
+    <tr><td class="paramname">metrics</td><td>CRISPR-based QC metrics from <code><a class="el" href="namespacescran_1_1crispr__quality__control.html#a5e0a41f185fd86479db5ef8a7e5d4116">compute_metrics()</a></code>. </td></tr>
     <tr><td class="paramname">options</td><td>Further options for filtering.</td></tr>
-    <tr><td class="paramname"><a class="el" href="classscran_1_1crispr__quality__control_1_1Filters.html" title="Filter for high-quality cells using CRISPR-based metrics.">Filters</a></td><td>to be applied to CRISPR-based QC metrics. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds. </dd></dl>
 
 </div>
 </div>
@@ -409,7 +408,7 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classscran_1_1crispr__quality__control_1_1Filters.html" title="Filter for high-quality cells using CRISPR-based metrics.">Filters</a> to be applied to blocks of CRISPR-based QC metrics. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>
@@ -464,7 +463,7 @@ template&lt;typename Float_  = double, typename Sum_  = double, typename Detecte
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classscran_1_1crispr__quality__control_1_1Filters.html" title="Filter for high-quality cells using CRISPR-based metrics.">Filters</a> to be applied to blocks of CRISPR-based QC metrics. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Object containing filter thresholds for each block. </dd></dl>
 
 </div>
 </div>

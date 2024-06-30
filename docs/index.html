@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>scran_quality_control: Main Page</title>
+<title>scran_quality_control: Quality control on single-cell data</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,10 +70,78 @@ $(function() {
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">scran_quality_control Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Quality control on single-cell data </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2README"></a> <img src="https://github.com/libscran/quality_control/actions/workflows/run-tests.yaml/badge.svg" alt="Unit tests" style="pointer-events: none;" class="inline"/> <img src="https://github.com/libscran/quality_control/actions/workflows/doxygenate.yaml/badge.svg" alt="Documentation" style="pointer-events: none;" class="inline"/> <a href="https://codecov.io/gh/libscran/quality_control"><img src="https://codecov.io/gh/libscran/quality_control/graph/badge.svg?token=JWV0I4WJX2" alt="Codecov" style="pointer-events: none;" class="inline"/></a></p>
+<h1>Overview</h1>
+<p>This repository contains functions to perform quality control on cells, using metrics computed from a gene-by-cell matrix of expression values. Cells with "unusual" values for these metrics are considered to be of low quality and are filtered out prior to downstream analysis. The code itself was originally derived from the <a href="https://bioconductor.org/packages/scran"><b>scran</b> R package</a>, factored out into a separate C++ library for easier re-use.</p>
+<h1>Quick start</h1>
+<p>Given a <a href="https://github.com/tatami-inc/tatami"><code>tatami::Matrix</code></a> containing RNA data, we can compute some common statistics like the sum of counts, number of detected genes, and the mitochondrial proportion:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="rna__quality__control_8hpp.html">scran/rna_quality_control.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_classRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix&lt;double, int&gt;</a>* ptr = some_data_source();</div>
+<div class="line">std::vector&lt;std::vector&lt;int&gt; &gt; subsets;</div>
+<div class="line">subsets.push_back(some_mito_subsets()); <span class="comment">// vector of row indices for mitochondrial genes.</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structscran_1_1rna__quality__control_1_1MetricsOptions.html">scran::rna_quality_control::MetricsOptions</a> mopt;</div>
+<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control::compute_metrics</a>(ptr, subsets, mopt);</div>
+<div class="line"> </div>
+<div class="line">metrics.sum; <span class="comment">// vector of count sums across cells. </span></div>
+<div class="line">metrics.detected; <span class="comment">// vector of detected genes across cells.</span></div>
+<div class="line">metrics.subset_proportion[0]; <span class="comment">// vector of mitochondrial proportions.</span></div>
+<div class="ttc" id="aclasstatami_1_1Matrix_html"><div class="ttname"><a href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a></div></div>
+<div class="ttc" id="anamespacescran_1_1rna__quality__control_html_af46c0710c8d28bd27cae80f79d482ae1"><div class="ttname"><a href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control::compute_metrics</a></div><div class="ttdeci">void compute_metrics(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;output, const MetricsOptions &amp;options)</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:100</div></div>
+<div class="ttc" id="arna__quality__control_8hpp_html"><div class="ttname"><a href="rna__quality__control_8hpp.html">rna_quality_control.hpp</a></div><div class="ttdoc">Simple per-cell QC metrics from an RNA count matrix.</div></div>
+<div class="ttc" id="astructscran_1_1rna__quality__control_1_1MetricsOptions_html"><div class="ttname"><a href="structscran_1_1rna__quality__control_1_1MetricsOptions.html">scran::rna_quality_control::MetricsOptions</a></div><div class="ttdoc">Options for compute_metrics().</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:47</div></div>
+</div><!-- fragment --><p>We can then use this to identify high-quality cells:</p>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structscran_1_1rna__quality__control_1_1FiltersOptions.html">scran::rna_quality_control::FiltersOptions</a> fopt;</div>
+<div class="line"><span class="keyword">auto</span> filters = <a class="code hl_function" href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">scran::rna_quality_control::compute_filters</a>(metrics, fopt);</div>
+<div class="line"> </div>
+<div class="line">filters.get_sum(); <span class="comment">// lower threshold on the sum.</span></div>
+<div class="line">filters.get_detected(); <span class="comment">// lower threshold on the number of detected genes.</span></div>
+<div class="line">filters.get_subset_proportion()[0]; <span class="comment">// upper threshold on the mitochondrial proportion.</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> keep = filters.filter(metrics); <span class="comment">// vector where 1 = high-quality, 0 = low-quality.</span></div>
+<div class="ttc" id="anamespacescran_1_1rna__quality__control_html_a5167e6827b051b450cd7f381f46835ca"><div class="ttname"><a href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">scran::rna_quality_control::compute_filters</a></div><div class="ttdeci">Filters&lt; Float_ &gt; compute_filters(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const FiltersOptions &amp;options)</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:489</div></div>
+<div class="ttc" id="astructscran_1_1rna__quality__control_1_1FiltersOptions_html"><div class="ttname"><a href="structscran_1_1rna__quality__control_1_1FiltersOptions.html">scran::rna_quality_control::FiltersOptions</a></div><div class="ttdoc">Options for Filters().</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:223</div></div>
+</div><!-- fragment --><p>Users can also manually adjust the thresholds before filtering:</p>
+<div class="fragment"><div class="line">filters.get_sum() = 500;</div>
+<div class="line">filters.get_subset_proportion()[0] = 0.1;</div>
+</div><!-- fragment --><p>The same general approach applies to ADT and CRISPR data, albeit with different metrics that are most relevant to each modality. For example, we use the sum of counts for the IgG isotype control when filtering ADT metrics:</p>
+<div class="fragment"><div class="line"><a class="code hl_classRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix&lt;double, int&gt;</a>* ptr = some_data_source();</div>
+<div class="line">std::vector&lt;std::vector&lt;int&gt; &gt; subsets;</div>
+<div class="line">subsets.push_back(some_IgG_subsets()); <span class="comment">// vector of row indices for IgG controls.</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structscran_1_1adt__quality__control_1_1MetricsOptions.html">scran::adt_quality_control::MetricsOptions</a> mopt;</div>
+<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">scran::adt_quality_control::compute_metrics</a>(ptr, subsets, mopt);</div>
+<div class="line"><a class="code hl_struct" href="structscran_1_1adt__quality__control_1_1FiltersOptions.html">scran::adt_quality_control::FiltersOptions</a> fopt;</div>
+<div class="line"><span class="keyword">auto</span> filters = <a class="code hl_function" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">scran::adt_quality_control::compute_filters</a>(metrics, fopt);</div>
+<div class="line"><span class="keyword">auto</span> keep = filters.filter(metrics);</div>
+<div class="ttc" id="anamespacescran_1_1adt__quality__control_html_a16d8e4add23d4a08431fde30264ea869"><div class="ttname"><a href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">scran::adt_quality_control::compute_metrics</a></div><div class="ttdeci">void compute_metrics(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;output, const MetricsOptions &amp;options)</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:105</div></div>
+<div class="ttc" id="anamespacescran_1_1adt__quality__control_html_ac2ed5bbd683cbf8731f6d2557924994d"><div class="ttname"><a href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">scran::adt_quality_control::compute_filters</a></div><div class="ttdeci">Filters&lt; Float_ &gt; compute_filters(size_t num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const FiltersOptions &amp;options)</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:422</div></div>
+<div class="ttc" id="astructscran_1_1adt__quality__control_1_1FiltersOptions_html"><div class="ttname"><a href="structscran_1_1adt__quality__control_1_1FiltersOptions.html">scran::adt_quality_control::FiltersOptions</a></div><div class="ttdoc">Options for Filters().</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:193</div></div>
+<div class="ttc" id="astructscran_1_1adt__quality__control_1_1MetricsOptions_html"><div class="ttname"><a href="structscran_1_1adt__quality__control_1_1MetricsOptions.html">scran::adt_quality_control::MetricsOptions</a></div><div class="ttdoc">Options for compute_metrics().</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:54</div></div>
+</div><!-- fragment --><p>Check out the <a href="https://libscran.github.io/quality_control">reference documentation</a> for more details.</p>
+<h1>Building projects</h1>
+<p>This repository is part of the broader <a href="https://github.com/libscran/libscran"><b>libscran</b></a> library, so users are recommended to use the latter in their projects. <b>libscran</b> developers should just use CMake with <code>FetchContent</code>:</p>
+<div class="fragment"><div class="line">include(FetchContent)</div>
+<div class="line"> </div>
+<div class="line">FetchContent_Declare(</div>
+<div class="line">  scran_quality_control </div>
+<div class="line">  GIT_REPOSITORY https://github.com/libscran/quality_control</div>
+<div class="line">  GIT_TAG master # or any version of interest</div>
+<div class="line">)</div>
+<div class="line"> </div>
+<div class="line">FetchContent_MakeAvailable(scran_quality_control)</div>
+<div class="line"> </div>
+<div class="line"># For executables:</div>
+<div class="line">target_link_libraries(myexe scran_quality_control)</div>
+<div class="line"> </div>
+<div class="line"># For libaries</div>
+<div class="line">target_link_libraries(mylib INTERFACE scran_quality_control)</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
