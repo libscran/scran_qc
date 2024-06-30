@@ -1,11 +1,14 @@
 <map id="scran/find_median_mad.hpp" name="scran/find_median_mad.hpp">
-<area shape="rect" id="Node000001" title="Compute the median and MAD from an array of values." alt="" coords="117,5,299,31"/>
-<area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,168,195,193"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,42,152,59,133,81,121,103,112,127,104,168,99,166,107,125,116,101,128,77,149,55,171,37"/>
-<area shape="rect" id="Node000003" href="$choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="143,79,273,120"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,46,211,79,205,79,205,46"/>
-<area shape="rect" id="Node000004" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="219,168,408,193"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="245,38,268,55,288,77,300,101,308,125,315,167,310,168,303,127,295,103,283,81,264,59,242,42"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="171,131,118,169,115,165,168,127"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="248,127,299,165,296,169,245,131"/>
+<area shape="rect" id="Node000001" title="Compute the median and MAD from an array of values." alt="" coords="224,5,406,31"/>
+<area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,175,195,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,40,225,57,188,81,163,105,140,131,109,176,105,173,136,128,159,101,185,77,223,53,262,35"/>
+<area shape="rect" id="Node000003" href="$choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="199,79,329,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="301,46,279,80,274,77,296,43"/>
+<area shape="rect" id="Node000004" href="$crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="219,168,352,208"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="332,44,345,80,347,100,344,121,329,147,310,169,306,166,325,144,339,119,342,100,340,81,327,45"/>
+<area shape="rect" id="Node000005" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="376,175,565,201"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="338,41,461,173,458,177,334,44"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="215,130,124,177,122,172,212,125"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="275,134,283,167,278,168,270,136"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="326,123,443,172,441,177,324,128"/>
 </map>

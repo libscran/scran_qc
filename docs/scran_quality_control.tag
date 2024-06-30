@@ -27,6 +27,22 @@
     <namespace>scran::choose_filter_thresholds</namespace>
   </compound>
   <compound kind="file">
+    <name>crispr_quality_control.hpp</name>
+    <path>scran/</path>
+    <filename>crispr__quality__control_8hpp.html</filename>
+    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
+    <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
+    <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
+    <class kind="struct">scran::crispr_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::crispr_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::crispr_quality_control::MetricsResults</class>
+    <class kind="struct">scran::crispr_quality_control::FiltersOptions</class>
+    <class kind="class">scran::crispr_quality_control::Filters</class>
+    <class kind="class">scran::crispr_quality_control::BlockedFilters</class>
+    <namespace>scran</namespace>
+    <namespace>scran::crispr_quality_control</namespace>
+  </compound>
+  <compound kind="file">
     <name>find_median_mad.hpp</name>
     <path>scran/</path>
     <filename>find__median__mad_8hpp.html</filename>
@@ -127,6 +143,53 @@
       <anchorfile>classscran_1_1adt__quality__control_1_1BlockedFilters.html</anchorfile>
       <anchor>a5853624608db126e2d99060cad4a667d</anchor>
       <arglist>(const MetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>scran::crispr_quality_control::BlockedFilters</name>
+    <filename>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>BlockedFilters</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a402004aa5474729739a234c4e53aac95</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_max_value</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a738a223db413ed6cf69ef8d7899a0935</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Float_ &gt; &amp;</type>
+      <name>get_max_value</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>a0ebca01693da9084577412ae3e32216a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>af98d5546e74c7500c373a97626411514</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>acf4ed3bf581e289236521bf7ddd084b1</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1BlockedFilters.html</anchorfile>
+      <anchor>aa05dbd507a7b01d75c221336d123826e</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block) const</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -316,6 +379,53 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>scran::crispr_quality_control::Filters</name>
+    <filename>classscran_1_1crispr__quality__control_1_1Filters.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>Filters</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>ae67b5c6cf4bd2c066937be1873f174e8</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_</type>
+      <name>get_max_value</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a05128c13ad180f0da43444ce14203ffe</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Float_ &amp;</type>
+      <name>get_max_value</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>accd99968f2487317178c7f52dd5fede2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>af819567873395d1befb493a542ca586e</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>a2831a85ee73edd21326c7c9d7fd81de7</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *output) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>filter</name>
+      <anchorfile>classscran_1_1crispr__quality__control_1_1Filters.html</anchorfile>
+      <anchor>aed0aff71c39a3f783b8a8c553fb930d1</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>scran::rna_quality_control::Filters</name>
     <filename>classscran_1_1rna__quality__control_1_1Filters.html</filename>
     <templarg>typename Float_</templarg>
@@ -416,6 +526,17 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::crispr_quality_control::FiltersOptions</name>
+    <filename>structscran_1_1crispr__quality__control_1_1FiltersOptions.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>max_value_num_mads</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1FiltersOptions.html</anchorfile>
+      <anchor>a190ecbb3c51fe7d9b389f93eb64bca94</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::rna_quality_control::FiltersOptions</name>
     <filename>structscran_1_1rna__quality__control_1_1FiltersOptions.html</filename>
     <member kind="variable">
@@ -468,6 +589,42 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::crispr_quality_control::MetricsBuffers</name>
+    <filename>structscran_1_1crispr__quality__control_1_1MetricsBuffers.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <templarg>typename Value_</templarg>
+    <templarg>typename Index_</templarg>
+    <member kind="variable">
+      <type>Sum_ *</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>abc73760fe659f64ad87b5ec73c37f587</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Detected_ *</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>adc50f314b70791110d0160ff650433e2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Value_ *</type>
+      <name>max_value</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>ad0e2d7df3f528fa07759d232b226e9bc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Index_ *</type>
+      <name>max_index</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsBuffers.html</anchorfile>
+      <anchor>a88f7021de51b618ebaf26b3c6725213a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::rna_quality_control::MetricsBuffers</name>
     <filename>structscran_1_1rna__quality__control_1_1MetricsBuffers.html</filename>
     <templarg>typename Sum_</templarg>
@@ -507,6 +664,17 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>scran::crispr_quality_control::MetricsOptions</name>
+    <filename>structscran_1_1crispr__quality__control_1_1MetricsOptions.html</filename>
+    <member kind="variable">
+      <type>int</type>
+      <name>num_threads</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsOptions.html</anchorfile>
+      <anchor>a64fcc3fc16105fe2c18b6cb1b54b5e09</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>scran::rna_quality_control::MetricsOptions</name>
     <filename>structscran_1_1rna__quality__control_1_1MetricsOptions.html</filename>
     <member kind="variable">
@@ -541,6 +709,42 @@
       <name>subset_sum</name>
       <anchorfile>structscran_1_1adt__quality__control_1_1MetricsResults.html</anchorfile>
       <anchor>a786ea3b7e1bc317d031e6f29b74ff7c8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran::crispr_quality_control::MetricsResults</name>
+    <filename>structscran_1_1crispr__quality__control_1_1MetricsResults.html</filename>
+    <templarg>typename Sum_</templarg>
+    <templarg>typename Detected_</templarg>
+    <templarg>typename Value_</templarg>
+    <templarg>typename Index_</templarg>
+    <member kind="variable">
+      <type>std::vector&lt; Sum_ &gt;</type>
+      <name>sum</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>ae690960c50586e767de0a36f65dac802</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Detected_ &gt;</type>
+      <name>detected</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a5e8a29d574034718c109c49185dcea85</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Value_ &gt;</type>
+      <name>max_value</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>adbd58b52aef9b893b72499323c07fdfc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Index_ &gt;</type>
+      <name>max_index</name>
+      <anchorfile>structscran_1_1crispr__quality__control_1_1MetricsResults.html</anchorfile>
+      <anchor>a0779ecebf71e3fe6df1a927ad3017af1</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -802,6 +1006,7 @@
     <filename>namespacescran.html</filename>
     <namespace>scran::adt_quality_control</namespace>
     <namespace>scran::choose_filter_thresholds</namespace>
+    <namespace>scran::crispr_quality_control</namespace>
     <namespace>scran::find_median_mad</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
     <namespace>scran::rna_quality_control</namespace>
@@ -897,6 +1102,58 @@
       <anchorfile>namespacescran_1_1choose__filter__thresholds.html</anchorfile>
       <anchor>ac23c9e27e19730fda2ca0d7d70339c1f</anchor>
       <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, find_median_mad::Workspace&lt; Float_, Index_ &gt; *workspace, const Options &amp;options)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::crispr_quality_control</name>
+    <filename>namespacescran_1_1crispr__quality__control.html</filename>
+    <class kind="class">scran::crispr_quality_control::BlockedFilters</class>
+    <class kind="class">scran::crispr_quality_control::Filters</class>
+    <class kind="struct">scran::crispr_quality_control::FiltersOptions</class>
+    <class kind="struct">scran::crispr_quality_control::MetricsBuffers</class>
+    <class kind="struct">scran::crispr_quality_control::MetricsOptions</class>
+    <class kind="struct">scran::crispr_quality_control::MetricsResults</class>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>a5e0a41f185fd86479db5ef8a7e5d4116</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, MetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;output, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt;</type>
+      <name>compute_metrics</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>a5456326ad2cfe939762f0f79d2e9489b</anchor>
+      <arglist>(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const MetricsOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>a376b9b86602e1beef8b58270ec616063</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>Filters&lt; Float_ &gt;</type>
+      <name>compute_filters</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>abc592b0d390ca248c7796ff4333d7aff</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>a3c7e3955d25ac8111974ea44fea05ed9</anchor>
+      <arglist>(size_t num, const MetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
+    </member>
+    <member kind="function">
+      <type>BlockedFilters&lt; Float_ &gt;</type>
+      <name>compute_filters_blocked</name>
+      <anchorfile>namespacescran_1_1crispr__quality__control.html</anchorfile>
+      <anchor>a41e3134f0f14330ec702ce2421e5a96b</anchor>
+      <arglist>(const MetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, const FiltersOptions &amp;options)</arglist>
     </member>
   </compound>
   <compound kind="namespace">

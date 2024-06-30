@@ -1,7 +1,9 @@
 <map id="scran/per_cell_qc_metrics.hpp" name="scran/per_cell_qc_metrics.hpp">
-<area shape="rect" id="Node000001" title="Compute per&#45;cell quality control metrics." alt="" coords="108,5,305,31"/>
-<area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,79,195,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,42,120,81,117,76,174,38"/>
-<area shape="rect" id="Node000003" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="219,79,408,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,38,297,76,294,81,236,42"/>
+<area shape="rect" id="Node000001" title="Compute per&#45;cell quality control metrics." alt="" coords="187,5,384,31"/>
+<area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,87,195,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,40,129,88,127,84,242,35"/>
+<area shape="rect" id="Node000003" href="$crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="219,79,352,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="288,46,288,79,283,79,283,46"/>
+<area shape="rect" id="Node000004" href="$rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="376,87,565,112"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="329,35,443,84,441,88,327,40"/>
 </map>
