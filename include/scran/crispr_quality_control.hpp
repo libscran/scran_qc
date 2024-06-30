@@ -180,11 +180,9 @@ struct MetricsResults {
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
  * @param mat Pointer to a feature-by-cells **tatami** matrix containing counts.
- * @param[in] subsets Vector of feature subsets, see `per_cell_qc_metrics::compute()` for details.
  * @param options Further options.
  *
- * @return A `PerCellRnaQcMetrics::Results` object containing the QC metrics.
- * Subset proportions are returned depending on the `subsets`.
+ * @return An object containing the QC metrics.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
 MetricsResults<Sum_, Detected_, Value_, Index_> compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const MetricsOptions& options) {
@@ -405,10 +403,9 @@ public:
  *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_metrics()`.
- * `MetricsBuffers::subset_sum` is assumed to contain the sums of negative control feature subsets like IgG antibodies.
  * @param options Further options for filtering.
  *
- * @param Filters to be applied to CRISPR-based QC metrics.
+ * @return Object containing filter thresholds.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
 Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, const FiltersOptions& options) {
@@ -425,10 +422,9 @@ Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_
  * @tparam Index_ Type of the matrix indices.
  *
  * @param metrics CRISPR-based QC metrics from `compute_metrics()`.
- * `MetricsBuffers::subset_sum` is assumed to contain the sums of negative control feature subsets like IgG antibodies.
  * @param options Further options for filtering.
  *
- * @param Filters to be applied to CRISPR-based QC metrics.
+ * @return Object containing filter thresholds.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
 Filters<Float_> compute_filters(const MetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const FiltersOptions& options) {
@@ -467,7 +463,6 @@ public:
 private:
     std::vector<Float_> my_sum;
     std::vector<Float_> my_max_value;
-    std::vector<std::vector<Float_> > my_subset_sum;
 
 public:
     /**
@@ -544,7 +539,7 @@ public:
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
  *
- * @return Filters to be applied to blocks of CRISPR-based QC metrics.
+ * @return Object containing filter thresholds for each block.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int, typename Block_ = int>
 BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block, const FiltersOptions& options) {
@@ -565,7 +560,7 @@ BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
  *
- * @return Filters to be applied to blocks of CRISPR-based QC metrics.
+ * @return Object containing filter thresholds for each block.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int, typename Block_ = int>
 BlockedFilters<Float_> compute_filters_blocked(const MetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block, const FiltersOptions& options) {

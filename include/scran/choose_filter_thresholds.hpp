@@ -22,6 +22,7 @@ namespace scran {
  * Any outlier values are indicative of low-quality cells that should be filtered out.
  * Given an array of values, outliers are defined as those that are more than some number of median absolute deviations (MADs) from the median value.
  * Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.
+ * We can also apply a log-transformation to the metrics to identify outliers with respect to their fold-change from the median.
  *
  * For datasets with multiple blocks, we can also compute block-specific thresholds for each metric.
  * This assumes that differences in the metric distributions between blocks are driven by uninteresting causes (e.g., differences in sequencing depth);
@@ -62,8 +63,13 @@ struct Options {
     double min_diff = 0;
 
     /**
-     * Whether the supplied median and MAD were computed on the log-scale (i.e., `find_median_mad::Options::log = true`).
-     * If true, the thresholds are converted back to the original scale of the metrics prior to filtering.
+     * Whether the supplied median and MAD should be computed on the log-scale (i.e., `find_median_mad::Options::log = true`).
+     * This focuses on the fold-change from the median when defining outliers.
+     * In practice, this is useful for metrics that are always positive and have right-skewed distributions,
+     * as the log-transformation symmetrizes the distribution and makes it more normal-like such that the `Options::num_mads` interpretation can be applied.
+     * It also ensures that the defined threshold is always positive.
+     *
+     * If this is set to true, the thresholds are converted back to the original scale of the metrics prior to filtering.
      */
     bool log = false;
 };

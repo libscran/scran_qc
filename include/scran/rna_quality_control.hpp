@@ -30,16 +30,14 @@ namespace scran {
  *   Low totals indicate that the library was not successfully captured.
  * - The number of detected features.
  *   This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.
- * - The proportion of counts in pre-defined feature subsets.
- *   The exact interpretation depends on the nature of the subset -
- *   most commonly, one subset will contain all genes on the mitochondrial chromosome,
- *   where higher proportions indicate cell damage due to loss of cytoplasmic transcripts.
- *   Spike-in proportions can be interpreted in a similar manner.
+ * - The proportion of counts in pre-defined feature subsets, the exact interpretation of which depends on the nature of the subset.
+ *   Typically, one subset contains all genes on the mitochondrial chromosome, where higher proportions are representative of cell damage;
+ *   the assumption is that cytoplasmic transcripts leak through tears in the cell membrane while the mitochondria are still trapped inside.
+ *   The prportion of spike-in transcripts can be interpreted in a similar manner, where the loss of endogenous transcripts results in higher spike-in proportions.
  *
- * Outliers are defined on each metric by counting the number of MADs from the median value across all cells, see `choose_filter_thresholds::compute()` for details.
+ * We consider low-quality cells to be those with a low sum, a low number of detected genes, and high subset proportions.
+ * We define thresholds for each metric using an MAD-based outlier approach, see `choose_filter_thresholds` for details.
  * For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics.
- * This improves resolution at low values and ensures that the defined threshold is not negative.
- * Note that all thresholds are still reported on the original scale, so no further exponentiation is required.
  */
 namespace rna_quality_control {
 
@@ -93,7 +91,8 @@ struct MetricsBuffers {
  * @tparam Proportion_ Floating-point type to store the proportions.
  *
  * @param mat Pointer to a feature-by-cells matrix containing counts.
- * @param[in] subsets Vector of feature subsets, see `per_cell_qc_metrics::compute()` for details.
+ * @param[in] subsets Vector of feature subsets, typically mitochondrial genes or spike-in transcripts (see comments in `rna_quality_control`).
+ * See `per_cell_qc_metrics::compute()` for more details on the expected format.
  * @param[out] output `MetricsBuffers` object in which to store the output.
  * @param options Further options.
  */
@@ -187,10 +186,11 @@ struct MetricsResults {
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
  * @param mat Pointer to a feature-by-cells **tatami** matrix containing counts.
- * @param[in] subsets Vector of feature subsets, see `per_cell_qc_metrics::compute()` for details.
+ * @param[in] subsets Vector of feature subsets, typically mitochondrial genes or spike-in transcripts (see comments in `rna_quality_control`).
+ * See `per_cell_qc_metrics::compute()` for more details on the expected format.
  * @param options Further options.
  *
- * @return A `PerCellRnaQcMetrics::Results` object containing the QC metrics.
+ * @return An object containing the QC metrics.
  * Subset proportions are returned depending on the `subsets`.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Value_ = double, typename Index_ = int, typename Subset_ = const uint8_t*>
@@ -432,6 +432,7 @@ public:
      * @tparam Output_ Boolean type to store the high quality flags.
      * @param num Number of cells.
      * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @param[out] output Pointer to an array of length `num`.
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
@@ -446,6 +447,7 @@ public:
      * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Output_ Boolean type to store the high quality flags.
      * @param metrics RNA-based QC metrics returned by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @param[out] output Pointer to an array of length `num`. 
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
@@ -460,6 +462,7 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Proportion_ Floating-point type to store the proportions.
      * @param metrics RNA-based QC metrics returned by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @return Vector of length `num`, containing the high-quality calls.
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
@@ -475,9 +478,12 @@ public:
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Proportion_ Floating-point type to store the proportions.
+ *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
  * @param options Further options for filtering.
+ * 
+ * @return An object containing the filter thresholds.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
 Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
@@ -491,8 +497,11 @@ Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Proportion_ Floating-point type to store the proportions.
+ *
  * @param metrics RNA-based QC metrics from `compute_metrics()`.
  * @param options Further options for filtering.
+ *
+ * @return An object containing the filter thresholds.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
 Filters<Float_> compute_filters(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const FiltersOptions& options) {
@@ -574,8 +583,10 @@ public:
      * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Block_ Integer type for the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
+     *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
      * @param[out] output Pointer to an array of length `num`.
@@ -592,7 +603,9 @@ public:
      * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Block_ Integer type for the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
+     *
      * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
      * @param[out] output Pointer to an array of length `num`.
@@ -609,9 +622,12 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Proportion_ Floating-point type to store the proportions.
      * @tparam Block_ Integer type for the block assignment.
+     *
      * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
+     *
      * @return Vector of length `num`, containing the high-quality calls.
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
@@ -627,11 +643,14 @@ public:
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Proportion_ Floating-point type to store the proportions.
  * @tparam Block_ Integer type for the block assignments.
+ *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
+ *
+ * @return Object containing filter thresholds for each block.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
 BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
@@ -645,10 +664,13 @@ BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Proportion_ Floating-point type to store the proportions.
  * @tparam Block_ Integer type for the block assignments.
+ *
  * @param metrics RNA-based QC metrics computed by `compute_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
+ *
+ * @return Object containing filter thresholds for each block.
  */
 template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
 BlockedFilters<Float_> compute_filters_blocked(const MetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block, const FiltersOptions& options) {
