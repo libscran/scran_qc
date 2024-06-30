@@ -33,6 +33,7 @@ macro(create_test name)
         src/find_median_mad.cpp
         src/choose_filter_thresholds.cpp
         src/rna_quality_control.cpp
+        src/adt_quality_control.cpp
     )
 
     target_link_libraries(
