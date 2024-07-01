@@ -19,12 +19,12 @@ we can compute some common statistics like the sum of counts, number of detected
 ```cpp
 #include "scran/rna_quality_control.hpp"
 
-tatami::Matrix<double, int>* ptr = some_data_source();
+std::shared_ptr<tatami::Matrix<double, int> > mat = some_data_source();
 std::vector<std::vector<int> > subsets;
 subsets.push_back(some_mito_subsets()); // vector of row indices for mitochondrial genes.
 
 scran::rna_quality_control::MetricsOptions mopt;
-auto metrics = scran::rna_quality_control::compute_metrics(ptr, subsets, mopt);
+auto metrics = scran::rna_quality_control::compute_metrics(mat.get(), subsets, mopt);
 
 metrics.sum; // vector of count sums across cells. 
 metrics.detected; // vector of detected genes across cells.
@@ -55,15 +55,25 @@ The same general approach applies to ADT and CRISPR data, albeit with different 
 For example, we use the sum of counts for the IgG isotype control when filtering ADT metrics:
 
 ```cpp
-tatami::Matrix<double, int>* ptr = some_data_source();
+std::shared_ptr<tatami::Matrix<double, int> > adt_mat = some_adt_data_source();
 std::vector<std::vector<int> > subsets;
 subsets.push_back(some_IgG_subsets()); // vector of row indices for IgG controls.
 
 scran::adt_quality_control::MetricsOptions mopt;
-auto metrics = scran::adt_quality_control::compute_metrics(ptr, subsets, mopt);
+auto metrics = scran::adt_quality_control::compute_metrics(adt_mat.get(), subsets, mopt);
 scran::adt_quality_control::FiltersOptions fopt;
 auto filters = scran::adt_quality_control::compute_filters(metrics, fopt);
 auto keep = filters.filter(metrics);
+```
+
+Once we have our filter(s), we can subset our dataset so that only the columns corresponding to high-quality cells are used for downstream analysis:
+
+```cpp
+auto submatrix = tatami::make_DelayedSubset(
+    mat, 
+    scran::format_filters::compute_which<int>(keep.size(), keep.data());
+    /* by_row = */ false
+);
 ```
 
 Check out the [reference documentation](https://libscran.github.io/quality_control) for more details.

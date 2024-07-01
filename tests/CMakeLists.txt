@@ -35,6 +35,7 @@ macro(create_test name)
         src/rna_quality_control.cpp
         src/adt_quality_control.cpp
         src/crispr_quality_control.cpp
+        src/format_filters.cpp
     )
 
     target_link_libraries(
