@@ -53,6 +53,13 @@
     <namespace>scran::find_median_mad</namespace>
   </compound>
   <compound kind="file">
+    <name>format_filters.hpp</name>
+    <path>scran/</path>
+    <filename>format__filters_8hpp.html</filename>
+    <namespace>scran</namespace>
+    <namespace>scran::format_filters</namespace>
+  </compound>
+  <compound kind="file">
     <name>per_cell_qc_metrics.hpp</name>
     <path>scran/</path>
     <filename>per__cell__qc__metrics_8hpp.html</filename>
@@ -1008,6 +1015,7 @@
     <namespace>scran::choose_filter_thresholds</namespace>
     <namespace>scran::crispr_quality_control</namespace>
     <namespace>scran::find_median_mad</namespace>
+    <namespace>scran::format_filters</namespace>
     <namespace>scran::per_cell_qc_metrics</namespace>
     <namespace>scran::rna_quality_control</namespace>
   </compound>
@@ -1182,6 +1190,52 @@
       <anchorfile>namespacescran_1_1find__median__mad.html</anchorfile>
       <anchor>a31771db5590e3de43e2ffed92f03fc93</anchor>
       <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, Workspace&lt; Output_, Index_ &gt; *workspace, const Options &amp;options)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>scran::format_filters</name>
+    <filename>namespacescran_1_1format__filters.html</filename>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_which</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>a8558625db78828cc42ff390cb01b7476</anchor>
+      <arglist>(Index_ num, const Keep_ *filter, std::vector&lt; Index_ &gt; &amp;output)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Index_ &gt;</type>
+      <name>compute_which</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>a20527b6752b0d2801b79e8789f873c7c</anchor>
+      <arglist>(Index_ num, const Keep_ *filter)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_combined_keep</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>adb5c4f474ba88c84f45e99262ab3151d</anchor>
+      <arglist>(size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *output)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Output_ &gt;</type>
+      <name>compute_combined_keep</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>a69d9e49062991fcb0a383ab864b679c3</anchor>
+      <arglist>(size_t num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>compute_combined_index</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>a27975098c63ee4d138d081bcdaa4d61e</anchor>
+      <arglist>(Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters, std::vector&lt; Index_ &gt; &amp;output)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Index_ &gt;</type>
+      <name>compute_combined_index</name>
+      <anchorfile>namespacescran_1_1format__filters.html</anchorfile>
+      <anchor>aea36a80dc19559e28ab14a30cce83247</anchor>
+      <arglist>(Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
     </member>
   </compound>
   <compound kind="namespace">

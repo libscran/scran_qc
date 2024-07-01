@@ -81,17 +81,16 @@ $(function() {
 <p>Given a <a href="https://github.com/tatami-inc/tatami"><code>tatami::Matrix</code></a> containing RNA data, we can compute some common statistics like the sum of counts, number of detected genes, and the mitochondrial proportion:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="rna__quality__control_8hpp.html">scran/rna_quality_control.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_classRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix&lt;double, int&gt;</a>* ptr = some_data_source();</div>
+<div class="line">std::shared_ptr&lt;tatami::Matrix&lt;double, int&gt; &gt; mat = some_data_source();</div>
 <div class="line">std::vector&lt;std::vector&lt;int&gt; &gt; subsets;</div>
 <div class="line">subsets.push_back(some_mito_subsets()); <span class="comment">// vector of row indices for mitochondrial genes.</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structscran_1_1rna__quality__control_1_1MetricsOptions.html">scran::rna_quality_control::MetricsOptions</a> mopt;</div>
-<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control::compute_metrics</a>(ptr, subsets, mopt);</div>
+<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control::compute_metrics</a>(mat.get(), subsets, mopt);</div>
 <div class="line"> </div>
 <div class="line">metrics.sum; <span class="comment">// vector of count sums across cells. </span></div>
 <div class="line">metrics.detected; <span class="comment">// vector of detected genes across cells.</span></div>
 <div class="line">metrics.subset_proportion[0]; <span class="comment">// vector of mitochondrial proportions.</span></div>
-<div class="ttc" id="aclasstatami_1_1Matrix_html"><div class="ttname"><a href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a></div></div>
 <div class="ttc" id="anamespacescran_1_1rna__quality__control_html_af46c0710c8d28bd27cae80f79d482ae1"><div class="ttname"><a href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control::compute_metrics</a></div><div class="ttdeci">void compute_metrics(const tatami::Matrix&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, MetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;output, const MetricsOptions &amp;options)</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:100</div></div>
 <div class="ttc" id="arna__quality__control_8hpp_html"><div class="ttname"><a href="rna__quality__control_8hpp.html">rna_quality_control.hpp</a></div><div class="ttdoc">Simple per-cell QC metrics from an RNA count matrix.</div></div>
 <div class="ttc" id="astructscran_1_1rna__quality__control_1_1MetricsOptions_html"><div class="ttname"><a href="structscran_1_1rna__quality__control_1_1MetricsOptions.html">scran::rna_quality_control::MetricsOptions</a></div><div class="ttdoc">Options for compute_metrics().</div><div class="ttdef"><b>Definition</b> rna_quality_control.hpp:47</div></div>
@@ -110,12 +109,12 @@ $(function() {
 <div class="fragment"><div class="line">filters.get_sum() = 500;</div>
 <div class="line">filters.get_subset_proportion()[0] = 0.1;</div>
 </div><!-- fragment --><p>The same general approach applies to ADT and CRISPR data, albeit with different metrics that are most relevant to each modality. For example, we use the sum of counts for the IgG isotype control when filtering ADT metrics:</p>
-<div class="fragment"><div class="line"><a class="code hl_classRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix&lt;double, int&gt;</a>* ptr = some_data_source();</div>
+<div class="fragment"><div class="line">std::shared_ptr&lt;tatami::Matrix&lt;double, int&gt; &gt; adt_mat = some_adt_data_source();</div>
 <div class="line">std::vector&lt;std::vector&lt;int&gt; &gt; subsets;</div>
 <div class="line">subsets.push_back(some_IgG_subsets()); <span class="comment">// vector of row indices for IgG controls.</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structscran_1_1adt__quality__control_1_1MetricsOptions.html">scran::adt_quality_control::MetricsOptions</a> mopt;</div>
-<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">scran::adt_quality_control::compute_metrics</a>(ptr, subsets, mopt);</div>
+<div class="line"><span class="keyword">auto</span> metrics = <a class="code hl_function" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">scran::adt_quality_control::compute_metrics</a>(adt_mat.get(), subsets, mopt);</div>
 <div class="line"><a class="code hl_struct" href="structscran_1_1adt__quality__control_1_1FiltersOptions.html">scran::adt_quality_control::FiltersOptions</a> fopt;</div>
 <div class="line"><span class="keyword">auto</span> filters = <a class="code hl_function" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">scran::adt_quality_control::compute_filters</a>(metrics, fopt);</div>
 <div class="line"><span class="keyword">auto</span> keep = filters.filter(metrics);</div>
@@ -123,6 +122,13 @@ $(function() {
 <div class="ttc" id="anamespacescran_1_1adt__quality__control_html_ac2ed5bbd683cbf8731f6d2557924994d"><div class="ttname"><a href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">scran::adt_quality_control::compute_filters</a></div><div class="ttdeci">Filters&lt; Float_ &gt; compute_filters(size_t num, const MetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const FiltersOptions &amp;options)</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:422</div></div>
 <div class="ttc" id="astructscran_1_1adt__quality__control_1_1FiltersOptions_html"><div class="ttname"><a href="structscran_1_1adt__quality__control_1_1FiltersOptions.html">scran::adt_quality_control::FiltersOptions</a></div><div class="ttdoc">Options for Filters().</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:193</div></div>
 <div class="ttc" id="astructscran_1_1adt__quality__control_1_1MetricsOptions_html"><div class="ttname"><a href="structscran_1_1adt__quality__control_1_1MetricsOptions.html">scran::adt_quality_control::MetricsOptions</a></div><div class="ttdoc">Options for compute_metrics().</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:54</div></div>
+</div><!-- fragment --><p>Once we have our filter(s), we can subset our dataset so that only the columns corresponding to high-quality cells are used for downstream analysis:</p>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> submatrix = <a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a77fad1d2a2553899a7860521d6284f50">tatami::make_DelayedSubset</a>(</div>
+<div class="line">    mat, </div>
+<div class="line">    scran::format_filters::compute_which&lt;int&gt;(keep.size(), keep.data());</div>
+<div class="line">    <span class="comment">/* by_row = */</span> false</div>
+<div class="line">);</div>
+<div class="ttc" id="anamespacetatami_html_a77fad1d2a2553899a7860521d6284f50"><div class="ttname"><a href="https://tatami-inc.github.io/tatami/namespacetatami.html#a77fad1d2a2553899a7860521d6284f50">tatami::make_DelayedSubset</a></div><div class="ttdeci">std::shared_ptr&lt; Matrix&lt; Value_, Index_ &gt; &gt; make_DelayedSubset(std::shared_ptr&lt; const Matrix&lt; Value_, Index_ &gt; &gt; matrix, SubsetStorage_ subset, bool by_row)</div></div>
 </div><!-- fragment --><p>Check out the <a href="https://libscran.github.io/quality_control">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <p>This repository is part of the broader <a href="https://github.com/libscran/libscran"><b>libscran</b></a> library, so users are recommended to use the latter in their projects. <b>libscran</b> developers should just use CMake with <code>FetchContent</code>:</p>
