@@ -1,5 +1,5 @@
-#ifndef SCRAN_ADT_QUALITY_CONTROL_HPP
-#define SCRAN_ADT_QUALITY_CONTROL_HPP
+#ifndef SCRAN_QC_ADT_QUALITY_CONTROL_HPP
+#define SCRAN_QC_ADT_QUALITY_CONTROL_HPP
 
 #include <vector>
 #include <limits>
@@ -14,17 +14,52 @@
 
 /**
  * @file adt_quality_control.hpp
- *
  * @brief Simple per-cell QC metrics from an ADT count matrix.
  */
 
-namespace scran {
+namespace scran_qc {
 
 /**
- * @namespace scran::adt_quality_control
- * @brief Simple per-cell QC metrics from an ADT count matrix.
+ * @brief Options for `compute_adt_qc_metrics()`.
+ */
+struct ComputeAdtQcMetricsOptions {
+    /**
+     * Number of threads to use.
+     */
+    int num_threads = 1;
+};
+
+/**
+ * @brief Buffers for `compute_adt_qc_metrics()`.
+ * @tparam Sum_ Numeric type to store the summed expression.
+ * @tparam Detected_ Integer type to store the number of cells.
  *
- * Given a feature-by-cell ADT count matrix, this class computes several QC metrics:
+ * All pointers should not be non-NULL when calling `compute_adt_qc_metrics()` or `compute_adt_qc_filters()`. 
+ */
+template<typename Sum_ = double, typename Detected_ = int>
+struct ComputeAdtQcMetricsBuffers {
+    /**
+     * Pointer to an array of length equal to the number of cells, to store the sum of ADT counts for each cell.
+     * This is analogous to `ComputeAdtQcMetricsResults::sum`.
+     */
+    Sum_* sum = NULL;
+
+    /**
+     * Pointer to an array of length equal to the number of cells, to store the number of detected ADTs for each cell.
+     * This is analogous to `ComputeAdtQcMetricsResults::detected`. 
+     */
+    Detected_* detected = NULL;
+
+    /**
+     * Vector of pointers of length equal to the number of feature subsets, to store the sum of counts for each ADT subset in each cell.
+     * Each entry should point to an array of length equal to the number of cells.
+     * This is analogous to `ComputeAdtQcMetricsResults::subset_sum`. 
+     */
+    std::vector<Sum_*> subset_sum;
+};
+
+/**
+ * Given a feature-by-cell ADT count matrix, this function uses `per_cell_qc_metrics()` to compute several ADT-relevant QC metrics:
  * 
  * - The sum of counts for each cell, which (in theory) represents the efficiency of library preparation and sequencing.
  *   This is less useful as a QC metric for ADT data given that the sum is strongly influenced by biological variation in the abundance of the targeted features.
@@ -37,57 +72,7 @@ namespace scran {
  *   While the exact interpretation depends on the nature of the subset, the most common use case involves isotype control (IgG) features.
  *   IgG antibodies should not bind to anything, so high coverage suggests that non-specific binding is a problem, e.g., due to antibody conjugates.
  *
- * We consider low-quality cells to be those with a low number of detected tags and high subset sums.
- * We define thresholds for each metric using an MAD-based outlier approach, see `choose_filter_thresholds` for details.
- * For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics.
- *
- * For the number of detected features, we supplement the MAD-based threshold with a minimum drop in the proportion from the median.
- * That is, cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage.
- * By default, the number must drop by at least 10% from the median.
- * This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.
- */
-namespace adt_quality_control {
-
-/**
- * @brief Options for `compute_metrics()`.
- */
-struct MetricsOptions {
-    /**
-     * Number of threads to use.
-     */
-    int num_threads = 1;
-};
-
-/**
- * @brief Buffers for direct storage of the calculated statistics.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- */
-template<typename Sum_ = double, typename Detected_ = int>
-struct MetricsBuffers {
-    /**
-     * Pointer to an array of length equal to the number of cells, see `MetricsResults::sum`.
-     * This should not be NULL when calling `compute_metrics()`.
-     */
-    Sum_* sum = NULL;
-
-    /**
-     * Pointer to an array of length equal to the number of cells, see `MetricsResults::detected`.
-     * This should not be NULL when calling `compute_metrics()`.
-     */
-    Detected_* detected = NULL;
-
-    /**
-     * Vector of pointers of length equal to the number of feature subsets.
-     * Each entry should point to an array of length equal to the number of cells, see `MetricsResults::subset_sum`.
-     * This should have length equal to the `subsets` used in `compute_metrics()` and all pointers should be non-NULL.
-     */
-    std::vector<Sum_*> subset_sum;
-};
-
-/**
- * Compute the QC metrics from an input matrix.
- * This is a wrapper around `per_cell_qc_metrics::compute()` with some pre-configuration for ADT-relevant metrics.
+ * We consider low-quality cells to be those with a low number of detected tags and high subset sums, see `compute_adt_qc_filters()` for more details.
  *
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
@@ -95,41 +80,37 @@ struct MetricsBuffers {
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
- * @param mat Pointer to a feature-by-cells matrix containing counts.
+ * @param mat A **tatami** matrix containing count data.
+ * Rows correspond to ADT features while columns correspond to cells.
  * @param[in] subsets Vector of feature subsets, typically IgG controls (see comments in `adt_quality_control`).
  * See `per_cell_qc_metrics::compute()` for more details on the expected format.
- * @param[out] output `MetricsBuffers` object in which to store the output.
+ * @param[out] output `ComputeAdtQcMetricsBuffers` object in which to store the output.
  * @param options Further options.
  */
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, MetricsBuffers<Sum_, Detected_>& output, const MetricsOptions& options) {
-    per_cell_qc_metrics::Buffers<Sum_, Detected_, Value_, Index_> tmp;
+void compute_adt_qc_metrics(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const ComputeAdtQcMetricsBuffers<Sum_, Detected_>& output,
+    const ComputeAdtQcMetricsOptions& options)
+{
+    PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_> tmp;
     tmp.sum = output.sum;
     tmp.detected = output.detected;
     tmp.subset_sum = output.subset_sum;
 
-    per_cell_qc_metrics::Options opt;
+    PerCellQcMetricsOptions opt;
     opt.num_threads = options.num_threads;
-    per_cell_qc_metrics::compute(mat, subsets, tmp, opt);
+    per_cell_qc_metrics(mat, subsets, tmp, opt);
 }
 
 /**
- * @brief Results of the QC metric calculations.
+ * @brief Results of `compute_adt_qc_metrics()`.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
- *
- * Meaningful instances of this object should generally be constructed by calling the `compute_metrics()` function.
  */
 template<typename Sum_ = double, typename Detected_ = int>
-struct MetricsResults {
-    /**
-     * @cond
-     */
-    MetricsResults() = default;
-    /**
-     * @endcond
-     */
-
+struct ComputeAdtQcMetricsResults {
     /**
      * Vector of length equal to the number of cells in the dataset, containing the sum of counts for each cell.
      */
@@ -148,7 +129,7 @@ struct MetricsResults {
 };
 
 /**
- * Overload of `compute_metrics()` that allocates memory for the results.
+ * Overload of `compute_adt_qc_metrics()` that allocates memory for the results.
  *
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
@@ -156,7 +137,8 @@ struct MetricsResults {
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
- * @param mat Pointer to a feature-by-cells **tatami** matrix containing counts.
+ * @param mat A **tatami** matrix containing count data.
+ * Rows correspond to ADT features while columns correspond to cells.
  * @param[in] subsets Vector of feature subsets, typically IgG controls (see comments in `adt_quality_control`).
  * See `per_cell_qc_metrics::compute()` for more details on the expected format.
  * @param options Further options.
@@ -164,10 +146,14 @@ struct MetricsResults {
  * @return An object containing the QC metrics.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int, typename Subset_ = const uint8_t*>
-MetricsResults<Sum_, Detected_> compute_metrics(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, const MetricsOptions& options) {
-    auto NC = mat->ncol();
-    MetricsBuffers<Sum_, Detected_> x;
-    MetricsResults<Sum_, Detected_> output;
+ComputeAdtQcMetricsResults<Sum_, Detected_> compute_adt_qc_metrics(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const MetricsOptions& options)
+{
+    auto NC = mat.ncol();
+    ComputeAdtQcMetricsBuffers<Sum_, Detected_> x;
+    ComputeAdtQcMetricsResults<Sum_, Detected_> output;
 
     output.sum.resize(NC);
     x.sum = output.sum.data();
@@ -183,14 +169,14 @@ MetricsResults<Sum_, Detected_> compute_metrics(const tatami::Matrix<Value_, Ind
         x.subset_sum[s] = output.subset_sum[s].data();
     }
 
-    compute_metrics(mat, subsets, x, options);
+    compute_adt_qc_metrics(mat, subsets, x, options);
     return output;
 }
 
 /**
- * @brief Options for `Filters()`.
+ * @brief Options for `compute_adt_qc_filters()`.
  */
-struct FiltersOptions {
+struct ComputeAdtQcFiltersOptions {
     /**
      * Number of MADs below the median, to define the threshold for outliers in the number of detected features.
      * This should be non-negative.
@@ -216,7 +202,7 @@ struct FiltersOptions {
 namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename BlockSource_>
-void populate(Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& res, BlockSource_ block, const FiltersOptions& options) {
+void adt_populate(Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& res, BlockSource_ block, const FiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
@@ -227,40 +213,44 @@ void populate(Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& res,
     }();
 
     {
-        choose_filter_thresholds::Options opts;
+        ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.detected_num_mads;
         opts.log = true;
         opts.upper = false;
         opts.min_diff = -std::log(1 - options.detected_min_drop);
         host.get_detected() = [&]() {
             if constexpr(unblocked) {
-                return choose_filter_thresholds::compute(n, res.detected, buffer.data(), opts).lower;
+                return choose_filter_thresholds(n, res.detected, buffer.data(), opts).lower;
             } else {
-                return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, res.detected, block, &buffer, opts));
+                return internal::strip_threshold<true>(choose_filter_thresholds_blocked(n, res.detected, block, &buffer, opts));
             }
         }();
     }
 
-    size_t nsubsets = res.subset_sum.size();
-    host.get_subset_sum().resize(nsubsets);
-    for (size_t s = 0; s < nsubsets; ++s) {
-        auto sub = res.subset_sum[s];
-        choose_filter_thresholds::Options opts;
+    {
+        size_t nsubsets = res.subset_sum.size();
+        host.get_subset_sum().resize(nsubsets);
+
+        ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.subset_sum_num_mads;
         opts.log = true;
         opts.lower = false;
-        host.get_subset_sum()[s] = [&]() {
-            if constexpr(unblocked) {
-                return choose_filter_thresholds::compute(n, sub, buffer.data(), opts).upper;
-            } else {
-                return choose_filter_thresholds::internal::strip<false>(choose_filter_thresholds::compute_blocked(n, sub, block, &buffer, opts));
-            }
-        }();
+
+        for (size_t s = 0; s < nsubsets; ++s) {
+            auto sub = res.subset_sum[s];
+            host.get_subset_sum()[s] = [&]() {
+                if constexpr(unblocked) {
+                    return choose_filter_thresholds(n, sub, buffer.data(), opts).upper;
+                } else {
+                    return internal::strip_threshold<false>(choose_filter_thresholds_blocked(n, sub, block, &buffer, opts));
+                }
+            }();
+        }
     }
 }
 
 template<class Host_, typename Sum_, typename Detected_, typename BlockSource_, typename Output_>
-void filter(const Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& metrics, BlockSource_ block, Output_* output) {
+void adt_filter(const Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& metrics, BlockSource_ block, Output_* output) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
@@ -293,8 +283,8 @@ void filter(const Host_& host, size_t n, const MetricsBuffers<Sum_, Detected_>& 
 }
 
 template<typename Sum_, typename Detected_>
-MetricsBuffers<const Sum_, const Detected_> to_buffer(const MetricsResults<Sum_, Detected_>& metrics) {
-    MetricsBuffers<const Sum_, const Detected_> buffer;
+ComputeAdtQcMetricsBuffers<const Sum_, const Detected_> to_buffer(const ComputeAdtQcMetricsResults<Sum_, Detected_>& metrics) {
+    ComputeAdtQcMetricsBuffers<const Sum_, const Detected_> buffer;
     buffer.sum = metrics.sum.data();
     buffer.detected = metrics.detected.data();
     buffer.subset_sum.reserve(metrics.subset_sum.size());
@@ -312,15 +302,11 @@ MetricsBuffers<const Sum_, const Detected_> to_buffer(const MetricsResults<Sum_,
 /**
  * @brief Filter for high-quality cells using ADT-based metrics. 
  * @tparam Float_ Floating-point type for filter thresholds.
+ *
+ * Instances of this class are typically created by `compute_adt_qc_filters()`.
  */
 template<typename Float_ = double>
-class Filters {
-public:
-    /**
-     * Default constructor.
-     */
-    Filters() = default;
-
+class AdtQcFilters {
 public:
     /**
      * @return Lower threshold to apply to the number of detected tags.
@@ -363,15 +349,15 @@ public:
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param num Number of cells.
-     * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      *
      * @param[out] output Pointer to an array of length `num`.
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Output_>
     void filter(size_t num, const MetricsBuffers<Sum_, Detected_>& metrics, Output_* output) const {
-        internal::filter(*this, num, metrics, false, output);
+        internal::adt_filter(*this, num, metrics, false, output);
     }
 
     /**
@@ -379,8 +365,8 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
-     * @param metrics ADT-based QC metrics returned by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics ADT-based QC metrics returned by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      * @param[out] output Pointer to an array of length `num`. 
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
@@ -394,8 +380,8 @@ public:
      * @tparam Sum_ Numeric type to store the summed expression.
      * @tparam Detected_ Integer type to store the number of cells.
      *
-     * @param metrics ADT-based QC metrics returned by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics ADT-based QC metrics returned by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      *
      * @return Vector of length `num`, containing the high-quality calls.
      */
@@ -408,20 +394,29 @@ public:
 };
 
 /**
+ * Using the ADT-relevant QC metrics from `compute_adt_qc_metrics()`,
+ * we define thresholds for each metric using an MAD-based outlier approach (see `choose_filter_thresholds()` for details).
+ * For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics.
+ *
+ * For the number of detected features, we supplement the MAD-based threshold with a minimum drop in the proportion from the median.
+ * That is, cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage.
+ * By default, the number must drop by at least 10% from the median.
+ * This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.
+ *
  * @tparam Float_ Floating-point type for the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
  * @param num Number of cells.
- * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_metrics()`.
+ * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
  * @param options Further options for filtering.
  *
  * @return An object containing the filter thresholds.
  */
-template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int>
-Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_>& metrics, const FiltersOptions& options) {
-    Filters<Float_> output;
-    internal::populate<Float_>(output, num, metrics, false, options);
+template<typename Float_ = double, typename Sum_, typename Detected_>
+AdtQcFilters<Float_> compute_adt_qc_filters(size_t num, const MetricsBuffers<Sum_, Detected_>& metrics, const ComputeAdtQcFiltersOptions& options) {
+    AdtQcFilters<Float_> output;
+    internal::adt_populate<Float_>(output, num, metrics, false, options);
     return output;
 }
 
@@ -430,28 +425,24 @@ Filters<Float_> compute_filters(size_t num, const MetricsBuffers<Sum_, Detected_
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
- * @param metrics ADT-based QC metrics from `compute_metrics()`.
+ * @param metrics ADT-based QC metrics from `compute_adt_qc_metrics()`.
  * @param options Further options for filtering.
  *
  * @return An object containing the filter thresholds.
  */
-template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int>
-Filters<Float_> compute_filters(const MetricsResults<Sum_, Detected_>& metrics, const FiltersOptions& options) {
-    return compute_filters(metrics.detected.size(), internal::to_buffer(metrics), options);
+template<typename Float_ = double, typename Sum_, typename Detected_>
+AdtQcFilters<Float_> compute_adt_qc_filters(const MetricsResults<Sum_, Detected_>& metrics, const ComputeAdtQcFiltersOptions& options) {
+    return compute_adt_qc_filters(metrics.detected.size(), internal::to_buffer(metrics), options);
 }
 
 /**
- * @brief Filter for high-quality cells using ADT-based metrics with blocking.
+ * @brief Filter on ADT-based QC metrics with blocking.
  * @tparam Float_ Floating-point type for filter thresholds.
+ *
+ * Instances of this class are typically created by `compute_adt_qc_filters_blocked()`.
  */
 template<typename Float_ = double>
-class BlockedFilters {
-public:
-    /**
-     * Default constructor.
-     */
-    BlockedFilters() = default;
-
+class AdtQcBlockedFilters {
 public:
     /**
      * @return Vector of length equal to the number of blocks,
@@ -500,8 +491,8 @@ public:
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param num Number of cells.
-     * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
      * @param[out] output Pointer to an array of length `num`.
@@ -509,7 +500,7 @@ public:
      */
     template<typename Index_, typename Sum_, typename Detected_, typename Block_, typename Output_>
     void filter(Index_ num, const MetricsBuffers<Sum_, Detected_>& metrics, const Block_* block, Output_* output) const {
-        internal::filter(*this, num, metrics, block, output);
+        internal::adt_filter(*this, num, metrics, block, output);
     }
 
     /**
@@ -518,8 +509,8 @@ public:
      * @tparam Block_ Integer type for the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
-     * @param metrics ADT-based QC metrics computed by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
      * @param[out] output Pointer to an array of length `num`.
@@ -536,8 +527,8 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Block_ Integer type for the block assignment.
      *
-     * @param metrics ADT-based QC metrics computed by `compute_metrics()`.
-     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_filters()`.
+     * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
+     * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
      * Each identifier should correspond to the same blocks used in the constructor.
      *
@@ -552,22 +543,31 @@ public:
 };
 
 /**
+ * This function computes filter thresholds for ADT-derived QC metrics in blocked datasets (e.g., cells from multiple batches or samples).
+ * Each blocking level has its own thresholds, equivalent to calling `compute_adt_qc_filters()` on the cells from each block.
+ * This ensures that uninteresting inter-block differences do not inflate the MAD, see `choose_filter_thresholds_blocked()` for more details.
+ *
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Block_ Integer type for the block assignments.
  *
  * @param num Number of cells.
- * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_metrics()`.
+ * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
  */
-template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Block_ = int>
-BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<Sum_, Detected_>& metrics, const Block_* block, const FiltersOptions& options) {
-    BlockedFilters<Float_> output;
-    internal::populate<Float_>(output, num, metrics, block, options);
+template<typename Float_ = double, typename Sum_, typename Detected_, typename Block_>
+AdtQcBlockedFilters<Float_> compute_adt_qc_filters_blocked(
+    size_t num,
+    const ComputeAdtQcMetricsBuffers<Sum_, Detected_>& metrics,
+    const Block_* block,
+    const ComputeAdtQcFiltersOptions& options)
+{
+    AdtQcBlockedFilters<Float_> output;
+    internal::adt_populate<Float_>(output, num, metrics, block, options);
     return output;
 }
 
@@ -576,18 +576,20 @@ BlockedFilters<Float_> compute_filters_blocked(size_t num, const MetricsBuffers<
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Block_ Integer type for the block assignments.
  *
- * @param metrics ADT-based QC metrics computed by `compute_metrics()`.
+ * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
  */
-template<typename Float_ = double, typename Sum_ = double, typename Detected_ = int, typename Block_ = int>
-BlockedFilters<Float_> compute_filters_blocked(const MetricsResults<Sum_, Detected_>& metrics, const Block_* block, const FiltersOptions& options) {
-    return compute_filters_blocked(metrics.detected.size(), internal::to_buffer(metrics), block, options);
-}
-
+template<typename Float_ = double, typename Sum_, typename Detected_, typename Block_>
+AdtQcBlockedFilters<Float_> compute_adt_qc_filters_blocked(
+    const MetricsResults<Sum_, Detected_>& metrics,
+    const Block_* block,
+    const ComputeAdtQcFiltersOptions& options)
+{
+    return compute_adt_qc_filters_blocked(metrics.detected.size(), internal::to_buffer(metrics), block, options);
 }
 
 }
