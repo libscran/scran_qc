@@ -1,5 +1,5 @@
-#ifndef SCRAN_PER_CELL_QC_METRICS_HPP
-#define SCRAN_PER_CELL_QC_METRICS_HPP
+#ifndef SCRAN_QC_PER_CELL_QC_METRICS_HPP
+#define SCRAN_QC_PER_CELL_QC_METRICS_HPP
 
 #include <vector>
 #include <algorithm>
@@ -14,69 +14,45 @@
  * @brief Compute per-cell quality control metrics.
  */
 
-namespace scran {
+namespace scran_qc {
 
 /**
- * @namespace scran::per_cell_qc_metrics
- * @brief Compute per-cell quality control metrics. 
- *
- * Given a feature-by-cell expression matrix (usually containing counts), we compute several QC metrics:
- * 
- * - The sum of expression values for each cell, which represents the efficiency of library preparation and sequencing.
- *   Low sums indicate that the library was not successfully captured.
- * - The number of detected features (i.e., with non-zero counts).
- *   This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.
- * - The maximum value across all features.
- *   This is useful in situations where only one feature is expected to be present, e.g., CRISPR guides, hash tags.
- * - The row index of the feature with the maximum count.
- *   If multiple features are tied for the maximum count, the earliest feature is reported.
- * - The sum of expression values in pre-defined feature subsets.
- *   The exact interpretation depends on the nature of the subset -
- *   most commonly, one subset will contain all genes on the mitochondrial chromosome,
- *   where higher proportions of counts in the mitochondrial subset indicate cell damage due to loss of cytoplasmic transcripts.
- *   Spike-in proportions can be interpreted in a similar manner.
- * - The number of detected features in pre-defined feature subsets.
- *   Analogous to the number of detected features for the entire feature space.
+ * @brief PerCellQcMetricsOptions for `per_cell_qc_metrics()`.
  */
-namespace per_cell_qc_metrics {
-
-/**
- * @brief Options for `compute()`.
- */
-struct Options {
+struct PerCellQcMetricsOptions {
     /**
      * Whether to compute the sum of expression values for each cell.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_sum = true;
 
     /**
      * Whether to compute the number of detected features for each cell.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_detected = true;
 
     /**
      * Whether to compute the maximum expression value for each cell.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_max_value = true;
 
     /**
      * Whether to store the index of the feature with the maximum value for each cell.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_max_index = true;
 
     /**
      * Whether to compute the sum expression in each feature subset.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_subset_sum = true;
 
     /**
      * Whether to compute the number of detected features in each feature subset.
-     * This option only affects the `compute()` overload that returns a `Results` object.
+     * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_subset_detected = true;
 
@@ -107,32 +83,32 @@ struct Buffers {
      */
 
     /**
-     * Pointer to an array of length equal to the number of cells, equivalent to `Results::sum`.
+     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::sum`.
      * Set to `NULL` to skip this calculation.
      */
     Sum_* sum = NULL;
 
     /**
-     * Pointer to an array of length equal to the number of cells, equivalent to `Results::detected`.
+     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::detected`.
      * Set to `NULL` to skip this calculation.
      */
     Detected_* detected = NULL;
 
     /**
-     * Pointer to an array of length equal to the number of cells, equivalent to `Results::max_index`.
+     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::max_index`.
      * Set to `NULL` to skip this calculation.
      */
     Index_* max_index = NULL;
 
     /**
-     * Pointer to an array of length equal to the number of cells, equivalent to `Results::max_value`.
+     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::max_value`.
      * Set to `NULL` to skip this calculation.
      */
     Value_* max_value = NULL;
 
     /**
      * Vector of pointers of length equal to the number of feature subsets,
-     * where each point is to an array of length equal to the number of cells; equivalent to `Results::subset_sum`.
+     * where each point is to an array of length equal to the number of cells; equivalent to `PerCellQcMetricsResults::subset_sum`.
      * Set any value to `NULL` to skip the calculation for the corresponding feature subset,
      * or leave empty to skip calculations for all feature subsets.
      */
@@ -140,7 +116,7 @@ struct Buffers {
 
     /**
      * Vector of pointers of length equal to the number of feature subsets,
-     * where each point is to an array of length equal to the number of cells; equivalent to `Results::subset_detected`.
+     * where each point is to an array of length equal to the number of cells; equivalent to `PerCellQcMetricsResults::subset_detected`.
      * Set any value to `NULL` to skip the calculation for the corresponding feature subset,
      * or leave empty to skip calculations for all feature subsets.
      */
@@ -153,13 +129,13 @@ struct Buffers {
 namespace internal {
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_direct_dense(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_direct_dense(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
     std::vector<std::vector<Index_> > subset_indices;
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
         if constexpr(std::is_pointer<Subset_>::value) {
             size_t nsubsets = subsets.size();
             subset_indices.resize(nsubsets);
-            Index_ NR = mat->nrow();
+            Index_ NR = mat.nrow();
 
             for (size_t s = 0; s < nsubsets; ++s) {
                 auto& current = subset_indices[s];
@@ -174,8 +150,8 @@ void compute_direct_dense(const tatami::Matrix<Value_, Index_>* mat, const std::
     }
 
     tatami::parallelize([&](size_t, Index_ start, Index_ length) {
-        auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<false>(mat, false, start, length);
+        auto NR = mat.nrow();
+        auto ext = tatami::consecutive_extractor<false>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
 
         bool do_max = output.max_index || output.max_value;
@@ -247,7 +223,7 @@ void compute_direct_dense(const tatami::Matrix<Value_, Index_>* mat, const std::
                 }
             }
         }
-    }, mat->ncol(), num_threads);
+    }, mat.ncol(), num_threads);
 }
 
 template<typename Index_, typename Subset_, typename Sum_, typename Detected_, typename Value_>
@@ -271,12 +247,12 @@ std::vector<std::vector<uint8_t> > boolify_subsets(Index_ NR, const std::vector<
 }
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_direct_sparse(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
-    auto is_in_subset = boolify_subsets(mat->nrow(), subsets, output);
+void compute_qc_direct_sparse(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](size_t, Index_ start, Index_ length) {
-        auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<true>(mat, false, start, length);
+        auto NR = mat.nrow();
+        auto ext = tatami::consecutive_extractor<true>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
         std::vector<Index_> ibuffer(NR);
 
@@ -369,11 +345,11 @@ void compute_direct_sparse(const tatami::Matrix<Value_, Index_>* mat, const std:
                 }
             }
         }
-    }, mat->ncol(), num_threads);
+    }, mat.ncol(), num_threads);
 }
 
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
-class RunningBuffers {
+class PerCellQcMetricsRunningBuffers {
 public:
     RunningBuffers(Buffers<Sum_, Detected_, Value_, Index_>& output, size_t thread, Index_ start, Index_ len) {
         if (output.sum) {
@@ -486,15 +462,15 @@ public:
 };
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
-    auto is_in_subset = boolify_subsets(mat->nrow(), subsets, output);
+void compute_qc_running_dense(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
-        auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<false>(mat, true, static_cast<Index_>(0), NR, start, len);
+        auto NR = mat.nrow();
+        auto ext = tatami::consecutive_extractor<false>(&mat, true, static_cast<Index_>(0), NR, start, len);
         std::vector<Value_> vbuffer(len);
 
-        RunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
+        PerCellQcMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
         auto outt = locals.sum_data();
         auto outd = locals.detected_data();
         auto outmi = locals.max_index_data();
@@ -570,22 +546,22 @@ void compute_running_dense(const tatami::Matrix<Value_, Index_>* mat, const std:
         }
 
         locals.transfer();
-    }, mat->ncol(), num_threads);
+    }, mat.ncol(), num_threads);
 }
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_running_sparse(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
     tatami::Options opt;
     opt.sparse_ordered_index = false;
-    auto is_in_subset = boolify_subsets(mat->nrow(), subsets, output);
+    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
-        auto NR = mat->nrow();
-        auto ext = tatami::consecutive_extractor<true>(mat, true, static_cast<Index_>(0), NR, start, len, opt);
+        auto NR = mat.nrow();
+        auto ext = tatami::consecutive_extractor<true>(&mat, true, static_cast<Index_>(0), NR, start, len, opt);
         std::vector<Value_> vbuffer(len);
         std::vector<Index_> ibuffer(len);
 
-        RunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
+        PerCellQCMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
         auto outt = locals.sum_data();
         auto outd = locals.detected_data();
         auto outmi = locals.max_index_data();
@@ -680,7 +656,7 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
         }
 
         if (do_max) {
-            auto NR = mat->nrow();
+            auto NR = mat.nrow();
 
             // Checking anything with non-positive maximum, and replacing it
             // with zero if there are any structural zeros.
@@ -703,7 +679,7 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
         }
 
         locals.transfer();
-    }, mat->ncol(), num_threads);
+    }, mat.ncol(), num_threads);
 }
 
 }
@@ -719,62 +695,80 @@ void compute_running_sparse(const tatami::Matrix<Value_, Index_>* mat, const std
  * @tparam Value_ Type of the matrix value.
  * @tparam Index_ Integer type to store the gene index.
  *
- * Meaningful instances of this object should generally be constructed by calling the `compute()` functions.
+ * Meaningful instances of this object should generally be constructed by calling the `per_cell_qc_metrics()` functions.
  * Empty instances can be default-constructed as placeholders.
  */
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
-struct Results {
+struct PerCellQcMetricsResults {
     /**
      * @cond
      */
-    Results() = default;
+    PerCellQcMetricsResults() = default;
 
-    Results(size_t nsubsets) : subset_sum(nsubsets), subset_detected(nsubsets) {}
+    PerCellQcMetricsResults(size_t nsubsets) : subset_sum(nsubsets), subset_detected(nsubsets) {}
     /**
      * @endcond
      */
 
     /**
      * Sum of expression values for each cell.
-     * Empty if `Options::compute_sum` is false.
+     * Empty if `PerCellQcMetricsOptions::compute_sum` is false.
      */
     std::vector<Sum_> sum;
 
     /**
      * Number of detected features in each cell.
-     * Empty if `Options::compute_detected` is false.
+     * Empty if `PerCellQcMetricsOptions::compute_detected` is false.
      */
     std::vector<Detected_> detected;
 
     /**
      * Row index of the most-expressed feature in each cell.
      * On ties, the first feature is arbitrarily chosen.
-     * Empty if `Options::compute_max_index` is false.
+     * Empty if `PerCellQcMetricsOptions::compute_max_index` is false.
      */
     std::vector<Index_> max_index;
 
     /**
      * Maximum value in each cell.
-     * Empty if `Options::compute_max_value` is false.
+     * Empty if `PerCellQcMetricsOptions::compute_max_value` is false.
      */
     std::vector<Value_> max_value;
 
     /**
      * Sum of expression values for each feature subset in each cell.
      * Each inner vector corresponds to a feature subset and is of length equal to the number of cells.
-     * Empty if there are no feature subsets or if `Options::compute_subset_sum` is false.
+     * Empty if there are no feature subsets or if `PerCellQcMetricsOptions::compute_subset_sum` is false.
      */
     std::vector<std::vector<Sum_> > subset_sum;
 
     /**
      * Number of detected features in each feature subset in each cell.
      * Each inner vector corresponds to a feature subset and is of length equal to the number of cells.
-     * Empty if there are no feature subsets or if `Options::compute_subset_detected` is false.
+     * Empty if there are no feature subsets or if `PerCellQcMetricsOptions::compute_subset_detected` is false.
      */
     std::vector<std::vector<Detected_> > subset_detected;
 };
 
 /**
+ * Given a feature-by-cell expression matrix (usually containing counts), we compute several QC metrics:
+ * 
+ * - The sum of expression values for each cell, which represents the efficiency of library preparation and sequencing.
+ *   Low sums indicate that the library was not successfully captured.
+ * - The number of detected features (i.e., with non-zero counts).
+ *   This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.
+ * - The maximum value across all features.
+ *   This is useful in situations where only one feature is expected to be present, e.g., CRISPR guides, hash tags.
+ * - The row index of the feature with the maximum count.
+ *   If multiple features are tied for the maximum count, the earliest feature is reported.
+ * - The sum of expression values in pre-defined feature subsets.
+ *   The exact interpretation depends on the nature of the subset -
+ *   most commonly, one subset will contain all genes on the mitochondrial chromosome,
+ *   where higher proportions of counts in the mitochondrial subset indicate cell damage due to loss of cytoplasmic transcripts.
+ *   Spike-in proportions can be interpreted in a similar manner.
+ * - The number of detected features in pre-defined feature subsets.
+ *   Analogous to the number of detected features for the entire feature space.
+ *
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
@@ -783,23 +777,28 @@ struct Results {
  *
  * @param mat Pointer to a feature-by-cells `tatami::Matrix` of counts.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
- * - A pointer to an array of length equal to `mat->nrow()` where each entry is interpretable as a boolean.
+ * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.
  *   This indicates whether each row in `mat` belongs to the subset.
  * - A `std::vector` containing sorted and unique row indices.
  *   This specifies the rows in `mat` that belong to the subset.
- * @param[out] output A `Buffers` object in which the computed statistics are to be stored.
+ * @param[out] output Collection of buffers in which the computed statistics are to be stored.
  * @param options Further options.
  */
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, const Options& options) {
-    if (mat->sparse()) {
-        if (mat->prefer_rows()) {
+void per_cell_qc_metrics(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets, 
+    const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
+    const PerCellQcMetricsOptions& options)
+{
+    if (mat.sparse()) {
+        if (mat.prefer_rows()) {
             internal::compute_running_sparse(mat, subsets, output, options.num_threads);
         } else {
             internal::compute_direct_sparse(mat, subsets, output, options.num_threads);
         }
     } else {
-        if (mat->prefer_rows()) {
+        if (mat.prefer_rows()) {
             internal::compute_running_dense(mat, subsets, output, options.num_threads);
         } else {
             internal::compute_direct_dense(mat, subsets, output, options.num_threads);
@@ -816,19 +815,20 @@ void compute(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset
  *
  * @param mat Pointer to a feature-by-cells `tatami::Matrix` of counts.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
- * - A pointer to an array of length equal to `mat->nrow()` where each entry is interpretable as a boolean.
+ * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.
  *   This indicates whether each row in `mat` belongs to the subset.
  * - A `std::vector` containing sorted and unique row indices.
  *   This specifies the rows in `mat` that belong to the subset.
  * @param options Further options.
  *
- * @return A `Results` object containing the QC metrics.
+ * @return Object containing the QC metrics.
+ * Not all metrics may be computed depending on `options`.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_, typename Index_, typename Subset_>
-Results<Sum_, Detected_, Value_, Index_> compute(const tatami::Matrix<Value_, Index_>* mat, const std::vector<Subset_>& subsets, const Options& options) {
-    Results<Sum_, Detected_, Value_, Index_> output;
+PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, const PerCellQcMetricsOptions& options) {
+    PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
     Buffers<Sum_, Detected_, Value_, Index_> buffers;
-    auto ncells = mat->ncol();
+    auto ncells = mat.ncol();
 
     if (options.compute_sum) {
         output.sum.resize(ncells);
@@ -867,10 +867,8 @@ Results<Sum_, Detected_, Value_, Index_> compute(const tatami::Matrix<Value_, In
         }
     }
 
-    compute(mat, subsets, buffers, options);
+    per_cell_qc_metrics(mat, subsets, buffers, options);
     return output;
-}
-
 }
 
 }

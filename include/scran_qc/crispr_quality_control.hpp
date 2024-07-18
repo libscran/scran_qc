@@ -22,7 +22,7 @@ namespace scran_qc {
 /**
  * @brief Options for `compute_crispr_qc_metrics()`.
  */
-struct MetricsOptions {
+struct ComputeCrisprQcMetricsOptions {
     /**
      * Number of threads to use.
      */
@@ -36,7 +36,7 @@ struct MetricsOptions {
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  *
- * All pointers should not be non-NULL when calling `compute_crispr_qc_metrics()` or `compute_crispr_qc_filters()`. 
+ * Note that, unlike `PerCellQcMetricsBuffers`, all pointers are expected to be non-NULL here.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
 struct ComputeCrisprQcMetricsBuffers {
@@ -44,25 +44,25 @@ struct ComputeCrisprQcMetricsBuffers {
      * Pointer to an array of length equal to the number of cells, to store the sum of CRISPR counts per cell.
      * This is analogous to `ComputeCrisprQcMetricsResults::sum`. 
      */
-    Sum_* sum = NULL;
+    Sum_* sum;
 
     /**
      * Pointer to an array of length equal to the number of cells, to store the number of detected guides per cell.
      * This is analogous to `ComputeCrisprQcMetricsResults::detected`.
      */
-    Detected_* detected = NULL;
+    Detected_* detected;
 
     /**
      * Pointer to an array of length equal to the number of cells, to store the maximum count for each cell.
      * This is analogous to `ComputeCrisprQcMetricsResults::max_value`.
      */
-    Value_* max_value = NULL;
+    Value_* max_value;
 
     /**
      * Pointer to an array of length equal to the number of cells, to store the index of the most abundant guide for each cell.
      * This is analogous to `ComputeCrisprQcMetricsResults::max_index`.
      */
-    Index_* max_index = NULL;
+    Index_* max_index;
 };
 
 /**
@@ -80,7 +80,7 @@ struct ComputeCrisprQcMetricsBuffers {
  *   or that library preparation and sequencing failed.
  *   The identity of the most abundant guide is also reported.
  *
- * Low-quality cells are defined as those with a low maximum count, see `compute_crispr_qc_filters()` for more details.
+ * We use these metrics to define thresholds for filtering in `compute_crispr_qc_filters()`.
  *
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
@@ -96,9 +96,9 @@ struct ComputeCrisprQcMetricsBuffers {
  */
 template<typename Value_, typename Index_, typename Sum_, typename Detected_>
 void compute_crispr_qc_metrics(
-    const tatami::Matrix<Value_, Index_>* mat,
+    const tatami::Matrix<Value_, Index_>& mat,
     const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    const ComputeCrisprQcMetricsOptions& options)
+    const ComputeCrisprQcComputeCrisprQcMetricsOptions& options)
 {
     PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_> tmp;
     tmp.sum = output.sum;
@@ -106,9 +106,9 @@ void compute_crispr_qc_metrics(
     tmp.max_value = output.max_value;
     tmp.max_index = output.max_index;
 
-    PerCellQcMetricsOptions opt;
+    PerCellQcComputeCrisprQcMetricsOptions opt;
     opt.num_threads = options.num_threads;
-    per_cell_qc_metrics::compute(mat, std::vector<uint8_t*>{}, tmp, opt);
+    per_cell_qc_metrics(mat, std::vector<uint8_t*>{}, tmp, opt);
 }
 
 /**
@@ -150,14 +150,15 @@ struct ComputeCrisprQcMetricsResults {
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
- * @param mat Pointer to a feature-by-cells **tatami** matrix containing counts.
+ * @param mat A **tatami** matrix containing counts.
+ * Each row should correspond to a guide while each column should correspond to a cell.
  * @param options Further options.
  *
  * @return An object containing the QC metrics.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
-ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc_metrics(const tatami::Matrix<Value_, Index_>* mat, const MetricsOptions& options) {
-    auto NC = mat->ncol();
+ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc_metrics(const tatami::Matrix<Value_, Index_>& mat, const ComputeCrisprQcMetricsOptions& options) {
+    auto NC = mat.ncol();
     ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_> x;
     ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
 
@@ -178,7 +179,7 @@ ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc
 }
 
 /**
- * @brief Options for `Filters()`.
+ * @brief Options for `compute_crispr_qc_filters()`.
  */
 struct ComputeCrisprQcFiltersOptions {
     /**
@@ -194,7 +195,7 @@ struct ComputeCrisprQcFiltersOptions {
 namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_>
-void populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
+void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
@@ -216,9 +217,9 @@ void populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, D
     fopt.median_only = true;
     auto prop_res = [&]() {
         if constexpr(unblocked) {
-            return find_median_mad::compute(n, maxprop.data(), buffer.data(), fopt);
+            return find_median_mad(n, maxprop.data(), buffer.data(), fopt);
         } else {
-            return find_median_mad::compute_blocked(n, maxprop.data(), block, &buffer, fopt);
+            return find_median_mad_blocked(n, maxprop.data(), block, &buffer, fopt);
         }
     }();
 
@@ -244,9 +245,9 @@ void populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, D
     copt.upper = false;
     host.get_max_value() = [&]() {
         if constexpr(unblocked) {
-            return choose_filter_thresholds::compute(n, maxprop.data(), buffer.data(), copt).lower;
+            return choose_filter_thresholds(n, maxprop.data(), buffer.data(), copt).lower;
         } else {
-            return choose_filter_thresholds::internal::strip<true>(choose_filter_thresholds::compute_blocked(n, maxprop.data(), block, &buffer, copt));
+            return internal::strip_threshold<true>(choose_filter_thresholds_blocked(n, maxprop.data(), block, &buffer, copt));
         }
     }();
 }
@@ -362,7 +363,7 @@ public:
 };
 
 /**
- * Low-quality cells are defined as those with a low count for the most abundant guides.
+ * In CRISPR data, low-quality cells are defined as those with a low count for the most abundant guides.
  * However, directly defining a threshold on the maximum count is somewhat tricky as unsuccessful transfection is not uncommon.
  * This often results in a large subpopulation with low maximum counts, inflating the MAD and compromising the threshold calculation.
  * Instead, we use the following approach:
