@@ -63,7 +63,7 @@ struct PerCellQcMetricsOptions {
 };
 
 /**
- * @brief Buffers for direct storage of the calculated statistics.
+ * @brief Buffers for `per_cell_qc_metrics()`.
  *
  * @tparam Sum_ Floating point type to store the sums.
  * @tparam Detected_ Integer type to store the number of detected cells.
@@ -71,13 +71,13 @@ struct PerCellQcMetricsOptions {
  * @tparam Index_ Integer type of the matrix index.
  */
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
-struct Buffers {
+struct PerCellQcMetricsBuffers {
     /**
      * @cond
      */
-    Buffers() = default;
+    PerCellQcMetricsBuffers() = default;
 
-    Buffers(size_t nsubsets) : subset_sum(nsubsets, NULL), subset_detected(nsubsets, NULL) {}
+    PerCellQcMetricsBuffers(size_t nsubsets) : subset_sum(nsubsets, NULL), subset_detected(nsubsets, NULL) {}
     /**
      * @endcond
      */
@@ -129,7 +129,12 @@ struct Buffers {
 namespace internal {
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_qc_direct_dense(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_direct_dense(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
+    int num_threads)
+{
     std::vector<std::vector<Index_> > subset_indices;
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
         if constexpr(std::is_pointer<Subset_>::value) {
@@ -227,7 +232,7 @@ void compute_qc_direct_dense(const tatami::Matrix<Value_, Index_>& mat, const st
 }
 
 template<typename Index_, typename Subset_, typename Sum_, typename Detected_, typename Value_>
-std::vector<std::vector<uint8_t> > boolify_subsets(Index_ NR, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output) {
+std::vector<std::vector<uint8_t> > boolify_subsets(Index_ NR, const std::vector<Subset_>& subsets, const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output) {
     std::vector<std::vector<uint8_t> > is_in_subset;
 
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
@@ -247,7 +252,12 @@ std::vector<std::vector<uint8_t> > boolify_subsets(Index_ NR, const std::vector<
 }
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_qc_direct_sparse(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_direct_sparse(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
+    int num_threads)
+{
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](size_t, Index_ start, Index_ length) {
@@ -351,7 +361,7 @@ void compute_qc_direct_sparse(const tatami::Matrix<Value_, Index_>& mat, const s
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
 class PerCellQcMetricsRunningBuffers {
 public:
-    RunningBuffers(Buffers<Sum_, Detected_, Value_, Index_>& output, size_t thread, Index_ start, Index_ len) {
+    PerCellQcMetricsRunningBuffers(const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output, size_t thread, Index_ start, Index_ len) {
         if (output.sum) {
             my_sum = tatami_stats::LocalOutputBuffer<Sum_>(thread, start, len, output.sum);
         }
@@ -462,7 +472,12 @@ public:
 };
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_qc_running_dense(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_running_dense(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
+    int num_threads)
+{
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
@@ -550,7 +565,12 @@ void compute_qc_running_dense(const tatami::Matrix<Value_, Index_>& mat, const s
 }
 
 template<typename Value_, typename Index_, typename Subset_, typename Sum_, typename Detected_>
-void compute_qc_running_sparse(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, Buffers<Sum_, Detected_, Value_, Index_>& output, int num_threads) {
+void compute_qc_running_sparse(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
+    int num_threads)
+{
     tatami::Options opt;
     opt.sparse_ordered_index = false;
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
@@ -561,7 +581,7 @@ void compute_qc_running_sparse(const tatami::Matrix<Value_, Index_>& mat, const 
         std::vector<Value_> vbuffer(len);
         std::vector<Index_> ibuffer(len);
 
-        PerCellQCMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
+        PerCellQcMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
         auto outt = locals.sum_data();
         auto outd = locals.detected_data();
         auto outmi = locals.max_index_data();
@@ -793,15 +813,15 @@ void per_cell_qc_metrics(
 {
     if (mat.sparse()) {
         if (mat.prefer_rows()) {
-            internal::compute_running_sparse(mat, subsets, output, options.num_threads);
+            internal::compute_qc_running_sparse(mat, subsets, output, options.num_threads);
         } else {
-            internal::compute_direct_sparse(mat, subsets, output, options.num_threads);
+            internal::compute_qc_direct_sparse(mat, subsets, output, options.num_threads);
         }
     } else {
         if (mat.prefer_rows()) {
-            internal::compute_running_dense(mat, subsets, output, options.num_threads);
+            internal::compute_qc_running_dense(mat, subsets, output, options.num_threads);
         } else {
-            internal::compute_direct_dense(mat, subsets, output, options.num_threads);
+            internal::compute_qc_direct_dense(mat, subsets, output, options.num_threads);
         }
     }
 }
@@ -825,9 +845,13 @@ void per_cell_qc_metrics(
  * Not all metrics may be computed depending on `options`.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_, typename Index_, typename Subset_>
-PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(const tatami::Matrix<Value_, Index_>& mat, const std::vector<Subset_>& subsets, const PerCellQcMetricsOptions& options) {
+PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const std::vector<Subset_>& subsets,
+    const PerCellQcMetricsOptions& options)
+{
     PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
-    Buffers<Sum_, Detected_, Value_, Index_> buffers;
+    PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_> buffers;
     auto ncells = mat.ncol();
 
     if (options.compute_sum) {

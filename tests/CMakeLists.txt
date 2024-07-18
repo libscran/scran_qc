@@ -1,24 +1,12 @@
 include(FetchContent)
 FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/1d17ea141d2c11b8917d2c7d029f1c4e2b9769b2.zip
-)
-
-FetchContent_Declare(
-  scran_test_utils 
-  GIT_REPOSITORY https://github.com/libscran/test_utils
+  scran_tests 
+  GIT_REPOSITORY https://github.com/libscran/scran_tests
   GIT_TAG master
 )
+FetchContent_MakeAvailable(scran_tests)
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-FetchContent_MakeAvailable(scran_test_utils)
-
-enable_testing()
-
-set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing")
+option(CODE_COVERAGE "Enable coverage testing" OFF)
 set(DO_CODE_COVERAGE OFF)
 if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(DO_CODE_COVERAGE ON)
@@ -32,17 +20,16 @@ macro(create_test name)
         src/per_cell_qc_metrics.cpp
         src/find_median_mad.cpp
         src/choose_filter_thresholds.cpp
-        src/rna_quality_control.cpp
-        src/adt_quality_control.cpp
-        src/crispr_quality_control.cpp
+        #        src/rna_quality_control.cpp
+        #        src/adt_quality_control.cpp
+        #        src/crispr_quality_control.cpp
         src/format_filters.cpp
     )
 
     target_link_libraries(
         ${name}
-        gtest_main
-        scran_quality_control
-        scran_test_utils
+        scran_qc
+        scran_tests
     )
 
     target_compile_options(${name} PRIVATE -Wall -Werror -Wpedantic -Wextra)

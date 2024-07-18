@@ -64,3 +64,4 @@ write_basic_package_version_file(
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libscran_scran_qcConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/libscran_scran_qcConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libscran_scran_qc)

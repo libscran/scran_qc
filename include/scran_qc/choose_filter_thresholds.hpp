@@ -97,7 +97,7 @@ Float_ unlog_threshold(Float_ val, bool was_logged) {
 }
 
 template<bool lower_, typename Float_>
-std::vector<Float_> strip_threshold(const std::vector<Results<Float_> >& res) {
+std::vector<Float_> strip_threshold(const std::vector<ChooseFilterThresholdsResults<Float_> >& res) {
     std::vector<Float_> output;
     output.reserve(res.size());
     for (const auto& r : res) {
@@ -243,19 +243,17 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
  * @return A vector containing the upper and lower thresholds for each block.
  */
 template<typename Index_, typename Value_, typename Block_, typename Float_>
-std::vector<Results<Float_> > choose_filter_thresholds_blocked(
+std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blocked(
     Index_ num,
     const Value_* metrics,
     const Block_* block,
     FindMedianMadWorkspace<Float_, Index_>* workspace,
-    const FindMedianMadOptions& options)
+    const ChooseFilterThresholdsOptions& options)
 {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
     auto mms = find_median_mad_blocked(num, metrics, block, workspace, fopt);
     return choose_filter_thresholds_blocked(mms, options);
-}
-
 }
 
 }

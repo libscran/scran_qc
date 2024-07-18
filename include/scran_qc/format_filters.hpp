@@ -49,7 +49,7 @@ void filter_index(Index_ num, const Keep_* filter, std::vector<Index_>& output) 
 template<typename Index_, typename Keep_>
 std::vector<Index_> filter_index(Index_ num, const Keep_* filter) {
     std::vector<Index_> output;
-    compute_which(num, filter, output);
+    filter_index(num, filter, output);
     return output;
 }
 

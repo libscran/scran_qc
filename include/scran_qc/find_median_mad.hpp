@@ -1,5 +1,5 @@
-#ifndef SCRAN_FIND_MEDIAN_MAD_H
-#define SCRAN_FIND_MEDIAN_MAD_H
+#ifndef SCRAN_QC_FIND_MEDIAN_MAD_H
+#define SCRAN_QC_FIND_MEDIAN_MAD_H
 
 #include <vector>
 #include <limits>
@@ -14,7 +14,7 @@
  * @brief Compute the median and MAD from an array of values.
  */
 
-namespace scran {
+namespace scran_qc {
 
 /**
  * @brief Options for `find_median_mad()`.
@@ -257,12 +257,12 @@ public:
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
  */
 template<typename Output_ = double, typename Index_, typename Value_, typename Block_>
-std::vector<FindMedianMadResults<Output_> > compute_blocked(
+std::vector<FindMedianMadResults<Output_> > find_median_mad_blocked(
     Index_ num,
     const Value_* metrics, 
     const Block_* block,
     FindMedianMadWorkspace<Output_, Index_>* workspace,
-    const Options& options)
+    const FindMedianMadOptions& options)
 {
     std::unique_ptr<FindMedianMadWorkspace<Output_, Index_> > xworkspace;
     if (workspace == NULL) {
@@ -275,7 +275,7 @@ std::vector<FindMedianMadResults<Output_> > compute_blocked(
     auto& buffer = workspace->my_buffer;
     if (!block) {
         std::copy_n(metrics, num, buffer.begin());
-        output.push_back(compute(num, buffer.data(), options));
+        output.push_back(find_median_mad(num, buffer.data(), options));
         return output;
     }
 
@@ -292,12 +292,10 @@ std::vector<FindMedianMadResults<Output_> > compute_blocked(
     size_t nblocks = starts.size();
     output.reserve(nblocks);
     for (size_t g = 0; g < nblocks; ++g) {
-        output.push_back(compute(ends[g] - starts[g], buffer.data() + starts[g], options));
+        output.push_back(find_median_mad(ends[g] - starts[g], buffer.data() + starts[g], options));
     }
 
     return output;
-}
-
 }
 
 }
