@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(scran_qc
-    VERSION 1.0.0
+    VERSION 0.1.0
     DESCRIPTION "Simple per-cell quality control statistics"
     LANGUAGES CXX)
 
