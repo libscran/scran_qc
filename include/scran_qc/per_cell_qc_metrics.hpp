@@ -17,7 +17,7 @@
 namespace scran_qc {
 
 /**
- * @brief PerCellQcMetricsOptions for `per_cell_qc_metrics()`.
+ * @brief Options for `per_cell_qc_metrics()`.
  */
 struct PerCellQcMetricsOptions {
     /**
@@ -795,7 +795,8 @@ struct PerCellQcMetricsResults {
  * @tparam Sum_ Floating point type to store the sums.
  * @tparam Detected_ Integer type to store the number of detected cells.
  *
- * @param mat Pointer to a feature-by-cells `tatami::Matrix` of counts.
+ * @param mat A **tatami** matrix, typically containing count data.
+ * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
  * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.
  *   This indicates whether each row in `mat` belongs to the subset.
@@ -833,7 +834,8 @@ void per_cell_qc_metrics(
  * @tparam Sum_ Floating point type to store the sums.
  * @tparam Detected_ Integer type to store the number of detected cells.
  *
- * @param mat Pointer to a feature-by-cells `tatami::Matrix` of counts.
+ * @param mat A **tatami** matrix, typically containing count data.
+ * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
  * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.
  *   This indicates whether each row in `mat` belongs to the subset.

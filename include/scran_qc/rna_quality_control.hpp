@@ -171,7 +171,7 @@ struct ComputeRnaQcMetricsResults {
  *
  * @param mat A **tatami** matrix containing counts.
  * Rows should correspond to genes while columns should correspond to cells.
- * @param[in] subsets Vector of feature subsets, typically mitochondrial genes or spike-in transcripts (see comments in `rna_quality_control`).
+ * @param[in] subsets Vector of feature subsets, typically mitochondrial genes or spike-in transcripts. 
  * See `per_cell_qc_metrics()` for more details on the expected format.
  * @param options Further options.
  *

@@ -29,7 +29,7 @@ struct FindMedianMadOptions {
 
     /**
      * Whether to only compute the median.
-     * If true, `FindMedianMadResults::mads` will be filled with NaNs.
+     * If true, `FindMedianMadResults::mad` will be set to NaN.
      */
     bool median_only = false;
 };
@@ -244,13 +244,14 @@ public:
  * @tparam Value_ Numeric type for the input.
  *
  * @param num Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `num`, see `compute()`.
+ * @param[in] metrics Pointer to an array of observations of length `num`.
+ * NaNs are ignored.
  * @param[in] block Optional pointer to an array of block identifiers.
  * If provided, the array should be of length equal to `num`.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * If a null pointer is supplied, all observations are assumed to belong to the same block.
  * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `FindMedianMadWorkspace::set()` on `num` and `block`.
- * The same object can be re-used across multiple calls to `compute_blocked()` with the same `num` and `block`.
+ * The same object can be re-used across multiple calls to `find_median_mad_blocked()` with the same `num` and `block`.
  * This can also be NULL in which case a new workspace is allocated. 
  * @param options Further options.
  *

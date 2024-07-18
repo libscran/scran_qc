@@ -15,7 +15,7 @@
 namespace scran_qc {
 
 /**
- * @brief Options for `compute()`.
+ * @brief Options for `choose_filter_thresholds()`.
  */
 struct ChooseFilterThresholdsOptions {
     /**
@@ -40,15 +40,15 @@ struct ChooseFilterThresholdsOptions {
     /**
      * Minimum difference from the median to define outliers.
      * This enforces a more relaxed threshold in cases where the MAD may be too small.
-     * If `Options::log = true`, this difference is interpreted as a unit on the log-scale.
+     * If `ChooseFilterThresholdsOptions::log = true`, this difference is interpreted as a unit on the log-scale.
      */
     double min_diff = 0;
 
     /**
-     * Whether the supplied median and MAD should be computed on the log-scale (i.e., `find_median_mad::Options::log = true`).
+     * Whether the supplied median and MAD should be computed on the log-scale (i.e., `FindMedianMadOptions::log = true`).
      * This focuses on the fold-change from the median when defining outliers.
      * In practice, this is useful for metrics that are always positive and have right-skewed distributions,
-     * as the log-transformation symmetrizes the distribution and makes it more normal-like such that the `Options::num_mads` interpretation can be applied.
+     * as the log-transformation symmetrizes the distribution and makes it more normal-like such that the `ChooseFilterThresholdsOptions::num_mads` interpretation can be applied.
      * It also ensures that the defined threshold is always positive.
      *
      * If this is set to true, the thresholds are converted back to the original scale of the metrics prior to filtering.

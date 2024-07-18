@@ -82,7 +82,7 @@ struct ComputeAdtQcMetricsBuffers {
  *
  * @param mat A **tatami** matrix containing count data.
  * Rows correspond to ADT features while columns correspond to cells.
- * @param[in] subsets Vector of feature subsets, typically IgG controls (see comments in `adt_quality_control`).
+ * @param[in] subsets Vector of feature subsets, typically IgG controls. 
  * See `per_cell_qc_metrics()` for more details on the expected format.
  * @param[out] output `ComputeAdtQcMetricsBuffers` object in which to store the output.
  * @param options Further options.
@@ -139,7 +139,7 @@ struct ComputeAdtQcMetricsResults {
  *
  * @param mat A **tatami** matrix containing count data.
  * Rows correspond to ADT features while columns correspond to cells.
- * @param[in] subsets Vector of feature subsets, typically IgG controls (see comments in `adt_quality_control`).
+ * @param[in] subsets Vector of feature subsets, typically IgG controls.
  * See `per_cell_qc_metrics()` for more details on the expected format.
  * @param options Further options.
  *

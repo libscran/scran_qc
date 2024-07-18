@@ -16,7 +16,7 @@ namespace scran_qc {
  * Convert the filtering vectors produced by `compute_rna_qc_filters()` and friends into formats that can be used for downstream analysis.
  * In particular, we want to slice the original feature-by-cell matrix so only the high-quality subset of cells are retained.
  * This is most easily done by using `tatami::make_DelayedSubset()` to subset the `tatami::Matrix` with the indices of the high-quality cells.
- * For this purpose, we can use `which()` to convert the boolean filtering vector into a vector of sorted and unique column indices.
+ * For this purpose, we can use `filter_index()` to convert the boolean filtering vector into a vector of sorted and unique column indices.
  *
  * @tparam Index_ Integer type for array indices.
  * @tparam Keep_ Boolean type for the filter.
@@ -54,7 +54,7 @@ std::vector<Index_> filter_index(Index_ num, const Keep_* filter) {
 }
 
 /**
- * When dealing with multiple filters from different modalities (e.g., `crispr_quality_control::Filters::filter()`, `adt_quality_control::Filters::filter()`),
+ * When dealing with multiple filters from different modalities (e.g., `CrisprQcFilters::filter()`, `AdtQcFilters::filter()`),
  * our default strategy is to take the intersection, i.e., we only retain cells that are considered to be high quality in all modalities.
  * This ensures that downstream analyses can be safely performed on each modality in the filtered dataset. 
  *
