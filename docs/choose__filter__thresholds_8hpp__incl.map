@@ -1,5 +1,5 @@
-<map id="scran/choose_filter_thresholds.hpp" name="scran/choose_filter_thresholds.hpp">
-<area shape="rect" id="Node000001" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="73,5,203,46"/>
+<map id="scran_qc/choose_filter_thresholds.hpp" name="scran_qc/choose_filter_thresholds.hpp">
+<area shape="rect" id="Node000001" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="62,5,214,46"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,175,63,201"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,48,52,163,48,160,123,45"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="87,175,139,201"/>

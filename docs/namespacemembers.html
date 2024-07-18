@@ -5,13 +5,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>scran_quality_control: Namespace Members</title>
+<title>scran_qc: Namespace Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -22,9 +29,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">scran_quality_control
+   <div id="projectname">scran_qc
    </div>
-   <div id="projectbrief">Compute simple per-cell quality control metrics</div>
+   <div id="projectbrief">Simple quality control on single-cell data</div>
   </td>
  </tr>
  </tbody>
@@ -74,14 +81,31 @@ $(function() {
 <div class="textblock">Here is a list of all documented namespace members with links to the namespaces they belong to:</div>
 
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
-<li>compute()&#160;:&#160;<a class="el" href="namespacescran_1_1choose__filter__thresholds.html#a56e2b8ed305d4f58b3a0e929db49afaa">scran::choose_filter_thresholds</a>, <a class="el" href="namespacescran_1_1find__median__mad.html#a71c945f9e24df90abf065cc20e4067ae">scran::find_median_mad</a>, <a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">scran::per_cell_qc_metrics</a></li>
-<li>compute_blocked()&#160;:&#160;<a class="el" href="namespacescran_1_1choose__filter__thresholds.html#adc92a1d34e7ca93a0dd82cdc156d6b12">scran::choose_filter_thresholds</a>, <a class="el" href="namespacescran_1_1find__median__mad.html#a31771db5590e3de43e2ffed92f03fc93">scran::find_median_mad</a></li>
-<li>compute_combined_index()&#160;:&#160;<a class="el" href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">scran::format_filters</a></li>
-<li>compute_combined_keep()&#160;:&#160;<a class="el" href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">scran::format_filters</a></li>
-<li>compute_filters()&#160;:&#160;<a class="el" href="namespacescran_1_1adt__quality__control.html#ac2ed5bbd683cbf8731f6d2557924994d">scran::adt_quality_control</a>, <a class="el" href="namespacescran_1_1crispr__quality__control.html#abc592b0d390ca248c7796ff4333d7aff">scran::crispr_quality_control</a>, <a class="el" href="namespacescran_1_1rna__quality__control.html#a5167e6827b051b450cd7f381f46835ca">scran::rna_quality_control</a></li>
-<li>compute_filters_blocked()&#160;:&#160;<a class="el" href="namespacescran_1_1adt__quality__control.html#a61e264eff3efa03a66b8ee39df5d510c">scran::adt_quality_control</a>, <a class="el" href="namespacescran_1_1crispr__quality__control.html#a3c7e3955d25ac8111974ea44fea05ed9">scran::crispr_quality_control</a>, <a class="el" href="namespacescran_1_1rna__quality__control.html#ab59c03c5dd92fede69594411f0fc7b93">scran::rna_quality_control</a></li>
-<li>compute_metrics()&#160;:&#160;<a class="el" href="namespacescran_1_1adt__quality__control.html#a16d8e4add23d4a08431fde30264ea869">scran::adt_quality_control</a>, <a class="el" href="namespacescran_1_1crispr__quality__control.html#a5e0a41f185fd86479db5ef8a7e5d4116">scran::crispr_quality_control</a>, <a class="el" href="namespacescran_1_1rna__quality__control.html#af46c0710c8d28bd27cae80f79d482ae1">scran::rna_quality_control</a></li>
-<li>compute_which()&#160;:&#160;<a class="el" href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">scran::format_filters</a></li>
+<li>choose_filter_thresholds()&#160;:&#160;<a class="el" href="namespacescran__qc.html#ae36c76ebd4e27574da1e12241a16d625">scran_qc</a></li>
+<li>choose_filter_thresholds_blocked()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a8e8af19093a60909e202bb614bbacbeb">scran_qc</a></li>
+<li>combine_filters()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">scran_qc</a></li>
+<li>combine_filters_index()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">scran_qc</a></li>
+<li>compute_adt_qc_filters()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">scran_qc</a></li>
+<li>compute_adt_qc_filters_blocked()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a47a6f3d70501f5b3bcac0f44cbc82349">scran_qc</a></li>
+<li>compute_adt_qc_metrics()&#160;:&#160;<a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">scran_qc</a></li>
+<li>compute_crispr_qc_filters()&#160;:&#160;<a class="el" href="namespacescran__qc.html#adf29d5d3e3d5c698710b139f626c8ce0">scran_qc</a></li>
+<li>compute_crispr_qc_filters_blocked()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a2be1a5e698e0b3a8f79c3966d971fe81">scran_qc</a></li>
+<li>compute_crispr_qc_metrics()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">scran_qc</a></li>
+<li>compute_rna_qc_filters()&#160;:&#160;<a class="el" href="namespacescran__qc.html#af13df69a88ca429bcf8333d61bfb5802">scran_qc</a></li>
+<li>compute_rna_qc_filters_blocked()&#160;:&#160;<a class="el" href="namespacescran__qc.html#ad3ce8f1830515304cde4417dd26cb8a6">scran_qc</a></li>
+<li>compute_rna_qc_metrics()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a11547d21005ac59afdfa595581c534bc">scran_qc</a></li>
+</ul>
+
+
+<h3><a id="index_f" name="index_f"></a>- f -</h3><ul>
+<li>filter_index()&#160;:&#160;<a class="el" href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">scran_qc</a></li>
+<li>find_median_mad()&#160;:&#160;<a class="el" href="namespacescran__qc.html#aa258344640d79468c00a2c96c9e1bf1f">scran_qc</a></li>
+<li>find_median_mad_blocked()&#160;:&#160;<a class="el" href="namespacescran__qc.html#af2fb034bba1a588f7b007fbf95ffe370">scran_qc</a></li>
+</ul>
+
+
+<h3><a id="index_p" name="index_p"></a>- p -</h3><ul>
+<li>per_cell_qc_metrics()&#160;:&#160;<a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">scran_qc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

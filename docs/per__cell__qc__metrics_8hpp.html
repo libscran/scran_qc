@@ -5,13 +5,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>scran_quality_control: scran/per_cell_qc_metrics.hpp File Reference</title>
+<title>scran_qc: scran_qc/per_cell_qc_metrics.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -22,9 +29,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">scran_quality_control
+   <div id="projectname">scran_qc
    </div>
-   <div id="projectbrief">Compute simple per-cell quality control metrics</div>
+   <div id="projectbrief">Simple quality control on single-cell data</div>
   </td>
  </tr>
  </tbody>
@@ -71,7 +78,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdabb9492db2368b3caf0f4c1df6a160.html">scran</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_c1046265c972b987455439d8dbd80657.html">scran_qc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -94,35 +101,40 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for per_cell_qc_metrics.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="per__cell__qc__metrics_8hpp__incl.png" border="0" usemap="#ascran_2per__cell__qc__metrics_8hpp" alt=""/></div>
-<map name="ascran_2per__cell__qc__metrics_8hpp" id="ascran_2per__cell__qc__metrics_8hpp">
-<area shape="rect" title="Compute per&#45;cell quality control metrics." alt="" coords="153,5,350,31"/>
-<area shape="rect" title=" " alt="" coords="5,87,63,112"/>
-<area shape="poly" title=" " alt="" coords="212,34,75,81,73,82,71,77,73,77,210,29"/>
-<area shape="rect" title=" " alt="" coords="86,87,161,112"/>
-<area shape="poly" title=" " alt="" coords="233,34,157,80,155,76,230,29"/>
-<area shape="rect" title=" " alt="" coords="185,87,238,112"/>
-<area shape="poly" title=" " alt="" coords="248,33,227,74,222,71,243,30"/>
-<area shape="rect" title=" " alt="" coords="261,87,322,112"/>
-<area shape="poly" title=" " alt="" coords="260,30,281,71,276,74,255,33"/>
-<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="345,87,467,112"/>
-<area shape="poly" title=" " alt="" coords="276,29,370,77,368,82,274,34"/>
-<area shape="rect" title=" " alt="" coords="491,79,625,120"/>
-<area shape="poly" title=" " alt="" coords="299,29,477,74,475,80,298,34"/>
+<div class="center"><img src="per__cell__qc__metrics_8hpp__incl.png" border="0" usemap="#ascran__qc_2per__cell__qc__metrics_8hpp" alt=""/></div>
+<map name="ascran__qc_2per__cell__qc__metrics_8hpp" id="ascran__qc_2per__cell__qc__metrics_8hpp">
+<area shape="rect" title="Compute per&#45;cell quality control metrics." alt="" coords="179,5,324,46"/>
+<area shape="rect" title=" " alt="" coords="5,102,63,127"/>
+<area shape="poly" title=" " alt="" coords="197,49,75,96,73,97,71,92,73,92,195,44"/>
+<area shape="rect" title=" " alt="" coords="86,102,161,127"/>
+<area shape="poly" title=" " alt="" coords="224,49,155,95,152,90,221,44"/>
+<area shape="rect" title=" " alt="" coords="185,102,238,127"/>
+<area shape="poly" title=" " alt="" coords="245,48,226,89,221,86,240,45"/>
+<area shape="rect" title=" " alt="" coords="261,102,322,127"/>
+<area shape="poly" title=" " alt="" coords="263,45,282,86,277,89,258,48"/>
+<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="345,102,467,127"/>
+<area shape="poly" title=" " alt="" coords="288,44,372,91,370,96,285,49"/>
+<area shape="rect" title=" " alt="" coords="491,94,625,135"/>
+<area shape="poly" title=" " alt="" coords="322,44,477,88,476,93,321,49"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="per__cell__qc__metrics_8hpp__dep__incl.png" border="0" usemap="#ascran_2per__cell__qc__metrics_8hppdep" alt=""/></div>
-<map name="ascran_2per__cell__qc__metrics_8hppdep" id="ascran_2per__cell__qc__metrics_8hppdep">
-<area shape="rect" title="Compute per&#45;cell quality control metrics." alt="" coords="187,5,384,31"/>
-<area shape="rect" href="adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,87,195,112"/>
-<area shape="poly" title=" " alt="" coords="244,40,129,88,127,84,242,35"/>
-<area shape="rect" href="crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="219,79,352,120"/>
-<area shape="poly" title=" " alt="" coords="288,46,288,79,283,79,283,46"/>
-<area shape="rect" href="rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="376,87,565,112"/>
-<area shape="poly" title=" " alt="" coords="329,35,443,84,441,88,327,40"/>
+<div class="center"><img src="per__cell__qc__metrics_8hpp__dep__incl.png" border="0" usemap="#ascran__qc_2per__cell__qc__metrics_8hppdep" alt=""/></div>
+<map name="ascran__qc_2per__cell__qc__metrics_8hppdep" id="ascran__qc_2per__cell__qc__metrics_8hppdep">
+<area shape="rect" title="Compute per&#45;cell quality control metrics." alt="" coords="169,5,313,46"/>
+<area shape="rect" href="adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,94,146,135"/>
+<area shape="poly" title=" " alt="" coords="191,56,114,96,112,91,189,51"/>
+<area shape="rect" href="scran__qc_8hpp.html" title="Simple quality control for single&#45;cell data." alt="" coords="163,183,319,208"/>
+<area shape="poly" title=" " alt="" coords="224,60,211,95,208,114,211,134,222,160,234,181,230,184,217,162,206,135,203,114,206,93,219,59"/>
+<area shape="rect" href="crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="221,94,375,135"/>
+<area shape="poly" title=" " alt="" coords="264,57,287,92,283,95,260,60"/>
+<area shape="rect" href="rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="400,94,540,135"/>
+<area shape="poly" title=" " alt="" coords="308,49,419,91,417,96,306,54"/>
+<area shape="poly" title=" " alt="" coords="132,139,217,180,214,185,129,144"/>
+<area shape="poly" title=" " alt="" coords="277,149,252,184,248,180,273,146"/>
+<area shape="poly" title=" " alt="" coords="400,143,277,185,275,179,398,138"/>
 </map>
 </div>
 </div>
@@ -130,33 +142,30 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Options.html">scran::per_cell_qc_metrics::Options</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Options.html" title="Options for compute().">Options</a> for <code><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">compute()</a></code>.  <a href="structscran_1_1per__cell__qc__metrics_1_1Options.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html">scran_qc::PerCellQcMetricsOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code>.  <a href="structscran__qc_1_1PerCellQcMetricsOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Buffers.html">scran::per_cell_qc_metrics::Buffers&lt; Sum_, Detected_, Value_, Index_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Buffers.html" title="Buffers for direct storage of the calculated statistics.">Buffers</a> for direct storage of the calculated statistics.  <a href="structscran_1_1per__cell__qc__metrics_1_1Buffers.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">scran_qc::PerCellQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffers for <code><a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code>.  <a href="structscran__qc_1_1PerCellQcMetricsBuffers.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Results.html">scran::per_cell_qc_metrics::Results&lt; Sum_, Detected_, Value_, Index_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result store for QC metric calculations.  <a href="structscran_1_1per__cell__qc__metrics_1_1Results.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html">scran_qc::PerCellQcMetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result store for QC metric calculations.  <a href="structscran__qc_1_1PerCellQcMetricsResults.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacescran" id="r_namespacescran"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran.html">scran</a></td></tr>
-<tr class="memdesc:namespacescran"><td class="mdescLeft">&#160;</td><td class="mdescRight">Methods for single-cell analysis. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacescran_1_1per__cell__qc__metrics" id="r_namespacescran_1_1per__cell__qc__metrics"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html">scran::per_cell_qc_metrics</a></td></tr>
-<tr class="memdesc:namespacescran_1_1per__cell__qc__metrics"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute per-cell quality control metrics. <br /></td></tr>
+<tr class="memitem:namespacescran__qc" id="r_namespacescran__qc"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html">scran_qc</a></td></tr>
+<tr class="memdesc:namespacescran__qc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple quality control for single-cell data. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a442874c635f37e35a72d7048246615e2" id="r_a442874c635f37e35a72d7048246615e2"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_ , typename Detected_ &gt; </td></tr>
-<tr class="memitem:a442874c635f37e35a72d7048246615e2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#a442874c635f37e35a72d7048246615e2">scran::per_cell_qc_metrics::compute</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, <a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Buffers.html">Buffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;output, const <a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:a442874c635f37e35a72d7048246615e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee1bf82509fd11171f94679e7eeb096d" id="r_aee1bf82509fd11171f94679e7eeb096d"><td class="memTemplParams" colspan="2">template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ , typename Index_ , typename Subset_ &gt; </td></tr>
-<tr class="memitem:aee1bf82509fd11171f94679e7eeb096d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Results.html">Results</a>&lt; Sum_, Detected_, Value_, Index_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1per__cell__qc__metrics.html#aee1bf82509fd11171f94679e7eeb096d">scran::per_cell_qc_metrics::compute</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; *mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const <a class="el" href="structscran_1_1per__cell__qc__metrics_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:aee1bf82509fd11171f94679e7eeb096d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade78b2da5f4df8f7079570cb5e750513" id="r_ade78b2da5f4df8f7079570cb5e750513"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Subset_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Sum_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Detected_</a> &gt; </td></tr>
+<tr class="memitem:ade78b2da5f4df8f7079570cb5e750513"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">scran_qc::per_cell_qc_metrics</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">mat</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> std::vector&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Subset_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">subsets</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">PerCellQcMetricsBuffers</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Sum_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Detected_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html">PerCellQcMetricsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:ade78b2da5f4df8f7079570cb5e750513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd64a6af25caaab6bef69ccfb26b49c" id="r_acdd64a6af25caaab6bef69ccfb26b49c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Sum_</a>  = double, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Detected_</a>  = int, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Subset_</a> &gt; </td></tr>
+<tr class="memitem:acdd64a6af25caaab6bef69ccfb26b49c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html">PerCellQcMetricsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Sum_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Detected_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#acdd64a6af25caaab6bef69ccfb26b49c">scran_qc::per_cell_qc_metrics</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">mat</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> std::vector&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Subset_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">subsets</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html">PerCellQcMetricsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:acdd64a6af25caaab6bef69ccfb26b49c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Compute per-cell quality control metrics. </p>

@@ -1,5 +1,5 @@
-<map id="scran/format_filters.hpp" name="scran/format_filters.hpp">
-<area shape="rect" id="Node000001" title="Format QC filters for downstream analysis." alt="" coords="45,5,202,31"/>
+<map id="scran_qc/format_filters.hpp" name="scran_qc/format_filters.hpp">
+<area shape="rect" id="Node000001" title="Format QC filters for downstream analysis." alt="" coords="35,5,212,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,34,63,71,59,67,107,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="86,79,161,105"/>

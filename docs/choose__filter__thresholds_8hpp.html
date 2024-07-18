@@ -5,13 +5,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>scran_quality_control: scran/choose_filter_thresholds.hpp File Reference</title>
+<title>scran_qc: scran_qc/choose_filter_thresholds.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -22,9 +29,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">scran_quality_control
+   <div id="projectname">scran_qc
    </div>
-   <div id="projectbrief">Compute simple per-cell quality control metrics</div>
+   <div id="projectbrief">Simple quality control on single-cell data</div>
   </td>
  </tr>
  </tbody>
@@ -71,7 +78,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdabb9492db2368b3caf0f4c1df6a160.html">scran</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_c1046265c972b987455439d8dbd80657.html">scran_qc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -92,9 +99,9 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for choose_filter_thresholds.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="choose__filter__thresholds_8hpp__incl.png" border="0" usemap="#ascran_2choose__filter__thresholds_8hpp" alt=""/></div>
-<map name="ascran_2choose__filter__thresholds_8hpp" id="ascran_2choose__filter__thresholds_8hpp">
-<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="73,5,203,46"/>
+<div class="center"><img src="choose__filter__thresholds_8hpp__incl.png" border="0" usemap="#ascran__qc_2choose__filter__thresholds_8hpp" alt=""/></div>
+<map name="ascran__qc_2choose__filter__thresholds_8hpp" id="ascran__qc_2choose__filter__thresholds_8hpp">
+<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="62,5,214,46"/>
 <area shape="rect" title=" " alt="" coords="5,175,63,201"/>
 <area shape="poly" title=" " alt="" coords="127,48,52,163,48,160,123,45"/>
 <area shape="rect" title=" " alt="" coords="87,175,139,201"/>
@@ -117,15 +124,20 @@ Include dependency graph for choose_filter_thresholds.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="choose__filter__thresholds_8hpp__dep__incl.png" border="0" usemap="#ascran_2choose__filter__thresholds_8hppdep" alt=""/></div>
-<map name="ascran_2choose__filter__thresholds_8hppdep" id="ascran_2choose__filter__thresholds_8hppdep">
-<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="220,5,351,46"/>
-<area shape="rect" href="adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,102,195,127"/>
-<area shape="poly" title=" " alt="" coords="231,55,127,103,125,99,228,50"/>
-<area shape="rect" href="crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="219,94,352,135"/>
-<area shape="poly" title=" " alt="" coords="288,62,288,94,283,94,283,62"/>
-<area shape="rect" href="rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="376,102,565,127"/>
-<area shape="poly" title=" " alt="" coords="342,50,446,99,444,103,340,55"/>
+<div class="center"><img src="choose__filter__thresholds_8hpp__dep__incl.png" border="0" usemap="#ascran__qc_2choose__filter__thresholds_8hppdep" alt=""/></div>
+<map name="ascran__qc_2choose__filter__thresholds_8hppdep" id="ascran__qc_2choose__filter__thresholds_8hppdep">
+<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="165,5,317,46"/>
+<area shape="rect" href="adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,94,146,135"/>
+<area shape="poly" title=" " alt="" coords="191,56,114,96,112,91,189,51"/>
+<area shape="rect" href="scran__qc_8hpp.html" title="Simple quality control for single&#45;cell data." alt="" coords="163,183,319,208"/>
+<area shape="poly" title=" " alt="" coords="224,60,211,95,208,114,211,134,222,160,234,181,230,184,217,162,206,135,203,114,206,93,219,59"/>
+<area shape="rect" href="crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="221,94,375,135"/>
+<area shape="poly" title=" " alt="" coords="264,57,287,92,283,95,260,60"/>
+<area shape="rect" href="rna__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="400,94,540,135"/>
+<area shape="poly" title=" " alt="" coords="308,49,419,91,417,96,306,54"/>
+<area shape="poly" title=" " alt="" coords="132,139,217,180,214,185,129,144"/>
+<area shape="poly" title=" " alt="" coords="277,149,252,184,248,180,273,146"/>
+<area shape="poly" title=" " alt="" coords="400,143,277,185,275,179,398,138"/>
 </map>
 </div>
 </div>
@@ -133,39 +145,36 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">scran::choose_filter_thresholds::Options</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html" title="Options for compute().">Options</a> for <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae991983721dc1e71443f6ae641f67205">compute()</a></code>.  <a href="structscran_1_1choose__filter__thresholds_1_1Options.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">scran_qc::ChooseFilterThresholdsOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">scran::choose_filter_thresholds::Results&lt; Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html" title="Results of compute().">Results</a> of <code><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae991983721dc1e71443f6ae641f67205">compute()</a></code>.  <a href="structscran_1_1choose__filter__thresholds_1_1Results.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">scran_qc::ChooseFilterThresholdsResults&lt; Float_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsResults.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacescran" id="r_namespacescran"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran.html">scran</a></td></tr>
-<tr class="memdesc:namespacescran"><td class="mdescLeft">&#160;</td><td class="mdescRight">Methods for single-cell analysis. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacescran_1_1choose__filter__thresholds" id="r_namespacescran_1_1choose__filter__thresholds"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html">scran::choose_filter_thresholds</a></td></tr>
-<tr class="memdesc:namespacescran_1_1choose__filter__thresholds"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define QC filter thresholds using a MAD-based approach. <br /></td></tr>
+<tr class="memitem:namespacescran__qc" id="r_namespacescran__qc"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html">scran_qc</a></td></tr>
+<tr class="memdesc:namespacescran__qc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple quality control for single-cell data. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae991983721dc1e71443f6ae641f67205" id="r_ae991983721dc1e71443f6ae641f67205"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:ae991983721dc1e71443f6ae641f67205"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">Results</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae991983721dc1e71443f6ae641f67205">scran::choose_filter_thresholds::compute</a> (const <a class="el" href="structscran_1_1find__median__mad_1_1Results.html">find_median_mad::Results</a>&lt; Float_ &gt; &amp;mm, const <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:ae991983721dc1e71443f6ae641f67205"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56e2b8ed305d4f58b3a0e929db49afaa" id="r_a56e2b8ed305d4f58b3a0e929db49afaa"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a56e2b8ed305d4f58b3a0e929db49afaa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">Results</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#a56e2b8ed305d4f58b3a0e929db49afaa">scran::choose_filter_thresholds::compute</a> (Index_ num, Float_ *metrics, const <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:a56e2b8ed305d4f58b3a0e929db49afaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae52b9902520938f7de10d808caabe2f4" id="r_ae52b9902520938f7de10d808caabe2f4"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Value_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:ae52b9902520938f7de10d808caabe2f4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">Results</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ae52b9902520938f7de10d808caabe2f4">scran::choose_filter_thresholds::compute</a> (Index_ num, const Value_ *metrics, Float_ *buffer, const <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:ae52b9902520938f7de10d808caabe2f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc92a1d34e7ca93a0dd82cdc156d6b12" id="r_adc92a1d34e7ca93a0dd82cdc156d6b12"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:adc92a1d34e7ca93a0dd82cdc156d6b12"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">Results</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#adc92a1d34e7ca93a0dd82cdc156d6b12">scran::choose_filter_thresholds::compute_blocked</a> (const std::vector&lt; <a class="el" href="structscran_1_1find__median__mad_1_1Results.html">find_median_mad::Results</a>&lt; Float_ &gt; &gt; mms, const <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:adc92a1d34e7ca93a0dd82cdc156d6b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac23c9e27e19730fda2ca0d7d70339c1f" id="r_ac23c9e27e19730fda2ca0d7d70339c1f"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Value_ , typename Block_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:ac23c9e27e19730fda2ca0d7d70339c1f"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Results.html">Results</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran_1_1choose__filter__thresholds.html#ac23c9e27e19730fda2ca0d7d70339c1f">scran::choose_filter_thresholds::compute_blocked</a> (Index_ num, const Value_ *metrics, const Block_ *block, <a class="el" href="classscran_1_1find__median__mad_1_1Workspace.html">find_median_mad::Workspace</a>&lt; Float_, Index_ &gt; *workspace, const <a class="el" href="structscran_1_1choose__filter__thresholds_1_1Options.html">Options</a> &amp;options)</td></tr>
-<tr class="separator:ac23c9e27e19730fda2ca0d7d70339c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeee603882324b072b88a6f641ffcc2e6" id="r_aeee603882324b072b88a6f641ffcc2e6"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:aeee603882324b072b88a6f641ffcc2e6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">scran_qc::choose_filter_thresholds</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">mm</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:aeee603882324b072b88a6f641ffcc2e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae36c76ebd4e27574da1e12241a16d625" id="r_ae36c76ebd4e27574da1e12241a16d625"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:ae36c76ebd4e27574da1e12241a16d625"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ae36c76ebd4e27574da1e12241a16d625">scran_qc::choose_filter_thresholds</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">metrics</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:ae36c76ebd4e27574da1e12241a16d625"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9a36257fb0f4f4a7d9a2f75af17e43" id="r_a0d9a36257fb0f4f4a7d9a2f75af17e43"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:a0d9a36257fb0f4f4a7d9a2f75af17e43"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a0d9a36257fb0f4f4a7d9a2f75af17e43">scran_qc::choose_filter_thresholds</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">metrics</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">buffer</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:a0d9a36257fb0f4f4a7d9a2f75af17e43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e8af19093a60909e202bb614bbacbeb" id="r_a8e8af19093a60909e202bb614bbacbeb"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:a8e8af19093a60909e202bb614bbacbeb"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a8e8af19093a60909e202bb614bbacbeb">scran_qc::choose_filter_thresholds_blocked</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; &gt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">mms</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:a8e8af19093a60909e202bb614bbacbeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc052211c623c1226049a2ee24f098fe" id="r_acc052211c623c1226049a2ee24f098fe"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Block_</a> , <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">typename</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:acc052211c623c1226049a2ee24f098fe"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#acc052211c623c1226049a2ee24f098fe">scran_qc::choose_filter_thresholds_blocked</a> (<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Value_</a> *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">metrics</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Block_</a> *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">block</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace</a>&lt; <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Float_</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> &gt; *<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">workspace</a>, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">const</a> <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">options</a>)</td></tr>
+<tr class="separator:acc052211c623c1226049a2ee24f098fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Define QC filter thresholds using a MAD-based approach. </p>

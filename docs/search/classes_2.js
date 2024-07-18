@@ -1,9 +1,25 @@
 var searchData=
 [
-  ['compressedsparsecolumnmatrix_0',['CompressedSparseColumnMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseColumnMatrix.html',1,'tatami']]],
-  ['compressedsparsecontents_1',['CompressedSparseContents',['https://tatami-inc.github.io/tatami/structtatami_1_1CompressedSparseContents.html',1,'tatami']]],
-  ['compressedsparsematrix_2',['CompressedSparseMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseMatrix.html',1,'tatami']]],
-  ['compressedsparserowmatrix_3',['CompressedSparseRowMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseRowMatrix.html',1,'tatami']]],
-  ['consecutiveoracle_4',['ConsecutiveOracle',['https://tatami-inc.github.io/tatami/classtatami_1_1ConsecutiveOracle.html',1,'tatami']]],
-  ['constantmatrix_5',['ConstantMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1ConstantMatrix.html',1,'tatami']]]
+  ['choosefilterthresholdsoptions_0',['ChooseFilterThresholdsOptions',['../structscran__qc_1_1ChooseFilterThresholdsOptions.html',1,'scran_qc']]],
+  ['choosefilterthresholdsresults_1',['ChooseFilterThresholdsResults',['../structscran__qc_1_1ChooseFilterThresholdsResults.html',1,'scran_qc']]],
+  ['compressedsparsecolumnmatrix_2',['CompressedSparseColumnMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseColumnMatrix.html',1,'tatami']]],
+  ['compressedsparsecontents_3',['CompressedSparseContents',['https://tatami-inc.github.io/tatami/structtatami_1_1CompressedSparseContents.html',1,'tatami']]],
+  ['compressedsparsematrix_4',['CompressedSparseMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseMatrix.html',1,'tatami']]],
+  ['compressedsparserowmatrix_5',['CompressedSparseRowMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1CompressedSparseRowMatrix.html',1,'tatami']]],
+  ['computeadtqcfiltersoptions_6',['ComputeAdtQcFiltersOptions',['../structscran__qc_1_1ComputeAdtQcFiltersOptions.html',1,'scran_qc']]],
+  ['computeadtqcmetricsbuffers_7',['ComputeAdtQcMetricsBuffers',['../structscran__qc_1_1ComputeAdtQcMetricsBuffers.html',1,'scran_qc']]],
+  ['computeadtqcmetricsoptions_8',['ComputeAdtQcMetricsOptions',['../structscran__qc_1_1ComputeAdtQcMetricsOptions.html',1,'scran_qc']]],
+  ['computeadtqcmetricsresults_9',['ComputeAdtQcMetricsResults',['../structscran__qc_1_1ComputeAdtQcMetricsResults.html',1,'scran_qc']]],
+  ['computecrisprqcfiltersoptions_10',['ComputeCrisprQcFiltersOptions',['../structscran__qc_1_1ComputeCrisprQcFiltersOptions.html',1,'scran_qc']]],
+  ['computecrisprqcmetricsbuffers_11',['ComputeCrisprQcMetricsBuffers',['../structscran__qc_1_1ComputeCrisprQcMetricsBuffers.html',1,'scran_qc']]],
+  ['computecrisprqcmetricsoptions_12',['ComputeCrisprQcMetricsOptions',['../structscran__qc_1_1ComputeCrisprQcMetricsOptions.html',1,'scran_qc']]],
+  ['computecrisprqcmetricsresults_13',['ComputeCrisprQcMetricsResults',['../structscran__qc_1_1ComputeCrisprQcMetricsResults.html',1,'scran_qc']]],
+  ['computernaqcfiltersoptions_14',['ComputeRnaQcFiltersOptions',['../structscran__qc_1_1ComputeRnaQcFiltersOptions.html',1,'scran_qc']]],
+  ['computernaqcmetricsbuffers_15',['ComputeRnaQcMetricsBuffers',['../structscran__qc_1_1ComputeRnaQcMetricsBuffers.html',1,'scran_qc']]],
+  ['computernaqcmetricsoptions_16',['ComputeRnaQcMetricsOptions',['../structscran__qc_1_1ComputeRnaQcMetricsOptions.html',1,'scran_qc']]],
+  ['computernaqcmetricsresults_17',['ComputeRnaQcMetricsResults',['../structscran__qc_1_1ComputeRnaQcMetricsResults.html',1,'scran_qc']]],
+  ['consecutiveoracle_18',['ConsecutiveOracle',['https://tatami-inc.github.io/tatami/classtatami_1_1ConsecutiveOracle.html',1,'tatami']]],
+  ['constantmatrix_19',['ConstantMatrix',['https://tatami-inc.github.io/tatami/classtatami_1_1ConstantMatrix.html',1,'tatami']]],
+  ['crisprqcblockedfilters_20',['CrisprQcBlockedFilters',['../classscran__qc_1_1CrisprQcBlockedFilters.html',1,'scran_qc']]],
+  ['crisprqcfilters_21',['CrisprQcFilters',['../classscran__qc_1_1CrisprQcFilters.html',1,'scran_qc']]]
 ];

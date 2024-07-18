@@ -5,13 +5,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>scran_quality_control: scran/format_filters.hpp Source File</title>
+<title>scran_qc: scran_qc/format_filters.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -22,9 +29,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">scran_quality_control
+   <div id="projectname">scran_qc
    </div>
-   <div id="projectbrief">Compute simple per-cell quality control metrics</div>
+   <div id="projectbrief">Simple quality control on single-cell data</div>
   </td>
  </tr>
  </tbody>
@@ -76,106 +83,103 @@ $(document).ready(function() { init_codefold(0); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdabb9492db2368b3caf0f4c1df6a160.html">scran</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_c1046265c972b987455439d8dbd80657.html">scran_qc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">format_filters.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="format__filters_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef SCRAN_FORMAT_FILTERS_HPP</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define SCRAN_FORMAT_FILTERS_HPP</span></div>
+<a href="format__filters_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef SCRAN_QC_FORMAT_FILTERS_HPP</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define SCRAN_QC_FORMAT_FILTERS_HPP</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacescran.html">scran</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacescran__qc.html">scran_qc</a> {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>format_filters {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">   39</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">compute_which</a>(Index_ num, <span class="keyword">const</span> Keep_* filter, std::vector&lt;Index_&gt;&amp; output) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    output.clear();</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">for</span> (Index_ i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">if</span> (filter[i]) {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            output.push_back(i);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">   29</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">filter_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Keep_</a>* filter, std::vector&lt;Index_&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>.clear();</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">for</span> (<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> = 0; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> &lt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>; ++<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>) {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordflow">if</span> (filter[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>]) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>.push_back(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
-<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#a20527b6752b0d2801b79e8789f873c7c">   58</a></span>std::vector&lt;Index_&gt; <a class="code hl_function" href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">compute_which</a>(Index_ num, <span class="keyword">const</span> Keep_* filter) {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;Index_&gt; output;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_function" href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">compute_which</a>(num, filter, output);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a3afc89c4d5b58f290c88a1992dddaf0f">   50</a></span>std::vector&lt;Index_&gt; <a class="code hl_function" href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">filter_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Keep_</a>* filter) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;Index_&gt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_function" href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">filter_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, filter, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Keep_, <span class="keyword">typename</span> Output_&gt;</div>
-<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">   75</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">compute_combined_keep</a>(<span class="keywordtype">size_t</span> num, <span class="keyword">const</span> std::vector&lt;Keep_*&gt;&amp; filters, Output_* output) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::copy_n(filters.front(), num, output);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> f = 1, nfilters = filters.size(); f &lt; nfilters; ++f) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">auto</span> filt = filters[f];</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            output[i] = output[i] &amp;&amp; filt[i];</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Keep_, <span class="keyword">typename</span> Output_&gt;</div>
+<div class="foldopen" id="foldopen00071" data-start="{" data-end="}">
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">   71</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">combine_filters</a>(<span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> std::vector&lt;Keep_*&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Output_</a>* <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::copy_n(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>.front(), <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a> = 1, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">nfilters</a> = <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>.size(); <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a> &lt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">nfilters</a>; ++<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a>) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keyword">auto</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filt</a> = <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a>];</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> = 0; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> &lt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>; ++<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>) {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>] = <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>] &amp;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filt</a>[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>];</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}</div>
 </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Output_ = u<span class="keywordtype">int</span>8_t, <span class="keyword">typename</span> Keep_ = u<span class="keywordtype">int</span>8_t&gt;</div>
-<div class="foldopen" id="foldopen00096" data-start="{" data-end="}">
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#a69d9e49062991fcb0a383ab864b679c3">   96</a></span>std::vector&lt;Output_&gt; <a class="code hl_function" href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">compute_combined_keep</a>(<span class="keywordtype">size_t</span> num, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; filters) {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    std::vector&lt;Output_&gt; output(num);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <a class="code hl_function" href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">compute_combined_keep</a>(num, filters, output.data());</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Output_ = u<span class="keywordtype">int</span>8_t, <span class="keyword">typename</span> Keep_ = u<span class="keywordtype">int</span>8_t&gt;</div>
+<div class="foldopen" id="foldopen00094" data-start="{" data-end="}">
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#aedcaf6807fab07ce2cbd170a57c84f85">   94</a></span>std::vector&lt;Output_&gt; <a class="code hl_function" href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">combine_filters</a>(<span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>) {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    std::vector&lt;Output_&gt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_function" href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">combine_filters</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>.data());</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
 <div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">  112</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">compute_combined_index</a>(Index_ num, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; filters, std::vector&lt;Index_&gt;&amp; output) {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    output.clear();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">  112</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">combine_filters_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>, std::vector&lt;Index_&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>.clear();</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">size_t</span> nfilters = filters.size();</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">for</span> (Index_ i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordtype">bool</span> keep = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> f = 0; f &lt; nfilters; ++f) {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            <span class="keywordflow">if</span> (!filters[f][i]) {</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                keep = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">nfilters</a> = <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>.size();</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">for</span> (<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> = 0; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a> &lt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>; ++<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>) {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordtype">bool</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">keep</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a> = 0; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a> &lt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">nfilters</a>; ++<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a>) {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            <span class="keywordflow">if</span> (!<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>[<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">f</a>][<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>]) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">keep</a> = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            }</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        }</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> (keep) {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            output.push_back(i);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">keep</a>) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>.push_back(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">i</a>);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    }</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>}</div>
 </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
-<div class="foldopen" id="foldopen00141" data-start="{" data-end="}">
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="namespacescran_1_1format__filters.html#aea36a80dc19559e28ab14a30cce83247">  141</a></span>std::vector&lt;Index_&gt; <a class="code hl_function" href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">compute_combined_index</a>(Index_ num, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; filters) {</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    std::vector&lt;Index_&gt; output;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <a class="code hl_function" href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">compute_combined_index</a>(num, filters, output);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>}</div>
-</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Keep_&gt;</div>
+<div class="foldopen" id="foldopen00143" data-start="{" data-end="}">
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a5dc9944048c61d5befb96a19c04e1b8b">  143</a></span>std::vector&lt;Index_&gt; <a class="code hl_function" href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">combine_filters_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">Index_</a> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <span class="keyword">const</span> std::vector&lt;const Keep_*&gt;&amp; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>) {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    std::vector&lt;Index_&gt; <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <a class="code hl_function" href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">combine_filters_index</a>(<a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">num</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">filters</a>, <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">output</a>;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>}</div>
+</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacescran_1_1format__filters_html_a27975098c63ee4d138d081bcdaa4d61e"><div class="ttname"><a href="namespacescran_1_1format__filters.html#a27975098c63ee4d138d081bcdaa4d61e">scran::format_filters::compute_combined_index</a></div><div class="ttdeci">void compute_combined_index(Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters, std::vector&lt; Index_ &gt; &amp;output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:112</div></div>
-<div class="ttc" id="anamespacescran_1_1format__filters_html_a8558625db78828cc42ff390cb01b7476"><div class="ttname"><a href="namespacescran_1_1format__filters.html#a8558625db78828cc42ff390cb01b7476">scran::format_filters::compute_which</a></div><div class="ttdeci">void compute_which(Index_ num, const Keep_ *filter, std::vector&lt; Index_ &gt; &amp;output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:39</div></div>
-<div class="ttc" id="anamespacescran_1_1format__filters_html_adb5c4f474ba88c84f45e99262ab3151d"><div class="ttname"><a href="namespacescran_1_1format__filters.html#adb5c4f474ba88c84f45e99262ab3151d">scran::format_filters::compute_combined_keep</a></div><div class="ttdeci">void compute_combined_keep(size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:75</div></div>
-<div class="ttc" id="anamespacescran_html"><div class="ttname"><a href="namespacescran.html">scran</a></div><div class="ttdoc">Methods for single-cell analysis.</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:21</div></div>
+<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html">scran_qc::FindMedianMadWorkspace</a></div><div class="ttdoc">Temporary data structures for find_median_mad_blocked().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:172</div></div>
+<div class="ttc" id="anamespacescran__qc_html"><div class="ttname"><a href="namespacescran__qc.html">scran_qc</a></div><div class="ttdoc">Simple quality control for single-cell data.</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:20</div></div>
+<div class="ttc" id="anamespacescran__qc_html_a30925d34e2091b9e5fdf2b1cbff866e7"><div class="ttname"><a href="namespacescran__qc.html#a30925d34e2091b9e5fdf2b1cbff866e7">scran_qc::combine_filters</a></div><div class="ttdeci">void combine_filters(size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:71</div></div>
+<div class="ttc" id="anamespacescran__qc_html_a50cadfe67abc7398be1645988e3be3a7"><div class="ttname"><a href="namespacescran__qc.html#a50cadfe67abc7398be1645988e3be3a7">scran_qc::filter_index</a></div><div class="ttdeci">void filter_index(Index_ num, const Keep_ *filter, std::vector&lt; Index_ &gt; &amp;output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:29</div></div>
+<div class="ttc" id="anamespacescran__qc_html_a8af35779ffe55f2cb003e5bbed71e175"><div class="ttname"><a href="namespacescran__qc.html#a8af35779ffe55f2cb003e5bbed71e175">scran_qc::combine_filters_index</a></div><div class="ttdeci">void combine_filters_index(Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters, std::vector&lt; Index_ &gt; &amp;output)</div><div class="ttdef"><b>Definition</b> format_filters.hpp:112</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
