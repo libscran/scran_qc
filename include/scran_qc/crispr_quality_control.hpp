@@ -98,7 +98,7 @@ template<typename Value_, typename Index_, typename Sum_, typename Detected_>
 void compute_crispr_qc_metrics(
     const tatami::Matrix<Value_, Index_>& mat,
     const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    const ComputeCrisprQcComputeCrisprQcMetricsOptions& options)
+    const ComputeCrisprQcMetricsOptions& options)
 {
     PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_> tmp;
     tmp.sum = output.sum;
@@ -106,7 +106,7 @@ void compute_crispr_qc_metrics(
     tmp.max_value = output.max_value;
     tmp.max_index = output.max_index;
 
-    PerCellQcComputeCrisprQcMetricsOptions opt;
+    PerCellQcMetricsOptions opt;
     opt.num_threads = options.num_threads;
     per_cell_qc_metrics(mat, std::vector<uint8_t*>{}, tmp, opt);
 }
@@ -157,7 +157,10 @@ struct ComputeCrisprQcMetricsResults {
  * @return An object containing the QC metrics.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
-ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc_metrics(const tatami::Matrix<Value_, Index_>& mat, const ComputeCrisprQcMetricsOptions& options) {
+ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc_metrics(
+    const tatami::Matrix<Value_, Index_>& mat,
+    const ComputeCrisprQcMetricsOptions& options)
+{
     auto NC = mat.ncol();
     ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_> x;
     ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
@@ -201,7 +204,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
-            return find_median_mad::Workspace<Float_, size_t>(n, block);
+            return FindMedianMadWorkspace<Float_, size_t>(n, block);
         }
     }();
 
@@ -213,7 +216,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
         maxprop.push_back(static_cast<Float_>(res.max_value[i]) / static_cast<Float_>(res.sum[i]));
     }
 
-    find_median_mad::Options fopt;
+    FindMedianMadOptions fopt;
     fopt.median_only = true;
     auto prop_res = [&]() {
         if constexpr(unblocked) {
@@ -239,7 +242,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
     }
 
     // Filtering on the max counts.
-    choose_filter_thresholds::Options copt;
+    ChooseFilterThresholdsOptions copt;
     copt.num_mads = options.max_value_num_mads;
     copt.log = true;
     copt.upper = false;

@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "simulate_vector.h"
-#include "compare_almost_equal.h"
+#include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
-#include "crispr_quality_control.hpp"
+
+#include "scran_qc/crispr_quality_control.hpp"
 
 class CrisprQualityControlMetricsTest : public ::testing::Test {
 protected:
@@ -11,13 +11,21 @@ protected:
 
     static void SetUpTestSuite() {
         size_t nr = 11, nc = 199;
-        mat.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, simulate_sparse_vector<double>(nr * nc, 0.05, /* lower = */ 1, /* upper = */ 10, /* seed = */ 333)));
+        auto vec = scran_tests::simulate_vector(nr * nc, []{ 
+            scran_tests::SimulationParameters sparams;
+            sparams.density = 0.05;
+            sparams.lower = 1;
+            sparams.upper = 10;
+            sparams.seed = 333;
+            return sparams;
+        }());
+        mat.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
     }
 };
 
 TEST_F(CrisprQualityControlMetricsTest, Basic) {
-    scran::crispr_quality_control::MetricsOptions opts;
-    auto res = scran::crispr_quality_control::compute_metrics(mat.get(), opts);
+    scran_qc::ComputeCrisprQcMetricsOptions opts;
+    auto res = scran_qc::compute_crispr_qc_metrics(*mat, opts);
     EXPECT_EQ(res.sum, tatami_stats::sums::by_column(mat.get()));
 
     auto nonzeros = tatami_stats::counts::zero::by_column(mat.get());
@@ -47,7 +55,7 @@ TEST_F(CrisprQualityControlMetricsTest, Basic) {
 }
 
 TEST(CrisprQualityControlFilters, Basic) {
-    scran::crispr_quality_control::MetricsResults<int, int, int, int> results;
+    scran_qc::ComputeCrisprQcMetricsResults<int, int, int, int> results;
 
     // First 10 have all-zero proportions, next 10 have all-1 proportions.
     // Only the second half should survive the proportion filter that is 
@@ -57,8 +65,8 @@ TEST(CrisprQualityControlFilters, Basic) {
     results.max_value.resize(20);
     std::iota(results.max_value.begin() + 10, results.max_value.end(), 100);
 
-    scran::crispr_quality_control::FiltersOptions opt;
-    auto thresholds = scran::crispr_quality_control::compute_filters(results, opt);
+    scran_qc::ComputeCrisprQcFiltersOptions opt;
+    auto thresholds = scran_qc::compute_crispr_qc_filters(results, opt);
     EXPECT_GT(thresholds.get_max_value(), 0);
     EXPECT_LT(thresholds.get_max_value(), 100);
 
@@ -68,23 +76,23 @@ TEST(CrisprQualityControlFilters, Basic) {
     EXPECT_EQ(expected, keep);
 
     // Double-checking that only the second half is used.
-    scran::find_median_mad::Options fopt;
+    scran_qc::FindMedianMadOptions fopt;
     fopt.log = true;
-    auto ref = scran::find_median_mad::compute<double>(10, results.max_value.data() + 10, NULL, fopt);
-    compare_almost_equal(thresholds.get_max_value(), std::exp(ref.median - 3 * ref.mad));
+    auto ref = scran_qc::find_median_mad<double>(10, results.max_value.data() + 10, NULL, fopt);
+    scran_tests::compare_almost_equal(thresholds.get_max_value(), std::exp(ref.median - 3 * ref.mad));
 }
 
 TEST(CrisprQualityControlFilters, Blocked) {
     {
-        scran::crispr_quality_control::MetricsResults<> results;
+        scran_qc::ComputeCrisprQcMetricsResults<> results;
         results.sum = std::vector<double> { 100, 101, 102, 103, 104, 105 };
         results.max_value = std::vector<double> { 0, 90, 91, 92, 93, 94 };
 
-        scran::crispr_quality_control::FiltersOptions opt;
-        auto thresholds = scran::crispr_quality_control::compute_filters(results, opt);
+        scran_qc::ComputeCrisprQcFiltersOptions opt;
+        auto thresholds = scran_qc::compute_crispr_qc_filters(results, opt);
 
         std::vector<int> block(6);
-        auto bthresholds = scran::crispr_quality_control::compute_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), opt);
         EXPECT_EQ(thresholds.get_max_value(), bthresholds.get_max_value()[0]);
 
         auto keep = bthresholds.filter(results, block.data());
@@ -93,13 +101,13 @@ TEST(CrisprQualityControlFilters, Blocked) {
     }
 
     {
-        scran::crispr_quality_control::MetricsResults<double, int, double> results;
+        scran_qc::ComputeCrisprQcMetricsResults<double, int, double> results;
         results.sum = std::vector<double> { 1000, 1010, 1020, 1030, 1040, 1050, 1060, 1070 };
         results.max_value = std::vector<double> { 0, 90, 91, 92, 0, 900, 910, 920 };
 
-        scran::crispr_quality_control::FiltersOptions opt;
+        scran_qc::ComputeCrisprQcFiltersOptions opt;
         std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-        auto bthresholds = scran::crispr_quality_control::compute_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), opt);
 
         EXPECT_LT(bthresholds.get_max_value()[0], 90);
         EXPECT_GT(bthresholds.get_max_value()[0], 50);

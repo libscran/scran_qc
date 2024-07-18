@@ -237,12 +237,12 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
-            return find_median_mad::Workspace<Float_, size_t>(n, block);
+            return FindMedianMadWorkspace<Float_, size_t>(n, block);
         }
     }();
 
     {
-        choose_filter_thresholds::Options opts;
+        ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.sum_num_mads;
         opts.log = true;
         opts.upper = false;
@@ -256,7 +256,7 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
     }
 
     {
-        choose_filter_thresholds::Options opts;
+        ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.detected_num_mads;
         opts.log = true;
         opts.upper = false;
@@ -269,20 +269,23 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
         }();
     }
 
-    size_t nsubsets = res.subset_proportion.size();
-    host.get_subset_proportion().resize(nsubsets);
-    for (size_t s = 0; s < nsubsets; ++s) {
-        auto sub = res.subset_proportion[s];
-        choose_filter_thresholds::Options opts;
+    {
+        ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.subset_proportion_num_mads;
         opts.lower = false;
-        host.get_subset_proportion()[s] = [&]() {
-            if constexpr(unblocked) {
-                return choose_filter_thresholds(n, sub, buffer.data(), opts).upper;
-            } else {
-                return internal::strip_threshold<false>(choose_filter_thresholds_blocked(n, sub, block, &buffer, opts));
-            }
-        }();
+
+        size_t nsubsets = res.subset_proportion.size();
+        host.get_subset_proportion().resize(nsubsets);
+        for (size_t s = 0; s < nsubsets; ++s) {
+            auto sub = res.subset_proportion[s];
+            host.get_subset_proportion()[s] = [&]() {
+                if constexpr(unblocked) {
+                    return choose_filter_thresholds(n, sub, buffer.data(), opts).upper;
+                } else {
+                    return internal::strip_threshold<false>(choose_filter_thresholds_blocked(n, sub, block, &buffer, opts));
+                }
+            }();
+        }
     }
 }
 

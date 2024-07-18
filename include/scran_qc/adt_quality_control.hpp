@@ -202,13 +202,13 @@ struct ComputeAdtQcFiltersOptions {
 namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename BlockSource_>
-void adt_populate(Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Sum_, Detected_>& res, BlockSource_ block, const FiltersOptions& options) {
+void adt_populate(Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Sum_, Detected_>& res, BlockSource_ block, const ComputeAdtQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]() {
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
-            return find_median_mad::Workspace<Float_, size_t>(n, block);
+            return FindMedianMadWorkspace<Float_, size_t>(n, block);
         }
     }();
 
