@@ -1,8 +1,8 @@
 # Quality control on single-cell data
 
-![Unit tests](https://github.com/libscran/quality_control/actions/workflows/run-tests.yaml/badge.svg)
-![Documentation](https://github.com/libscran/quality_control/actions/workflows/doxygenate.yaml/badge.svg)
-[![Codecov](https://codecov.io/gh/libscran/quality_control/graph/badge.svg?token=JWV0I4WJX2)](https://codecov.io/gh/libscran/quality_control)
+![Unit tests](https://github.com/libscran/scran_qc/actions/workflows/run-tests.yaml/badge.svg)
+![Documentation](https://github.com/libscran/scran_qc/actions/workflows/doxygenate.yaml/badge.svg)
+[![Codecov](https://codecov.io/gh/libscran/scran_qc/graph/badge.svg?token=JWV0I4WJX2)](https://codecov.io/gh/libscran/scran_qc)
 
 ## Overview
 
