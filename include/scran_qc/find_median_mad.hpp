@@ -1,5 +1,5 @@
-#ifndef SCRAN_FIND_MEDIAN_MAD_H
-#define SCRAN_FIND_MEDIAN_MAD_H
+#ifndef SCRAN_QC_FIND_MEDIAN_MAD_H
+#define SCRAN_QC_FIND_MEDIAN_MAD_H
 
 #include <vector>
 #include <limits>
@@ -14,22 +14,12 @@
  * @brief Compute the median and MAD from an array of values.
  */
 
-namespace scran {
+namespace scran_qc {
 
 /**
- * @namespace scran::find_median_mad
- * @brief Calculate the median and MAD from an array of values.
- *
- * Pretty much as it says on the can; calculates the median of an array of values first,
- * and uses the median to then compute the median absolute deviation (MAD) from that array.
- * We support calculation of medians and MADs for separate "blocks" of observations in the same array.
+ * @brief Options for `find_median_mad()`.
  */
-namespace find_median_mad {
-
-/**
- * @brief Options for `find_median_mad::compute()`.
- */
-struct Options {
+struct FindMedianMadOptions {
     /**
      * Whether to compute the median and MAD after log-transformation of the values.
      * This is useful for defining thresholds based on fold changes from the center.
@@ -39,22 +29,22 @@ struct Options {
 
     /**
      * Whether to only compute the median.
-     * If true, `Results::mads` will be filled with NaNs.
+     * If true, `FindMedianMadResults::mad` will be set to NaN.
      */
     bool median_only = false;
 };
 
 /**
- * @brief Container for the median and MAD.
+ * @brief Results of `find_median_mad()`.
  * @tparam Float_ Floating-point type. 
  */
 template<typename Float_>
-struct Results {
+struct FindMedianMadResults {
     /**
      * @cond
      */
-    Results(Float_ m1, Float_ m2) : median(m1), mad(m2) {}
-    Results() = default;
+    FindMedianMadResults(Float_ m1, Float_ m2) : median(m1), mad(m2) {}
+    FindMedianMadResults() = default;
     /**
      * @endcond
      */
@@ -71,6 +61,9 @@ struct Results {
 };
 
 /**
+ * Pretty much as it says on the can; calculates the median of an array of values first,
+ * and uses the median to then compute the median absolute deviation (MAD) from that array.
+ *
  * @tparam Index_ Integer type for array indices.
  * @tparam Float_ Floating-point type for input and output.
  *
@@ -83,7 +76,7 @@ struct Results {
  * @return Median and MAD for `metrics`, possibly after log-transformation.
  */
 template<typename Index_, typename Float_> 
-Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
+FindMedianMadResults<Float_> find_median_mad(Index_ num, Float_* metrics, const FindMedianMadOptions& options) {
     static_assert(std::is_floating_point<Float_>::value);
 
     // Rotate all the NaNs to the front of the buffer and ignore them.
@@ -115,11 +108,11 @@ Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
 
     if (options.median_only || std::isnan(median)) {
         // Giving up.
-        return Results<Float_>(median, std::numeric_limits<Float_>::quiet_NaN());
+        return FindMedianMadResults<Float_>(median, std::numeric_limits<Float_>::quiet_NaN());
     } else if (std::isinf(median)) {
         // MADs should be no-ops when added/subtracted from infinity. Any
         // finite value will do here, so might as well keep it simple.
-        return Results<Float_>(median, static_cast<Float_>(0));
+        return FindMedianMadResults<Float_>(median, static_cast<Float_>(0));
     }
 
     // As an aside, there's no way to avoid passing in 'metrics' as a Float_,
@@ -136,10 +129,12 @@ Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
     auto mad = tatami_stats::medians::direct<Float_>(metrics, num, /* skip_nan = */ false);
     mad *= 1.4826; // for equivalence with the standard deviation under normality.
 
-    return Results<Float_>(median, mad);
+    return FindMedianMadResults<Float_>(median, mad);
 }
 
 /**
+ * Overload of `find_median_mad()` that uses an auxiliary buffer to avoid mutating the input array of values.
+ *
  * @tparam Index_ Integer type for array indices.
  * @tparam Value_ Type for the input.
  * @tparam Float_ Floating-point type for output.
@@ -154,42 +149,44 @@ Results<Float_> compute(Index_ num, Float_* metrics, const Options& options) {
  *
  * @return Median and MAD for `metrics`, possibly after log-transformation.
  */
-template<typename Float_ = double, typename Index_ = int, typename Value_ = double> 
-Results<Float_> compute(Index_ num, const Value_* metrics, Float_* buffer, const Options& options) {
+template<typename Float_ = double, typename Index_, typename Value_> 
+FindMedianMadResults<Float_> find_median_mad(Index_ num, const Value_* metrics, Float_* buffer, const FindMedianMadOptions& options) {
     std::unique_ptr<std::vector<Float_> > xbuffer;
     if (buffer == NULL) {
         xbuffer = std::make_unique<std::vector<Float_> >(num);
         buffer = xbuffer->data();
     }
     std::copy_n(metrics, num, buffer);
-    return compute(num, buffer, options);
+    return find_median_mad(num, buffer, options);
 }
 
 /**
- * @brief Temporary data structures for `compute_blocked()`.
+ * @brief Temporary data structures for `find_median_mad_blocked()`.
  *
- * This can be re-used across multiple `compute_blocked()` calls to avoid reallocation.
+ * This can be re-used across multiple `find_median_mad_blocked()` calls to avoid reallocation.
  *
  * @tparam Float_ Floating-point type for buffering.
  * @tparam Index_ Integer type for array indices.
  */
 template<typename Float_, typename Index_>
-class Workspace {
+class FindMedianMadWorkspace {
 public:
     /**
      * @tparam Block_ Integer type for the block identifiers.
      * @param num Number of observations.
-     * @param[in] block Pointer to an array of block identifiers, see `set()`.
+     * @param[in] block Pointer to an array of block identifiers. 
+     * The array should be of length equal to `num`.
+     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
      */
     template<typename Block_>
-    Workspace(Index_ num, const Block_* block) : my_buffer(num) {
+    FindMedianMadWorkspace(Index_ num, const Block_* block) : my_buffer(num) {
         set(num, block);
     }
 
     /**
      * Default constructor.
      */
-    Workspace() = default;
+    FindMedianMadWorkspace() = default;
 
     /**
      * @tparam Block_ Integer type for the block identifiers.
@@ -238,38 +235,48 @@ public:
 };
 
 /**
+ * For blocked datasets, this function computes the median and MAD for each block.
+ * It is equivalent to calling `find_median_mad()` separately on all observations from each block.
+ *
  * @tparam Output_ Floating-point type for the output.
  * @tparam Index_ Integer type for array indices.
  * @tparam Block_ Integer type, containing the block IDs.
  * @tparam Value_ Numeric type for the input.
  *
  * @param num Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `num`, see `compute()`.
+ * @param[in] metrics Pointer to an array of observations of length `num`.
+ * NaNs are ignored.
  * @param[in] block Optional pointer to an array of block identifiers.
  * If provided, the array should be of length equal to `num`.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
  * If a null pointer is supplied, all observations are assumed to belong to the same block.
- * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `Workspace::set()` on `num` and `block`.
- * The same object can be re-used across multiple calls to `compute_blocked()` with the same `num` and `block`.
+ * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `FindMedianMadWorkspace::set()` on `num` and `block`.
+ * The same object can be re-used across multiple calls to `find_median_mad_blocked()` with the same `num` and `block`.
  * This can also be NULL in which case a new workspace is allocated. 
  * @param options Further options.
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
  */
-template<typename Output_ = double, typename Index_ = int, typename Value_ = double, typename Block_ = int>
-std::vector<Results<Output_> > compute_blocked(Index_ num, const Value_* metrics, const Block_* block, Workspace<Output_, Index_>* workspace, const Options& options) {
-    std::unique_ptr<Workspace<Output_, Index_> > xworkspace;
+template<typename Output_ = double, typename Index_, typename Value_, typename Block_>
+std::vector<FindMedianMadResults<Output_> > find_median_mad_blocked(
+    Index_ num,
+    const Value_* metrics, 
+    const Block_* block,
+    FindMedianMadWorkspace<Output_, Index_>* workspace,
+    const FindMedianMadOptions& options)
+{
+    std::unique_ptr<FindMedianMadWorkspace<Output_, Index_> > xworkspace;
     if (workspace == NULL) {
-        xworkspace = std::make_unique<Workspace<Output_, Index_> >(num, block);
+        xworkspace = std::make_unique<FindMedianMadWorkspace<Output_, Index_> >(num, block);
         workspace = xworkspace.get();
     }
 
-    std::vector<Results<Output_> > output;
+    std::vector<FindMedianMadResults<Output_> > output;
 
     auto& buffer = workspace->my_buffer;
     if (!block) {
         std::copy_n(metrics, num, buffer.begin());
-        output.push_back(compute(num, buffer.data(), options));
+        output.push_back(find_median_mad(num, buffer.data(), options));
         return output;
     }
 
@@ -286,12 +293,10 @@ std::vector<Results<Output_> > compute_blocked(Index_ num, const Value_* metrics
     size_t nblocks = starts.size();
     output.reserve(nblocks);
     for (size_t g = 0; g < nblocks; ++g) {
-        output.push_back(compute(ends[g] - starts[g], buffer.data() + starts[g], options));
+        output.push_back(find_median_mad(ends[g] - starts[g], buffer.data() + starts[g], options));
     }
 
     return output;
-}
-
 }
 
 }

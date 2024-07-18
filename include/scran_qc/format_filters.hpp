@@ -1,5 +1,5 @@
-#ifndef SCRAN_FORMAT_FILTERS_HPP
-#define SCRAN_FORMAT_FILTERS_HPP
+#ifndef SCRAN_QC_FORMAT_FILTERS_HPP
+#define SCRAN_QC_FORMAT_FILTERS_HPP
 
 #include <vector>
 #include <algorithm>
@@ -10,24 +10,14 @@
  * @brief Format QC filters for downstream analysis.
  */
 
-namespace scran {
+namespace scran_qc {
 
 /**
- * @namespace scran::format_filters
- * @brief Format QC filters for downstream analysis.
- *
- * Here, we convert the filtering vectors produced by `rna_quality_control::Filters::filter()` and friends into formats that can be used for downstream analysis.
+ * Convert the filtering vectors produced by `compute_rna_qc_filters()` and friends into formats that can be used for downstream analysis.
  * In particular, we want to slice the original feature-by-cell matrix so only the high-quality subset of cells are retained.
  * This is most easily done by using `tatami::make_DelayedSubset()` to subset the `tatami::Matrix` with the indices of the high-quality cells.
- * For this purpose, we can use `compute_which()` to convert the boolean filtering vector into a vector of sorted and unique column indices.
+ * For this purpose, we can use `filter_index()` to convert the boolean filtering vector into a vector of sorted and unique column indices.
  *
- * When dealing with multiple filters from different modalities (e.g., `crispr_quality_control::Filters::filter()`, `adt_quality_control::Filters::filter()`),
- * our default strategy is to take the intersection, i.e., we only retain cells that are considered to be high quality in all modalities.
- * This ensures that downstream analyses can be safely performed on each modality in the filtered dataset. 
- */
-namespace format_filters {
-
-/**
  * @tparam Index_ Integer type for array indices.
  * @tparam Keep_ Boolean type for the filter.
  *
@@ -36,7 +26,7 @@ namespace format_filters {
  * @param[out] output On output, a vector of sorted and unique indices of the cells considered to be high quality.
  */
 template<typename Index_, typename Keep_>
-void compute_which(Index_ num, const Keep_* filter, std::vector<Index_>& output) {
+void filter_index(Index_ num, const Keep_* filter, std::vector<Index_>& output) {
     output.clear();
     for (Index_ i = 0; i < num; ++i) {
         if (filter[i]) {
@@ -46,6 +36,8 @@ void compute_which(Index_ num, const Keep_* filter, std::vector<Index_>& output)
 }
 
 /**
+ * Overload of `filter_index()` that returns a vector directly.
+ *
  * @tparam Index_ Integer type for array indices.
  * @tparam Keep_ Boolean type for each filter modality.
  *
@@ -55,13 +47,17 @@ void compute_which(Index_ num, const Keep_* filter, std::vector<Index_>& output)
  * @return Vector of sorted and unique indices of the cells considered to be high quality.
  */
 template<typename Index_, typename Keep_>
-std::vector<Index_> compute_which(Index_ num, const Keep_* filter) {
+std::vector<Index_> filter_index(Index_ num, const Keep_* filter) {
     std::vector<Index_> output;
-    compute_which(num, filter, output);
+    filter_index(num, filter, output);
     return output;
 }
 
 /**
+ * When dealing with multiple filters from different modalities (e.g., `CrisprQcFilters::filter()`, `AdtQcFilters::filter()`),
+ * our default strategy is to take the intersection, i.e., we only retain cells that are considered to be high quality in all modalities.
+ * This ensures that downstream analyses can be safely performed on each modality in the filtered dataset. 
+ *
  * @tparam Keep_ Boolean type for each filter modality.
  * @tparam Output_ Boolean type for the output.
  *
@@ -72,7 +68,7 @@ std::vector<Index_> compute_which(Index_ num, const Keep_* filter) {
  * On output, this is filled with truthy values only for cells that are high quality in all modalities.
  */
 template<typename Keep_, typename Output_>
-void compute_combined_keep(size_t num, const std::vector<Keep_*>& filters, Output_* output) {
+void combine_filters(size_t num, const std::vector<Keep_*>& filters, Output_* output) {
     std::copy_n(filters.front(), num, output);
     for (size_t f = 1, nfilters = filters.size(); f < nfilters; ++f) {
         auto filt = filters[f];
@@ -83,6 +79,8 @@ void compute_combined_keep(size_t num, const std::vector<Keep_*>& filters, Outpu
 }
 
 /**
+ * Overload of `combine_filters()` that returns a vector directly.
+ *
  * @tparam Output_ Boolean type for the output.
  * @tparam Keep_ Boolean type for each filter modality.
  *
@@ -93,13 +91,15 @@ void compute_combined_keep(size_t num, const std::vector<Keep_*>& filters, Outpu
  * @return Vector of length `num`, indicating which cells are high quality in all modalities.
  */
 template<typename Output_ = uint8_t, typename Keep_ = uint8_t>
-std::vector<Output_> compute_combined_keep(size_t num, const std::vector<const Keep_*>& filters) {
+std::vector<Output_> combine_filters(size_t num, const std::vector<const Keep_*>& filters) {
     std::vector<Output_> output(num);
-    compute_combined_keep(num, filters, output.data());
+    combine_filters(num, filters, output.data());
     return output;
 }
 
 /**
+ * This has the same behavior as `combine_filters()` followed by `filter_index()`.
+ *
  * @tparam Index_ Integer type for array indices.
  * @tparam Keep_ Boolean type for each filter modality.
  *
@@ -109,7 +109,7 @@ std::vector<Output_> compute_combined_keep(size_t num, const std::vector<const K
  * @param[out] output On output, a vector of sorted and unique indices of the cells considered to be high quality in all modalities.
  */
 template<typename Index_, typename Keep_>
-void compute_combined_index(Index_ num, const std::vector<const Keep_*>& filters, std::vector<Index_>& output) {
+void combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters, std::vector<Index_>& output) {
     output.clear();
 
     size_t nfilters = filters.size();
@@ -128,6 +128,8 @@ void compute_combined_index(Index_ num, const std::vector<const Keep_*>& filters
 }
 
 /**
+ * Overload of `combine_filters_index()` that returns a vector directly.
+ *
  * @tparam Index_ Integer type for array indices.
  * @tparam Keep_ Boolean type for each filter modality.
  *
@@ -138,12 +140,10 @@ void compute_combined_index(Index_ num, const std::vector<const Keep_*>& filters
  * @return Vector of sorted and unique indices of the cells considered to be high quality in all modalities.
  */
 template<typename Index_, typename Keep_>
-std::vector<Index_> compute_combined_index(Index_ num, const std::vector<const Keep_*>& filters) {
+std::vector<Index_> combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters) {
     std::vector<Index_> output;
-    compute_combined_index(num, filters, output);
+    combine_filters_index(num, filters, output);
     return output;
-}
-
 }
 
 }

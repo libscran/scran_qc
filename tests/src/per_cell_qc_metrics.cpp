@@ -1,11 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "simulate_vector.h"
-#include "compare_almost_equal.h"
-
+#include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
 
-#include "per_cell_qc_metrics.hpp"
+#include "scran_qc/per_cell_qc_metrics.hpp"
 
 #include <cmath>
 
@@ -15,7 +13,13 @@ protected:
 
     static void SetUpTestSuite() {
         size_t nr = 100, nc = 50;
-        auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100);
+        auto vec = scran_tests::simulate_vector(nr * nc, []{
+            scran_tests::SimulationParameters sparams;
+            sparams.density = 0.2;
+            sparams.lower = 1;
+            sparams.upper = 100;
+            return sparams;
+        }());
         dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
         dense_column = tatami::convert_to_dense(dense_row.get(), false);
         sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
@@ -28,7 +32,7 @@ public:
         if constexpr(exact_) {
             EXPECT_EQ(ref.sum, other.sum);
         } else {
-            compare_almost_equal(ref.sum, other.sum);
+            scran_tests::compare_almost_equal(ref.sum, other.sum);
         }
         EXPECT_EQ(ref.detected, other.detected);
         EXPECT_EQ(ref.max_value, other.max_value);
@@ -39,7 +43,7 @@ public:
             if constexpr(exact_) {
                 EXPECT_EQ(ref.subset_sum[i], other.subset_sum[i]);
             } else {
-                compare_almost_equal(ref.subset_sum[i], other.subset_sum[i]);
+                scran_tests::compare_almost_equal(ref.subset_sum[i], other.subset_sum[i]);
             }
         }
 
@@ -60,27 +64,27 @@ public:
 };
 
 TEST_P(PerCellQcMetricsTestStandard, NoSubset) {
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
     int threads = GetParam();
     opt.num_threads = threads;
 
     if (threads > 1) {
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         compare<true>(ref, res1);
     } else {
         EXPECT_EQ(ref.sum, tatami_stats::sums::by_column(dense_row.get()));
         EXPECT_EQ(ref.detected, compute_num_detected(dense_row.get()));
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     compare(ref, res2);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     compare(ref, res3);
 
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     compare(ref, res3);
 }
 
@@ -88,8 +92,8 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
     std::vector<std::vector<int> > subs;
     subs.push_back({ 0, 5, 7, 8, 9, 10, 16, 17 });
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
 
     int threads = GetParam();
     opt.num_threads = threads;
@@ -99,17 +103,17 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
         EXPECT_EQ(ref.subset_sum[0], tatami_stats::sums::by_column(sub.get()));
         EXPECT_EQ(ref.subset_detected[0], compute_num_detected(sub.get()));
     } else {
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
         compare<true>(ref, res1);
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), subs, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, subs, opt);
     compare(ref, res2);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), subs, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, subs, opt);
     compare(ref, res3);
 
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), subs, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, subs, opt);
     compare(ref, res4);
 
     // Checking with boolified subsets.
@@ -120,16 +124,16 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
     }
     std::vector<uint8_t*> bool_sub{ bool_sub_raw.front().data() };
 
-    auto bres1 = scran::per_cell_qc_metrics::compute(dense_row.get(), bool_sub, opt);
+    auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
     compare<true>(ref, bres1);
 
-    auto bres2 = scran::per_cell_qc_metrics::compute(dense_column.get(), bool_sub, opt);
+    auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
     compare(ref, bres2);
 
-    auto bres3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), bool_sub, opt);
+    auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
     compare(ref, bres3);
 
-    auto bres4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), bool_sub, opt);
+    auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
     compare(ref, bres4);
 }
 
@@ -138,8 +142,8 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
     subs.push_back({ 0, 5, 7, 8, 9, 10, 16, 17 });
     subs.push_back({ 1, 2, 5, 6, 8, 11, 18, 19});
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
 
     int threads = GetParam();
     opt.num_threads = threads;
@@ -155,17 +159,17 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
         EXPECT_EQ(refprop2, ref.subset_sum[1]); 
         EXPECT_EQ(ref.subset_detected[1], compute_num_detected(ref2.get()));
     } else {
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
         compare<true>(ref, res1);
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), subs, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, subs, opt);
     compare(ref, res2);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), subs, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, subs, opt);
     compare(ref, res3);
 
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), subs, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, subs, opt);
     compare(ref, res4);
 
     // Checking with boolified subsets.
@@ -180,16 +184,16 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
     }
     std::vector<uint8_t*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
 
-    auto bres1 = scran::per_cell_qc_metrics::compute(dense_row.get(), bool_sub, opt);
+    auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
     compare<true>(ref, bres1);
 
-    auto bres2 = scran::per_cell_qc_metrics::compute(dense_column.get(), bool_sub, opt);
+    auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
     compare(ref, bres2);
 
-    auto bres3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), bool_sub, opt);
+    auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
     compare(ref, bres3);
 
-    auto bres4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), bool_sub, opt);
+    auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
     compare(ref, bres4);
 }
 
@@ -215,13 +219,20 @@ TEST_P(PerCellQcMetricsTestMaxed, SparseNegatives) {
 
     {
         size_t nr = 99, nc = 47;
-        auto vec = simulate_sparse_vector(nr * nc, /* density = */ 0.1, /* lower = */ -2, /* upper = */ -1, /* seed = */ 123 * threads);
+        auto vec = scran_tests::simulate_vector(nr * nc, [&]{
+            scran_tests::SimulationParameters sparams;
+            sparams.density = 0.2;
+            sparams.lower = -2;
+            sparams.upper = -1;
+            sparams.seed = 123 * threads;
+            return sparams;
+        }());
         dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
         propagate();
     }
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
     if (threads == 1) { 
         // max should be all-zeros.
@@ -229,20 +240,20 @@ TEST_P(PerCellQcMetricsTestMaxed, SparseNegatives) {
         EXPECT_EQ(ref.max_value, expected);
     } else {
         opt.num_threads = threads;
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         EXPECT_EQ(res1.max_value, ref.max_value);
         EXPECT_EQ(res1.max_index, ref.max_index);
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res3.max_value, ref.max_value);
     EXPECT_EQ(res3.max_index, ref.max_index);
     
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res4.max_value, ref.max_value);
     EXPECT_EQ(res4.max_index, ref.max_index);
 }
@@ -252,13 +263,19 @@ TEST_P(PerCellQcMetricsTestMaxed, DenseNegatives) {
 
     {
         size_t nr = 20, nc = 100;
-        auto vec = simulate_vector(nr * nc, /* lower = */ -5, /* upper = */ -1, /* seed = */ 123 * threads);
+        auto vec = scran_tests::simulate_vector(nr * nc, [&]{
+            scran_tests::SimulationParameters sparams;
+            sparams.lower = -5;
+            sparams.upper = -1;
+            sparams.seed = 123 * threads;
+            return sparams;
+        }());
         dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
         propagate();
     }
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
     opt.num_threads = threads;
 
@@ -272,20 +289,20 @@ TEST_P(PerCellQcMetricsTestMaxed, DenseNegatives) {
         }
         EXPECT_TRUE(max_neg);
     } else {
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         EXPECT_EQ(res1.max_value, ref.max_value);
         EXPECT_EQ(res1.max_index, ref.max_index);
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res3.max_value, ref.max_value);
     EXPECT_EQ(res3.max_index, ref.max_index);
     
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res4.max_value, ref.max_value);
     EXPECT_EQ(res4.max_index, ref.max_index);
 }
@@ -300,8 +317,8 @@ TEST_P(PerCellQcMetricsTestMaxed, AllZeros) {
         propagate();
     }
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
     opt.num_threads = threads;
 
@@ -312,20 +329,20 @@ TEST_P(PerCellQcMetricsTestMaxed, AllZeros) {
         std::vector<int> indices(dense_row->ncol());
         EXPECT_EQ(ref.max_index, indices);
     } else {
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         EXPECT_EQ(res1.max_value, ref.max_value);
         EXPECT_EQ(res1.max_index, ref.max_index);
     }
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res3.max_value, ref.max_value);
     EXPECT_EQ(res3.max_index, ref.max_index);
     
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res4.max_value, ref.max_value);
     EXPECT_EQ(res4.max_index, ref.max_index);
 }
@@ -369,15 +386,15 @@ TEST_P(PerCellQcMetricsTestMaxed, StructuralZeros) {
         dense_row = tatami::convert_to_dense(sparse_column.get(), true);
     }
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto ref = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
     opt.num_threads = threads;
-    auto res1 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res1 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res1.max_value, ref.max_value);
     EXPECT_EQ(res1.max_index, ref.max_index);
 
-    auto res2 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
 }
@@ -387,49 +404,58 @@ TEST_P(PerCellQcMetricsTestMaxed, OkayOnMissing) {
 
     {
         size_t nr = 20, nc = 100;
-        auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ -5, /* upper = */ -1, /* seed = */ 42 * threads);
+        auto vec = scran_tests::simulate_vector(nr * nc, [&]{
+            scran_tests::SimulationParameters sparams;
+            sparams.density = 0.2;
+            sparams.lower = 1;
+            sparams.upper = 5;
+            sparams.seed = 42 * threads;
+            return sparams;
+        }());
         dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
         propagate();
     }
 
     {
-        scran::per_cell_qc_metrics::Options opt;
+        scran_qc::PerCellQcMetricsOptions opt;
         opt.compute_max_value = false;
         opt.num_threads = threads;
 
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         EXPECT_TRUE(res1.max_value.empty());
+        EXPECT_EQ(res1.max_index.size(), dense_row->ncol());
 
-        auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+        auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
         EXPECT_TRUE(res2.max_value.empty());
         EXPECT_EQ(res2.max_index, res1.max_index);
 
-        auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+        auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
         EXPECT_TRUE(res3.max_value.empty());
         EXPECT_EQ(res3.max_index, res1.max_index);
         
-        auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+        auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
         EXPECT_TRUE(res4.max_value.empty());
         EXPECT_EQ(res4.max_index, res1.max_index);
     }
 
     {
-        scran::per_cell_qc_metrics::Options opt;
+        scran_qc::PerCellQcMetricsOptions opt;
         opt.compute_max_index = false;
         opt.num_threads = threads;
 
-        auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+        auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
         EXPECT_TRUE(res1.max_index.empty());
+        EXPECT_EQ(res1.max_value.size(), dense_row->ncol());
 
-        auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+        auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
         EXPECT_TRUE(res2.max_index.empty());
         EXPECT_EQ(res2.max_value, res1.max_value);
 
-        auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+        auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
         EXPECT_TRUE(res3.max_index.empty());
         EXPECT_EQ(res3.max_value, res1.max_value);
         
-        auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+        auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
         EXPECT_TRUE(res4.max_index.empty());
         EXPECT_EQ(res4.max_value, res1.max_value);
     }
@@ -443,7 +469,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 TEST(PerCellQcMetrics, Empty) {
     size_t nr = 0, nc = 50;
-    scran::per_cell_qc_metrics::Options opt;
+    scran_qc::PerCellQcMetricsOptions opt;
 
     auto dense_row = std::make_shared<tatami::DenseRowMatrix<double, int> >(nr, nc, std::vector<double>{});
     auto dense_column = tatami::convert_to_dense(dense_row.get(), false);
@@ -451,16 +477,16 @@ TEST(PerCellQcMetrics, Empty) {
     auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);
 
     std::vector<double> expected(nc);
-    auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), std::vector<char*>{}, opt);
+    auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res1.max_value, expected);
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, expected);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), std::vector<char*>{}, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
     EXPECT_EQ(res3.max_value, expected);
 
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), std::vector<char*>{}, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res4.max_value, expected);
 }
 
@@ -470,7 +496,14 @@ TEST(PerCellQcMetrics, NewType) {
     subs.push_back({ 1, 2, 5, 6, 8, 11, 18, 19});
 
     size_t nr = 200, nc = 60;
-    auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100);
+    auto vec = scran_tests::simulate_vector(nr * nc, []{
+        scran_tests::SimulationParameters sparams;
+        sparams.density = 0.2;
+        sparams.lower = 1;
+        sparams.upper = 100;
+        sparams.seed = 69;
+        return sparams;
+    }());
     for (auto& v : vec) {
         v = std::round(v);
     }
@@ -482,8 +515,8 @@ TEST(PerCellQcMetrics, NewType) {
     auto sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
     auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);
 
-    scran::per_cell_qc_metrics::Options opt;
-    auto refres = scran::per_cell_qc_metrics::compute(ref.get(), subs, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    auto refres = scran_qc::per_cell_qc_metrics(*ref, subs, opt);
     auto compare = [&](const auto& other) {
         EXPECT_EQ(refres.sum, other.sum);
         EXPECT_EQ(refres.detected, other.detected);
@@ -501,27 +534,34 @@ TEST(PerCellQcMetrics, NewType) {
         }
     };
 
-    auto res1 = scran::per_cell_qc_metrics::compute(dense_row.get(), subs, opt);
+    auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
     compare(res1);
 
-    auto res2 = scran::per_cell_qc_metrics::compute(dense_column.get(), subs, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, subs, opt);
     compare(res2);
 
-    auto res3 = scran::per_cell_qc_metrics::compute(sparse_row.get(), subs, opt);
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, subs, opt);
     compare(res3);
 
-    auto res4 = scran::per_cell_qc_metrics::compute(sparse_column.get(), subs, opt);
+    auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, subs, opt);
     compare(res4);
 }
 
 TEST(PerCellQcMetrics, Disabled) {
     size_t nr = 100, nc = 50;
-    auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100, /* seed */ 42);
+    auto vec = scran_tests::simulate_vector(nr * nc, []{
+        scran_tests::SimulationParameters sparams;
+        sparams.density = 0.2;
+        sparams.lower = 1;
+        sparams.upper = 100;
+        sparams.seed = 70;
+        return sparams;
+    }());
     tatami::DenseRowMatrix<double, int> mat(nr, nc, std::move(vec));
 
     // Fully disabled.
     {
-        scran::per_cell_qc_metrics::Options opt;
+        scran_qc::PerCellQcMetricsOptions opt;
         opt.compute_sum = false;
         opt.compute_detected = false;
         opt.compute_max_value = false;
@@ -532,7 +572,7 @@ TEST(PerCellQcMetrics, Disabled) {
         std::vector<std::vector<int> > subs;
         subs.push_back({ 0, 1, 2, 3 });
 
-        auto res = scran::per_cell_qc_metrics::compute(&mat, subs, opt);
+        auto res = scran_qc::per_cell_qc_metrics(mat, subs, opt);
         EXPECT_TRUE(res.sum.empty());
         EXPECT_TRUE(res.detected.empty());
         EXPECT_TRUE(res.max_value.empty());
@@ -547,12 +587,12 @@ TEST(PerCellQcMetrics, Disabled) {
         std::vector<std::vector<int> > subs;
         subs.push_back({ 0, 1, 2, 3 });
 
-        scran::per_cell_qc_metrics::Buffers<double, int, double, int> buffers;
+        scran_qc::PerCellQcMetricsBuffers<double, int, double, int> buffers;
         buffers.subset_sum.resize(1, NULL);
         buffers.subset_detected.resize(1, NULL);
 
-        scran::per_cell_qc_metrics::Options opt;
-        scran::per_cell_qc_metrics::compute(&mat, subs, buffers, opt);
+        scran_qc::PerCellQcMetricsOptions opt;
+        scran_qc::per_cell_qc_metrics(mat, subs, buffers, opt);
 
         EXPECT_TRUE(buffers.subset_sum[0] == NULL);
         EXPECT_TRUE(buffers.subset_detected[0] == NULL);
@@ -561,11 +601,18 @@ TEST(PerCellQcMetrics, Disabled) {
 
 TEST(PerCellQcMetrics, DirtyBufferFilling) {
     size_t nr = 100, nc = 50;
-    auto vec = simulate_sparse_vector(nr * nc, 0.1, /* lower = */ 1, /* upper = */ 100, /* seed */ 69);
+    auto vec = scran_tests::simulate_vector(nr * nc, []{
+        scran_tests::SimulationParameters sparams;
+        sparams.density = 0.2;
+        sparams.lower = 1;
+        sparams.upper = 100;
+        sparams.seed = 71;
+        return sparams;
+    }());
     tatami::DenseRowMatrix<double, int> mat(nr, nc, std::move(vec));
 
-    scran::per_cell_qc_metrics::Results<double, int, double, int> output;
-    scran::per_cell_qc_metrics::Buffers<double, int, double, int> buffers;
+    scran_qc::PerCellQcMetricsResults<double, int, double, int> output;
+    scran_qc::PerCellQcMetricsBuffers<double, int, double, int> buffers;
 
     // Prefilling each vector with a little bit of nonsense.
     {
@@ -598,8 +645,8 @@ TEST(PerCellQcMetrics, DirtyBufferFilling) {
     std::vector<std::vector<int> > subs;
     subs.push_back({ 1, 5, 7, 9, 11 });
 
-    scran::per_cell_qc_metrics::Options opt;
-    scran::per_cell_qc_metrics::compute(&mat, subs, buffers, opt);
-    auto ref = scran::per_cell_qc_metrics::compute(&mat, subs, opt);
+    scran_qc::PerCellQcMetricsOptions opt;
+    scran_qc::per_cell_qc_metrics(mat, subs, buffers, opt);
+    auto ref = scran_qc::per_cell_qc_metrics(mat, subs, opt);
     PerCellQcMetricsTestStandard::compare<true>(ref, output);
 }

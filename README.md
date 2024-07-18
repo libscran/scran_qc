@@ -17,14 +17,14 @@ Given a [`tatami::Matrix`](https://github.com/tatami-inc/tatami) containing RNA 
 we can compute some common statistics like the sum of counts, number of detected genes, and the mitochondrial proportion:
 
 ```cpp
-#include "scran/rna_quality_control.hpp"
+#include "scran_qc/scran_qc.hpp"
 
 std::shared_ptr<tatami::Matrix<double, int> > mat = some_data_source();
 std::vector<std::vector<int> > subsets;
 subsets.push_back(some_mito_subsets()); // vector of row indices for mitochondrial genes.
 
-scran::rna_quality_control::MetricsOptions mopt;
-auto metrics = scran::rna_quality_control::compute_metrics(mat.get(), subsets, mopt);
+scran_qc::ComputeRnaQcMetricsOptions mopt;
+auto metrics = scran_qc::compute_rna_qc_metrics(*mat, subsets, mopt);
 
 metrics.sum; // vector of count sums across cells. 
 metrics.detected; // vector of detected genes across cells.
@@ -34,8 +34,8 @@ metrics.subset_proportion[0]; // vector of mitochondrial proportions.
 We can then use this to identify high-quality cells:
 
 ```cpp
-scran::rna_quality_control::FiltersOptions fopt;
-auto filters = scran::rna_quality_control::compute_filters(metrics, fopt);
+scran_qc::ComputeRnaQcFiltersOptions fopt;
+auto filters = scran_qc::compute_rna_qc_filters(metrics, fopt);
 
 filters.get_sum(); // lower threshold on the sum.
 filters.get_detected(); // lower threshold on the number of detected genes.
@@ -56,14 +56,14 @@ For example, we use the sum of counts for the IgG isotype control when filtering
 
 ```cpp
 std::shared_ptr<tatami::Matrix<double, int> > adt_mat = some_adt_data_source();
-std::vector<std::vector<int> > subsets;
-subsets.push_back(some_IgG_subsets()); // vector of row indices for IgG controls.
+std::vector<std::vector<int> > asubsets;
+asubsets.push_back(some_IgG_subsets()); // vector of row indices for IgG controls.
 
-scran::adt_quality_control::MetricsOptions mopt;
-auto metrics = scran::adt_quality_control::compute_metrics(adt_mat.get(), subsets, mopt);
-scran::adt_quality_control::FiltersOptions fopt;
-auto filters = scran::adt_quality_control::compute_filters(metrics, fopt);
-auto keep = filters.filter(metrics);
+scran_qc::ComputeAdtQcMetricsOptions amopt;
+auto ametrics = scran_qc::compute_adt_qc_metrics(*adt_mat, asubsets, amopt);
+scran_qc::ComputeAdtQcFiltersOptions afopt;
+auto afilters = scran_qc::compute_adt_qc_filters(ametrics, afopt);
+auto akeep = filters.filter(ametrics);
 ```
 
 Once we have our filter(s), we can subset our dataset so that only the columns corresponding to high-quality cells are used for downstream analysis:
@@ -71,33 +71,68 @@ Once we have our filter(s), we can subset our dataset so that only the columns c
 ```cpp
 auto submatrix = tatami::make_DelayedSubset(
     mat, 
-    scran::format_filters::compute_which<int>(keep.size(), keep.data());
+    scran_qc::filter_index<int>(keep.size(), keep.data()),
+    /* by_row = */ false
+);
+
+// Combine filters from multiple modalities:
+auto submatrix2 = tatami::make_DelayedSubset(
+    mat, 
+    scran_qc::combine_filters_index<int>(keep.size(), { keep.data(), akeep.data() }),
     /* by_row = */ false
 );
 ```
 
-Check out the [reference documentation](https://libscran.github.io/quality_control) for more details.
+Check out the [reference documentation](https://libscran.github.io/scran_qc) for more details.
 
 ## Building projects
 
-This repository is part of the broader [**libscran**](https://github.com/libscran/libscran) library,
-so users are recommended to use the latter in their projects.
-**libscran** developers should just use CMake with `FetchContent`:
+### CMake with `FetchContent`
+
+If you're using CMake, you just need to add something like this to your `CMakeLists.txt`:
 
 ```cmake
 include(FetchContent)
 
 FetchContent_Declare(
-  scran_quality_control 
-  GIT_REPOSITORY https://github.com/libscran/quality_control
+  scran_qc
+  GIT_REPOSITORY https://github.com/libscran/scran_qc
   GIT_TAG master # or any version of interest
 )
 
-FetchContent_MakeAvailable(scran_quality_control)
+FetchContent_MakeAvailable(scran_qc)
+```
 
+Then you can link to **scran_qc** to make the headers available during compilation:
+
+```cmake
 # For executables:
-target_link_libraries(myexe scran_quality_control)
+target_link_libraries(myexe libscran::scran_qc)
 
 # For libaries
-target_link_libraries(mylib INTERFACE scran_quality_control)
+target_link_libraries(mylib INTERFACE libscran::scran_qc)
 ```
+
+### CMake with `find_package()`
+
+```cmake
+find_package(libscran_scran_qc CONFIG REQUIRED)
+target_link_libraries(mylib INTERFACE libscran::scran_qc)
+```
+
+To install the library, use:
+
+```sh
+mkdir build && cd build
+cmake .. -DSCRAN_QC_TESTS=OFF
+cmake --build . --target install
+```
+
+By default, this will use `FetchContent` to fetch all external dependencies.
+If you want to install them manually, use `-DSCRAN_QC_FETCH_EXTERN=OFF`.
+See the tags in [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions of each dependency.
+
+### Manual
+
+If you're not using CMake, the simple approach is to just copy the files in `include/` - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
+This requires the external dependencies listed in [`extern/CMakeLists.txt`](extern/CMakeLists.txt), which also need to be made available during compilation.
