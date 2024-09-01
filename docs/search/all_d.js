@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parallelize_0',['parallelize',['https://tatami-inc.github.io/tatami/namespacetatami.html#a41e252422f9959a123ba390a941ae76f',1,'tatami']]],
+  ['parallelize_0',['parallelize',['https://tatami-inc.github.io/tatami/namespacetatami.html#a5a08e0387bc00e8045a0364d6e35d120',1,'tatami']]],
   ['parallelize_2ehpp_1',['parallelize.hpp',['https://tatami-inc.github.io/tatami/parallelize_8hpp.html',1,'']]],
   ['per_5fcell_5fqc_5fmetrics_2',['per_cell_qc_metrics',['../namespacescran__qc.html#acdd64a6af25caaab6bef69ccfb26b49c',1,'scran_qc::per_cell_qc_metrics(const tatami::Matrix&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const PerCellQcMetricsOptions &amp;options)'],['../namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513',1,'scran_qc::per_cell_qc_metrics(const tatami::Matrix&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const PerCellQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;output, const PerCellQcMetricsOptions &amp;options)']]],
   ['per_5fcell_5fqc_5fmetrics_2ehpp_3',['per_cell_qc_metrics.hpp',['../per__cell__qc__metrics_8hpp.html',1,'']]],
