@@ -58,6 +58,7 @@ struct PerCellQcMetricsOptions {
 
     /**
      * Number of threads to use.
+     * The parallelization scheme is determined by `tatami::parallelize()`.
      */
     int num_threads = 1;
 };
