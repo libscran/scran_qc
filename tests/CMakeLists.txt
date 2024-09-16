@@ -6,6 +6,31 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(scran_tests)
 
+option(CODE_COVERAGE "Enable coverage testing" OFF)
+set(DO_CODE_COVERAGE OFF)
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(DO_CODE_COVERAGE ON)
+endif()
+
+include(GoogleTest)
+
+macro(decorate_executable target)
+    target_link_libraries(
+        ${target}
+        scran_qc
+        scran_tests
+    )
+
+    target_compile_options(${target} PRIVATE -Wall -Werror -Wpedantic -Wextra)
+
+    if(DO_CODE_COVERAGE)
+        target_compile_options(${target} PRIVATE -O0 -g --coverage)
+        target_link_options(${target} PRIVATE --coverage)
+    endif()
+
+    gtest_discover_tests(${target})
+endmacro()
+
 add_executable(
     libtest 
     src/per_cell_qc_metrics.cpp
@@ -16,20 +41,11 @@ add_executable(
     src/crispr_quality_control.cpp
     src/format_filters.cpp
 )
+decorate_executable(libtest)
 
-target_link_libraries(
-    libtest
-    scran_qc
-    scran_tests
+add_executable(
+    cuspartest 
+    src/per_cell_qc_metrics.cpp
 )
-
-target_compile_options(libtest PRIVATE -Wall -Werror -Wpedantic -Wextra)
-
-option(CODE_COVERAGE "Enable coverage testing" OFF)
-if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(libtest PRIVATE -O0 -g --coverage)
-    target_link_options(libtest PRIVATE --coverage)
-endif()
-
-include(GoogleTest)
-gtest_discover_tests(libtest)
+decorate_executable(cuspartest)
+target_compile_definitions(cuspartest PRIVATE SUBPAR_CUSTOM_PARALLELIZE_RANGE=::subpar::test_parallelize_range)

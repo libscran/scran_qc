@@ -155,7 +155,7 @@ void compute_qc_direct_dense(
         }
     }
 
-    tatami::parallelize([&](size_t, Index_ start, Index_ length) {
+    tatami::parallelize([&](int, Index_ start, Index_ length) {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
@@ -261,7 +261,7 @@ void compute_qc_direct_sparse(
 {
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](size_t, Index_ start, Index_ length) {
+    tatami::parallelize([&](int, Index_ start, Index_ length) {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
@@ -362,7 +362,7 @@ void compute_qc_direct_sparse(
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
 class PerCellQcMetricsRunningBuffers {
 public:
-    PerCellQcMetricsRunningBuffers(const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output, size_t thread, Index_ start, Index_ len) {
+    PerCellQcMetricsRunningBuffers(const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output, int thread, Index_ start, Index_ len) {
         if (output.sum) {
             my_sum = tatami_stats::LocalOutputBuffer<Sum_>(thread, start, len, output.sum);
         }
@@ -481,7 +481,7 @@ void compute_qc_running_dense(
 {
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
+    tatami::parallelize([&](int thread, Index_ start, Index_ len) {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(&mat, true, static_cast<Index_>(0), NR, start, len);
         std::vector<Value_> vbuffer(len);
@@ -576,7 +576,7 @@ void compute_qc_running_sparse(
     opt.sparse_ordered_index = false;
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](size_t thread, Index_ start, Index_ len) {
+    tatami::parallelize([&](int thread, Index_ start, Index_ len) {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(&mat, true, static_cast<Index_>(0), NR, start, len, opt);
         std::vector<Value_> vbuffer(len);
