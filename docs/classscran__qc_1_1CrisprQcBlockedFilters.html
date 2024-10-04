@@ -240,7 +240,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing CRISPR-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the <code><a class="el" href="namespacescran__qc.html#adf29d5d3e3d5c698710b139f626c8ce0">compute_crispr_qc_filters()</a></code>. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
@@ -305,7 +305,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>CRISPR-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the <code><a class="el" href="namespacescran__qc.html#adf29d5d3e3d5c698710b139f626c8ce0">compute_crispr_qc_filters()</a></code>. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
@@ -364,7 +364,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>CRISPR-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the <code><a class="el" href="namespacescran__qc.html#adf29d5d3e3d5c698710b139f626c8ce0">compute_crispr_qc_filters()</a></code>. Alternatively NULL, if all cells belong to the same block.</td></tr>
   </table>
   </dd>
 </dl>

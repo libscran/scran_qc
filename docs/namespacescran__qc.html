@@ -554,7 +554,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
@@ -607,7 +607,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
@@ -1168,7 +1168,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing CRISPR-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
@@ -1223,7 +1223,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>CRISPR-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
@@ -2123,7 +2123,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of buffers containing RNA-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
@@ -2177,7 +2177,7 @@ template&lt;<a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>RNA-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. Alternatively NULL, if all cells belong to the same block. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options for filtering.</td></tr>
   </table>
   </dd>
