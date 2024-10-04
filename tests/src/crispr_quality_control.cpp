@@ -91,6 +91,7 @@ TEST(CrisprQualityControlFilters, Blocked) {
         scran_qc::ComputeCrisprQcFiltersOptions opt;
         auto thresholds = scran_qc::compute_crispr_qc_filters(results, opt);
 
+        // Checking what happens when no filtering is performed.
         std::vector<int> block(6);
         auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), opt);
         EXPECT_EQ(thresholds.get_max_value(), bthresholds.get_max_value()[0]);
@@ -98,6 +99,13 @@ TEST(CrisprQualityControlFilters, Blocked) {
         auto keep = bthresholds.filter(results, block.data());
         std::vector<uint8_t> expected { 0, 1, 1, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
+
+        // Same result with a NULL pointer.
+        auto nthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, static_cast<int*>(NULL), opt);
+        EXPECT_EQ(thresholds.get_max_value(), nthresholds.get_max_value()[0]);
+
+        auto nkeep = nthresholds.filter(results, static_cast<int*>(NULL));
+        EXPECT_EQ(expected, nkeep);
     }
 
     {

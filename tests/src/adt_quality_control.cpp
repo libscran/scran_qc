@@ -96,6 +96,7 @@ TEST(AdtQualityControlFilters, Blocked) {
         scran_qc::ComputeAdtQcFiltersOptions opt;
         auto thresholds = scran_qc::compute_adt_qc_filters(results, opt);
 
+        // Checking what happens when no filtering is performed.
         std::vector<int> block(6);
         auto bthresholds = scran_qc::compute_adt_qc_filters_blocked(results, block.data(), opt);
         EXPECT_EQ(thresholds.get_detected(), bthresholds.get_detected()[0]);
@@ -104,6 +105,14 @@ TEST(AdtQualityControlFilters, Blocked) {
         auto keep = bthresholds.filter(results, block.data());
         std::vector<uint8_t> expected { 1, 0, 0, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
+
+        // Same result with NULL pointers.
+        auto nthresholds = scran_qc::compute_adt_qc_filters_blocked(results, static_cast<int*>(NULL), opt);
+        EXPECT_EQ(thresholds.get_detected(), nthresholds.get_detected()[0]);
+        EXPECT_EQ(thresholds.get_subset_sum()[0], nthresholds.get_subset_sum()[0][0]);
+
+        auto nkeep = nthresholds.filter(results, static_cast<int*>(NULL));
+        EXPECT_EQ(expected, nkeep);
     }
 
     {

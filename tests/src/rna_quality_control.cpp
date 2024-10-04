@@ -109,6 +109,7 @@ TEST(RnaQualityControlFilters, Blocked) {
         scran_qc::ComputeRnaQcFiltersOptions opt;
         auto thresholds = scran_qc::compute_rna_qc_filters(results, opt);
 
+        // Checking what happens when no filtering is performed.
         std::vector<int> block(6);
         auto bthresholds = scran_qc::compute_rna_qc_filters_blocked(results, block.data(), opt);
         EXPECT_EQ(thresholds.get_sum(), bthresholds.get_sum()[0]);
@@ -119,6 +120,16 @@ TEST(RnaQualityControlFilters, Blocked) {
         auto keep = bthresholds.filter(results, block.data());
         std::vector<uint8_t> expected { 0, 0, 0, 0, 1, 1 };
         EXPECT_EQ(expected, keep);
+
+        // Same result with a NULL pointer.
+        auto nthresholds = scran_qc::compute_rna_qc_filters_blocked(results, static_cast<int*>(NULL), opt);
+        EXPECT_EQ(thresholds.get_sum(), nthresholds.get_sum()[0]);
+        EXPECT_EQ(thresholds.get_detected(), nthresholds.get_detected()[0]);
+        EXPECT_EQ(thresholds.get_subset_proportion()[0], nthresholds.get_subset_proportion()[0][0]);
+        EXPECT_EQ(thresholds.get_subset_proportion()[1], nthresholds.get_subset_proportion()[1][0]);
+
+        auto nkeep = nthresholds.filter(results, static_cast<int*>(NULL));
+        EXPECT_EQ(expected, nkeep);
     }
 
     {

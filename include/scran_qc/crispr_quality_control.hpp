@@ -11,6 +11,7 @@
 #include "find_median_mad.hpp"
 #include "per_cell_qc_metrics.hpp"
 #include "choose_filter_thresholds.hpp"
+#include "utils.hpp"
 
 /**
  * @file crispr_quality_control.hpp
@@ -200,9 +201,11 @@ namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_>
 void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
-    constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
+    constexpr bool unblocked = std::is_same<BlockSource_, std::false_type>::value;
+    constexpr bool oneblocked = std::is_same<BlockSource_, std::true_type>::value;
+
     auto buffer = [&]() {
-        if constexpr(unblocked) {
+        if constexpr(unblocked || oneblocked) {
             return std::vector<Float_>(n);
         } else {
             return FindMedianMadWorkspace<Float_, size_t>(n, block);
@@ -220,7 +223,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
     FindMedianMadOptions fopt;
     fopt.median_only = true;
     auto prop_res = [&]() {
-        if constexpr(unblocked) {
+        if constexpr(unblocked || oneblocked) {
             return find_median_mad(n, maxprop.data(), buffer.data(), fopt);
         } else {
             return find_median_mad_blocked(n, maxprop.data(), block, &buffer, fopt);
@@ -229,7 +232,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
 
     for (size_t i = 0; i < n; ++i) {
         auto limit = [&]() {
-            if constexpr(unblocked){
+            if constexpr(unblocked || oneblocked){
                 return prop_res.median;
             } else {
                 return prop_res[block[i]].median;
@@ -248,8 +251,9 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
     copt.log = true;
     copt.upper = false;
     host.get_max_value() = [&]() {
-        if constexpr(unblocked) {
-            return choose_filter_thresholds(n, maxprop.data(), buffer.data(), copt).lower;
+        if constexpr(unblocked || oneblocked) {
+            auto thresh = choose_filter_thresholds(n, maxprop.data(), buffer.data(), copt).lower;
+            return maybe_vector<oneblocked>(thresh);
         } else {
             return internal::strip_threshold<true>(choose_filter_thresholds_blocked(n, maxprop.data(), block, &buffer, copt));
         }
@@ -258,19 +262,11 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
 
 template<class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_, typename Output_>
 void crispr_filter(const Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, BlockSource_ block, Output_* output) {
-    constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
-    const auto& mv = host.get_max_value();
+    const auto& mv = define_threshold_outer(host.get_max_value(), block);
     for (size_t i = 0; i < n; ++i) {
-        auto thresh = [&]() {
-            if constexpr(unblocked) {
-                return mv;
-            } else {
-                return mv[block[i]];
-            }
-        }();
-        output[i] = output[i] && (metrics.max_value[i] >= thresh);
+        output[i] = output[i] && (metrics.max_value[i] >= define_threshold_inner(mv, block, i));
     }
 }
 
@@ -330,7 +326,7 @@ public:
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Output_>
     void filter(size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, Output_* output) const {
-        internal::crispr_filter(*this, num, metrics, false, output);
+        internal::crispr_filter(*this, num, metrics, std::false_type{}, output);
     }
 
     /**
@@ -407,7 +403,7 @@ CrisprQcFilters<Float_> compute_crispr_qc_filters(
     const ComputeCrisprQcFiltersOptions& options)
 {
     CrisprQcFilters<Float_> output;
-    internal::crispr_populate<Float_>(output, num, metrics, false, options);
+    internal::crispr_populate<Float_>(output, num, metrics, std::false_type{}, options);
     return output;
 }
 
@@ -471,13 +467,18 @@ public:
      * @param num Number of cells.
      * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
-     * Each identifier should correspond to the same blocks used in the constructor.
+     * Each identifier should correspond to the same blocks used in the `compute_crispr_qc_filters()`.
+     * Alternatively NULL, if all cells belong to the same block.
      * @param[out] output Pointer to an array of length `num`.
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_, typename Output_>
     void filter(size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block, Output_* output) const {
-        internal::crispr_filter(*this, num, metrics, block, output);
+        if (block == NULL) {
+            internal::crispr_filter(*this, num, metrics, std::true_type{}, output);
+        } else {
+            internal::crispr_filter(*this, num, metrics, block, output);
+        }
     }
 
     /**
@@ -490,7 +491,8 @@ public:
      *
      * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
-     * Each identifier should correspond to the same blocks used in the constructor.
+     * Each identifier should correspond to the same blocks used in the `compute_crispr_qc_filters()`.
+     * Alternatively NULL, if all cells belong to the same block.
      * @param[out] output Pointer to an array of length `num`.
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
@@ -509,7 +511,8 @@ public:
      * 
      * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
-     * Each identifier should correspond to the same blocks used in the constructor.
+     * Each identifier should correspond to the same blocks used in the `compute_crispr_qc_filters()`.
+     * Alternatively NULL, if all cells belong to the same block.
      *
      * @return Vector of length `num`, containing the high-quality calls.
      */
@@ -536,6 +539,7 @@ public:
  * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * Alternatively NULL, if all cells belong to the same block.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
@@ -548,7 +552,11 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
     const ComputeCrisprQcFiltersOptions& options)
 {
     CrisprQcBlockedFilters<Float_> output;
-    internal::crispr_populate<Float_>(output, num, metrics, block, options);
+    if (block == NULL) {
+        internal::crispr_populate<Float_>(output, num, metrics, std::true_type{}, options);
+    } else {
+        internal::crispr_populate<Float_>(output, num, metrics, block, options);
+    }
     return output;
 }
 
@@ -562,6 +570,7 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
  * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * Alternatively NULL, if all cells belong to the same block.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
