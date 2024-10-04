@@ -261,12 +261,13 @@ void crispr_filter(const Host_& host, size_t n, const ComputeCrisprQcMetricsBuff
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
+    const auto& mv = host.get_max_value();
     for (size_t i = 0; i < n; ++i) {
         auto thresh = [&]() {
             if constexpr(unblocked) {
-                return host.get_max_value();
+                return mv;
             } else {
-                return host.get_max_value()[block[i]];
+                return mv[block[i]];
             }
         }();
         output[i] = output[i] && (metrics.max_value[i] >= thresh);

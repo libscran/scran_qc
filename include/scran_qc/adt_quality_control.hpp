@@ -255,12 +255,13 @@ void adt_filter(const Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Su
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
+    const auto& detected = host.get_detected();
     for (size_t i = 0; i < n; ++i) {
         auto thresh = [&]() {
             if constexpr(unblocked) {
-                return host.get_detected();
+                return detected;
             } else {
-                return host.get_detected()[block[i]];
+                return detected[block[i]];
             }
         }();
         output[i] = output[i] && (metrics.detected[i] >= thresh);
