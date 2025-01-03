@@ -72,6 +72,8 @@ struct ComputeAdtQcMetricsBuffers {
  * - The sum of counts in pre-defined feature subsets.
  *   While the exact interpretation depends on the nature of the subset, the most common use case involves isotype control (IgG) features.
  *   IgG antibodies should not bind to anything, so high coverage suggests that non-specific binding is a problem, e.g., due to antibody conjugates.
+ *   (We do not use proportions here, as it is entirely possible for a cell to have no counts for other tags due to the absence of their targeted features;
+ *   this would result in a high proportion even if the cell has a "normal" level of non-specific binding.)
  *
  * We use these metrics to define thresholds for filtering in `compute_adt_qc_filters()`.
  *
