@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include "scran_tests/scran_tests.hpp"
 
 #include "scran_qc/format_filters.hpp"
 

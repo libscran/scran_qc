@@ -1,5 +1,3 @@
-#include <gtest/gtest.h>
-
 #include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
 
@@ -597,56 +595,4 @@ TEST(PerCellQcMetrics, Disabled) {
         EXPECT_TRUE(buffers.subset_sum[0] == NULL);
         EXPECT_TRUE(buffers.subset_detected[0] == NULL);
     }
-}
-
-TEST(PerCellQcMetrics, DirtyBufferFilling) {
-    size_t nr = 100, nc = 50;
-    auto vec = scran_tests::simulate_vector(nr * nc, []{
-        scran_tests::SimulationParameters sparams;
-        sparams.density = 0.2;
-        sparams.lower = 1;
-        sparams.upper = 100;
-        sparams.seed = 71;
-        return sparams;
-    }());
-    tatami::DenseRowMatrix<double, int> mat(nr, nc, std::move(vec));
-
-    scran_qc::PerCellQcMetricsResults<double, int, double, int> output;
-    scran_qc::PerCellQcMetricsBuffers<double, int, double, int> buffers;
-
-    // Prefilling each vector with a little bit of nonsense.
-    {
-        output.sum.resize(nc, 99);
-        buffers.sum = output.sum.data();
-
-        output.detected.resize(nc, 111);
-        buffers.detected = output.detected.data();
-
-        output.max_index.resize(nc, 91);
-        buffers.max_index = output.max_index.data();
-
-        output.max_value.resize(nc, 23214);
-        buffers.max_value = output.max_value.data();
-
-        size_t nsubsets = 1;
-        output.subset_sum.resize(nsubsets);
-        buffers.subset_sum.resize(nsubsets);
-        output.subset_detected.resize(nsubsets);
-        buffers.subset_detected.resize(nsubsets);
-
-        for (size_t s = 0; s < nsubsets; ++s) {
-            output.subset_sum[s].resize(nc, 99);
-            buffers.subset_sum[s] = output.subset_sum[s].data();
-            output.subset_detected[s].resize(nc, -100);
-            buffers.subset_detected[s] = output.subset_detected[s].data();
-        }
-    }
-
-    std::vector<std::vector<int> > subs;
-    subs.push_back({ 1, 5, 7, 9, 11 });
-
-    scran_qc::PerCellQcMetricsOptions opt;
-    scran_qc::per_cell_qc_metrics(mat, subs, buffers, opt);
-    auto ref = scran_qc::per_cell_qc_metrics(mat, subs, opt);
-    PerCellQcMetricsTestStandard::compare<true>(ref, output);
 }

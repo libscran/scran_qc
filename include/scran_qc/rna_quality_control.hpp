@@ -185,17 +185,29 @@ ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_> compute_rna_qc_metrics(
     ComputeRnaQcMetricsBuffers<Sum_, Detected_, Proportion_> x;
     ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_> output;
 
-    output.sum.resize(NC);
+    output.sum.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.sum = output.sum.data();
 
-    output.detected.resize(NC);
+    output.detected.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.detected = output.detected.data();
 
     size_t nsubsets = subsets.size();
     x.subset_proportion.resize(nsubsets);
     output.subset_proportion.resize(nsubsets);
     for (size_t s = 0; s < nsubsets; ++s) {
-        output.subset_proportion[s].resize(NC);
+        output.subset_proportion[s].resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         x.subset_proportion[s] = output.subset_proportion[s].data();
     }
 
@@ -452,7 +464,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
     std::vector<Output_> filter(const ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_>& metrics) const {
-        std::vector<Output_> output(metrics.sum.size());
+        std::vector<Output_> output(metrics.sum.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, output.data());
         return output;
     }
@@ -620,7 +636,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double, typename Block_ = int>
     std::vector<Output_> filter(const ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_>& metrics, const Block_* block) const {
-        std::vector<Output_> output(metrics.sum.size());
+        std::vector<Output_> output(metrics.sum.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, block, output.data());
         return output;
     }

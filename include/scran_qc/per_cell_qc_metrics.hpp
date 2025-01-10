@@ -858,19 +858,35 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
     auto ncells = mat.ncol();
 
     if (options.compute_sum) {
-        output.sum.resize(ncells);
+        output.sum.resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         buffers.sum = output.sum.data();
     }
     if (options.compute_detected) {
-        output.detected.resize(ncells);
+        output.detected.resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         buffers.detected = output.detected.data();
     }
     if (options.compute_max_index) {
-        output.max_index.resize(ncells);
+        output.max_index.resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         buffers.max_index = output.max_index.data();
     }
     if (options.compute_max_value) {
-        output.max_value.resize(ncells);
+        output.max_value.resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         buffers.max_value = output.max_value.data();
     }
 
@@ -880,7 +896,11 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
         output.subset_sum.resize(nsubsets);
         buffers.subset_sum.resize(nsubsets);
         for (size_t s = 0; s < nsubsets; ++s) {
-            output.subset_sum[s].resize(ncells);
+            output.subset_sum[s].resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+                , SCRAN_QC_TEST_INIT
+#endif
+            );
             buffers.subset_sum[s] = output.subset_sum[s].data();
         }
     }
@@ -889,7 +909,11 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
         output.subset_detected.resize(nsubsets);
         buffers.subset_detected.resize(nsubsets);
         for (size_t s = 0; s < nsubsets; ++s) {
-            output.subset_detected[s].resize(ncells);
+            output.subset_detected[s].resize(ncells
+#ifdef SCRAN_QC_TEST_INIT
+                , SCRAN_QC_TEST_INIT
+#endif
+            );
             buffers.subset_detected[s] = output.subset_detected[s].data();
         }
     }

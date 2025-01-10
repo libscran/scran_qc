@@ -44,6 +44,19 @@ add_executable(
 decorate_executable(libtest)
 
 add_executable(
+    dirtytest 
+    src/per_cell_qc_metrics.cpp
+    src/find_median_mad.cpp
+    src/choose_filter_thresholds.cpp
+    src/rna_quality_control.cpp
+    src/adt_quality_control.cpp
+    src/crispr_quality_control.cpp
+    src/format_filters.cpp
+)
+decorate_executable(dirtytest)
+target_compile_definitions(dirtytest PRIVATE "SCRAN_QC_TEST_INIT=scran_tests::initial_value()")
+
+add_executable(
     cuspartest 
     src/per_cell_qc_metrics.cpp
 )

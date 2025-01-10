@@ -166,16 +166,32 @@ ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc
     ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_> x;
     ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
 
-    output.sum.resize(NC);
+    output.sum.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.sum = output.sum.data();
 
-    output.detected.resize(NC);
+    output.detected.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.detected = output.detected.data();
 
-    output.max_value.resize(NC);
+    output.max_value.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.max_value = output.max_value.data();
 
-    output.max_index.resize(NC);
+    output.max_index.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.max_index = output.max_index.data();
 
     compute_crispr_qc_metrics(mat, x, options);
@@ -361,7 +377,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
     std::vector<Output_> filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics) const {
-        std::vector<Output_> output(metrics.max_value.size());
+        std::vector<Output_> output(metrics.max_value.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, output.data());
         return output;
     }
@@ -515,7 +535,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int, typename Block_ = int>
     std::vector<Output_> filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block) const {
-        std::vector<Output_> output(metrics.max_value.size());
+        std::vector<Output_> output(metrics.max_value.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, block, output.data());
         return output;
     }

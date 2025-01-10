@@ -158,17 +158,29 @@ ComputeAdtQcMetricsResults<Sum_, Detected_> compute_adt_qc_metrics(
     ComputeAdtQcMetricsBuffers<Sum_, Detected_> x;
     ComputeAdtQcMetricsResults<Sum_, Detected_> output;
 
-    output.sum.resize(NC);
+    output.sum.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.sum = output.sum.data();
 
-    output.detected.resize(NC);
+    output.detected.resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
     x.detected = output.detected.data();
 
     size_t nsubsets = subsets.size();
     x.subset_sum.resize(nsubsets);
     output.subset_sum.resize(nsubsets);
     for (size_t s = 0; s < nsubsets; ++s) {
-        output.subset_sum[s].resize(NC);
+        output.subset_sum[s].resize(NC
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         x.subset_sum[s] = output.subset_sum[s].data();
     }
 
@@ -391,7 +403,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int>
     std::vector<Output_> filter(const ComputeAdtQcMetricsResults<Sum_, Detected_>& metrics) const {
-        std::vector<Output_> output(metrics.detected.size());
+        std::vector<Output_> output(metrics.detected.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, output.data());
         return output;
     }
@@ -541,7 +557,11 @@ public:
      */
     template<typename Output_ = uint8_t, typename Sum_ = double, typename Detected_ = int, typename Block_ = int>
     std::vector<Output_> filter(const ComputeAdtQcMetricsResults<Sum_, Detected_>& metrics, const Block_* block) const {
-        std::vector<Output_> output(metrics.detected.size());
+        std::vector<Output_> output(metrics.detected.size()
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
         filter(metrics, block, output.data());
         return output;
     }
