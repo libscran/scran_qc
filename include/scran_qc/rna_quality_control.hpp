@@ -246,7 +246,7 @@ namespace internal {
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Proportion_, typename BlockSource_>
 void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, Detected_, Proportion_>& res, BlockSource_ block, const ComputeRnaQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
-    auto buffer = [&]() {
+    auto buffer = [&]{
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
@@ -259,7 +259,7 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
         opts.num_mads = options.sum_num_mads;
         opts.log = true;
         opts.upper = false;
-        host.get_sum() = [&]() {
+        host.get_sum() = [&]{
             if constexpr(unblocked) {
                 return choose_filter_thresholds(n, res.sum, buffer.data(), opts).lower;
             } else {
@@ -273,7 +273,7 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
         opts.num_mads = options.detected_num_mads;
         opts.log = true;
         opts.upper = false;
-        host.get_detected() = [&]() {
+        host.get_detected() = [&]{
             if constexpr(unblocked) {
                 return choose_filter_thresholds(n, res.detected, buffer.data(), opts).lower;
             } else {
@@ -291,7 +291,7 @@ void rna_populate(Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Sum_, 
         host.get_subset_proportion().resize(nsubsets);
         for (size_t s = 0; s < nsubsets; ++s) {
             auto sub = res.subset_proportion[s];
-            host.get_subset_proportion()[s] = [&]() {
+            host.get_subset_proportion()[s] = [&]{
                 if constexpr(unblocked) {
                     return choose_filter_thresholds(n, sub, buffer.data(), opts).upper;
                 } else {
@@ -309,7 +309,7 @@ void rna_filter(const Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Su
 
     const auto& sum = host.get_sum();
     for (size_t i = 0; i < n; ++i) {
-        auto thresh = [&]() {
+        auto thresh = [&]{
             if constexpr(unblocked) {
                 return sum;
             } else {
@@ -321,7 +321,7 @@ void rna_filter(const Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Su
 
     const auto& detected = host.get_detected();
     for (size_t i = 0; i < n; ++i) {
-        auto thresh = [&]() {
+        auto thresh = [&]{
             if constexpr(unblocked) {
                 return detected;
             } else {
@@ -336,7 +336,7 @@ void rna_filter(const Host_& host, size_t n, const ComputeRnaQcMetricsBuffers<Su
         auto sub = metrics.subset_proportion[s];
         const auto& sthresh = host.get_subset_proportion()[s];
         for (size_t i = 0; i < n; ++i) {
-            auto thresh = [&]() {
+            auto thresh = [&]{
                 if constexpr(unblocked) {
                     return sthresh;
                 } else {

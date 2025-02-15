@@ -219,7 +219,7 @@ namespace internal {
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename BlockSource_>
 void adt_populate(Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Sum_, Detected_>& res, BlockSource_ block, const ComputeAdtQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
-    auto buffer = [&]() {
+    auto buffer = [&]{
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
@@ -233,7 +233,7 @@ void adt_populate(Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Sum_, 
         opts.log = true;
         opts.upper = false;
         opts.min_diff = -std::log(1 - options.detected_min_drop);
-        host.get_detected() = [&]() {
+        host.get_detected() = [&]{
             if constexpr(unblocked) {
                 return choose_filter_thresholds(n, res.detected, buffer.data(), opts).lower;
             } else {
@@ -253,7 +253,7 @@ void adt_populate(Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Sum_, 
 
         for (size_t s = 0; s < nsubsets; ++s) {
             auto sub = res.subset_sum[s];
-            host.get_subset_sum()[s] = [&]() {
+            host.get_subset_sum()[s] = [&]{
                 if constexpr(unblocked) {
                     return choose_filter_thresholds(n, sub, buffer.data(), opts).upper;
                 } else {
@@ -271,7 +271,7 @@ void adt_filter(const Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Su
 
     const auto& detected = host.get_detected();
     for (size_t i = 0; i < n; ++i) {
-        auto thresh = [&]() {
+        auto thresh = [&]{
             if constexpr(unblocked) {
                 return detected;
             } else {
@@ -286,7 +286,7 @@ void adt_filter(const Host_& host, size_t n, const ComputeAdtQcMetricsBuffers<Su
         auto sub = metrics.subset_sum[s];
         const auto& sthresh = host.get_subset_sum()[s];
         for (size_t i = 0; i < n; ++i) {
-            auto thresh = [&]() {
+            auto thresh = [&]{
                 if constexpr(unblocked) {
                     return sthresh;
                 } else {

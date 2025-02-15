@@ -155,7 +155,7 @@ void compute_qc_direct_dense(
         }
     }
 
-    tatami::parallelize([&](int, Index_ start, Index_ length) {
+    tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
@@ -203,7 +203,7 @@ void compute_qc_direct_dense(
 
             if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty subset_indices.
                 for (size_t s = 0; s < nsubsets; ++s) {
-                    const auto& sub = [&]() {
+                    const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subset_indices[s];
                         } else {
@@ -261,7 +261,7 @@ void compute_qc_direct_sparse(
 {
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](int, Index_ start, Index_ length) {
+    tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(&mat, false, start, length);
         std::vector<Value_> vbuffer(NR);
@@ -330,7 +330,7 @@ void compute_qc_direct_sparse(
 
            if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty is_in_subset.
                 for (size_t s = 0; s < nsubsets; ++s) {
-                    const auto& sub = [&]() {
+                    const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
                         } else {
@@ -481,7 +481,7 @@ void compute_qc_running_dense(
 {
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](int thread, Index_ start, Index_ len) {
+    tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(&mat, true, static_cast<Index_>(0), NR, start, len);
         std::vector<Value_> vbuffer(len);
@@ -533,7 +533,7 @@ void compute_qc_running_dense(
 
             if (!outst.empty() || !outsd.empty()) { // protect against accessing an empty is_in_subset.
                 for (size_t s = 0; s < nsubsets; ++s) {
-                    const auto& sub = [&]() {
+                    const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
                         } else {
@@ -576,7 +576,7 @@ void compute_qc_running_sparse(
     opt.sparse_ordered_index = false;
     auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](int thread, Index_ start, Index_ len) {
+    tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
         auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(&mat, true, static_cast<Index_>(0), NR, start, len, opt);
         std::vector<Value_> vbuffer(len);
@@ -648,7 +648,7 @@ void compute_qc_running_sparse(
 
             if (!outst.empty() || !outsd.empty()) { // protect against accessing an empty is_in_subset.
                 for (size_t s = 0; s < nsubsets; ++s) {
-                    const auto& sub = [&]() {
+                    const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
                         } else {

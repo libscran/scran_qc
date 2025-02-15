@@ -217,7 +217,7 @@ namespace internal {
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_>
 void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
-    auto buffer = [&]() {
+    auto buffer = [&]{
         if constexpr(unblocked) {
             return std::vector<Float_>(n);
         } else {
@@ -235,7 +235,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
 
     FindMedianMadOptions fopt;
     fopt.median_only = true;
-    auto prop_res = [&]() {
+    auto prop_res = [&]{
         if constexpr(unblocked) {
             return find_median_mad(n, maxprop.data(), buffer.data(), fopt);
         } else {
@@ -244,7 +244,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
     }();
 
     for (size_t i = 0; i < n; ++i) {
-        auto limit = [&]() {
+        auto limit = [&]{
             if constexpr(unblocked){
                 return prop_res.median;
             } else {
@@ -263,7 +263,7 @@ void crispr_populate(Host_& host, size_t n, const ComputeCrisprQcMetricsBuffers<
     copt.num_mads = options.max_value_num_mads;
     copt.log = true;
     copt.upper = false;
-    host.get_max_value() = [&]() {
+    host.get_max_value() = [&]{
         if constexpr(unblocked) {
             return choose_filter_thresholds(n, maxprop.data(), buffer.data(), copt).lower;
         } else {
@@ -279,7 +279,7 @@ void crispr_filter(const Host_& host, size_t n, const ComputeCrisprQcMetricsBuff
 
     const auto& mv = host.get_max_value();
     for (size_t i = 0; i < n; ++i) {
-        auto thresh = [&]() {
+        auto thresh = [&]{
             if constexpr(unblocked) {
                 return mv;
             } else {
