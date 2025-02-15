@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="Compute per&#45;cell quality control metrics." alt="" coords="169,5,313,46"/>
 <area shape="rect" id="Node000002" href="$adt__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="5,94,146,135"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,56,114,96,112,91,189,51"/>
-<area shape="rect" id="Node000003" href="$scran__qc_8hpp.html" title="Simple quality control for single&#45;cell data." alt="" coords="163,183,319,208"/>
+<area shape="rect" id="Node000003" href="$scran__qc_8hpp.html" title="Simple quality control for single&#45;cell data." alt="" coords="163,183,318,208"/>
 <area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="224,60,211,95,208,114,211,134,222,160,234,181,230,184,217,162,206,135,203,114,206,93,219,59"/>
 <area shape="rect" id="Node000004" href="$crispr__quality__control_8hpp.html" title="Simple per&#45;cell QC metrics from a CRISPR count matrix." alt="" coords="221,94,375,135"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,57,287,92,283,95,260,60"/>
