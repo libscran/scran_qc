@@ -55,10 +55,3 @@ add_executable(
 )
 decorate_executable(dirtytest)
 target_compile_definitions(dirtytest PRIVATE "SCRAN_QC_TEST_INIT=scran_tests::initial_value()")
-
-add_executable(
-    cuspartest 
-    src/per_cell_qc_metrics.cpp
-)
-decorate_executable(cuspartest)
-target_compile_definitions(cuspartest PRIVATE SUBPAR_CUSTOM_PARALLELIZE_RANGE=::subpar::test_parallelize_range)
