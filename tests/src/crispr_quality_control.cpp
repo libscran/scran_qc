@@ -69,7 +69,7 @@ TEST(CrisprQualityControlFilters, Basic) {
     EXPECT_LT(thresholds.get_max_value(), 100);
 
     auto keep = thresholds.filter(results);
-    std::vector<uint8_t> expected(20);
+    std::vector<unsigned char> expected(20);
     std::fill(expected.begin() + 10, expected.end(), 1);
     EXPECT_EQ(expected, keep);
 
@@ -94,7 +94,7 @@ TEST(CrisprQualityControlFilters, Blocked) {
         EXPECT_EQ(thresholds.get_max_value(), bthresholds.get_max_value()[0]);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 0, 1, 1, 1, 1, 1 };
+        std::vector<unsigned char> expected { 0, 1, 1, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 
@@ -113,7 +113,7 @@ TEST(CrisprQualityControlFilters, Blocked) {
         EXPECT_GT(bthresholds.get_max_value()[1], 500);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 0, 1, 1, 1, 0, 1, 1, 1 };
+        std::vector<unsigned char> expected { 0, 1, 1, 1, 0, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 }

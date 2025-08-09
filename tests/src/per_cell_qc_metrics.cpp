@@ -115,12 +115,12 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
     compare(ref, res4);
 
     // Checking with boolified subsets.
-    std::vector<std::vector<uint8_t> > bool_sub_raw;
+    std::vector<std::vector<unsigned char> > bool_sub_raw;
     bool_sub_raw.emplace_back(dense_row->nrow());
     for (auto s : subs.front()) {
         bool_sub_raw[0][s] = 1;
     }
-    std::vector<uint8_t*> bool_sub{ bool_sub_raw.front().data() };
+    std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data() };
 
     auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
     compare<true>(ref, bres1);
@@ -171,7 +171,7 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
     compare(ref, res4);
 
     // Checking with boolified subsets.
-    std::vector<std::vector<uint8_t> > bool_sub_raw;
+    std::vector<std::vector<unsigned char> > bool_sub_raw;
     bool_sub_raw.emplace_back(dense_row->nrow());
     for (auto s : subs.front()) {
         bool_sub_raw[0][s] = 1;
@@ -180,7 +180,7 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
     for (auto s : subs.back()) {
         bool_sub_raw[1][s] = 1;
     }
-    std::vector<uint8_t*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
+    std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
 
     auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
     compare<true>(ref, bres1);
@@ -507,8 +507,8 @@ TEST(PerCellQcMetrics, NewType) {
     }
     auto ref = std::make_shared<tatami::DenseRowMatrix<double, int> >(nr, nc, vec);
 
-    std::vector<uint8_t> uvec(vec.begin(), vec.end());
-    auto dense_row = std::make_shared<tatami::DenseRowMatrix<uint8_t, uint8_t> >(nr, nc, std::move(uvec));
+    std::vector<unsigned char> uvec(vec.begin(), vec.end());
+    auto dense_row = std::make_shared<tatami::DenseRowMatrix<unsigned char, unsigned char> >(nr, nc, std::move(uvec));
     auto dense_column = tatami::convert_to_dense(dense_row.get(), false);
     auto sparse_row = tatami::convert_to_compressed_sparse(dense_row.get(), true);
     auto sparse_column = tatami::convert_to_compressed_sparse(dense_row.get(), false);

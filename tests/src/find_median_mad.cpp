@@ -24,7 +24,7 @@ TEST(FindMedianMad, BasicTests) {
 TEST(FindMedianMad, EdgeTests) {
     scran_qc::FindMedianMadOptions opt;
 
-    auto stats = scran_qc::find_median_mad<double, int, double>(0, NULL, NULL, opt);
+    auto stats = scran_qc::find_median_mad<double, double>(0, NULL, NULL, opt);
     EXPECT_TRUE(std::isnan(stats.median));
     EXPECT_TRUE(std::isnan(stats.mad));
 
@@ -128,7 +128,7 @@ TEST(FindMedianMad, BlockTests) {
     };
 
     scran_qc::FindMedianMadOptions opt;
-    auto isres = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), NULL, opt);
+    auto isres = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), NULL, opt);
     EXPECT_EQ(isres.size(), 4);
 
     std::vector<double> buffer(even_values.size());
@@ -148,8 +148,8 @@ TEST(FindMedianMad, BlockTests) {
 
     // NULL blocked falls back to single-batch processing.
     {
-        auto ref = scran_qc::find_median_mad<double>(even_values.size(), even_values.data(), NULL, opt);
-        auto isres_none = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), static_cast<int*>(NULL), NULL, opt);
+        auto ref = scran_qc::find_median_mad<double>(even_values.size(), even_values.data(), static_cast<double*>(NULL), opt);
+        auto isres_none = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), static_cast<int*>(NULL), static_cast<scran_qc::FindMedianMadWorkspace<double>*>(NULL), opt);
         EXPECT_EQ(isres_none.size(), 1);
         EXPECT_EQ(isres_none[0].median, ref.median);
         EXPECT_EQ(isres_none[0].mad, ref.mad);
@@ -167,9 +167,9 @@ TEST(FindMedianMad, WorkspaceReuse) {
     };
 
     scran_qc::FindMedianMadOptions opt;
-    scran_qc::FindMedianMadWorkspace<double, int> work(block.size(), block.data());
-    auto isres = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), &work, opt);
-    auto isres2 = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), &work, opt);
+    scran_qc::FindMedianMadWorkspace<double> work(block.size(), block.data());
+    auto isres = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), &work, opt);
+    auto isres2 = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), &work, opt);
 
     ASSERT_EQ(isres.size(), isres2.size());
     for (size_t i = 0; i < isres.size(); ++i) {
@@ -179,10 +179,10 @@ TEST(FindMedianMad, WorkspaceReuse) {
 
     // Now trying to reuse the same workspace but with different blocking.
     std::reverse(block.begin(), block.end());
-    auto ref = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), NULL, opt);
+    auto ref = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), NULL, opt);
     work.set(block.size(), block.data());
-    isres = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), &work, opt);
-    isres2 = scran_qc::find_median_mad_blocked<double, int>(even_values.size(), even_values.data(), block.data(), &work, opt);
+    isres = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), &work, opt);
+    isres2 = scran_qc::find_median_mad_blocked<double>(even_values.size(), even_values.data(), block.data(), &work, opt);
 
     ASSERT_EQ(isres.size(), isres2.size());
     for (size_t i = 0; i < isres.size(); ++i) {
@@ -194,7 +194,7 @@ TEST(FindMedianMad, WorkspaceReuse) {
 TEST(FindMedianMad, DifferentType) {
     std::vector<int> foobar { 1, 2, 4, 3, 6, 9, 8, 7 };
     std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-    auto out = scran_qc::find_median_mad_blocked<float, int>(foobar.size(), foobar.data(), block.data(), NULL, scran_qc::FindMedianMadOptions());
+    auto out = scran_qc::find_median_mad_blocked<float>(foobar.size(), foobar.data(), block.data(), NULL, scran_qc::FindMedianMadOptions());
     EXPECT_FLOAT_EQ(out[0].median, 2.5);
     EXPECT_FLOAT_EQ(out[0].mad, 1.4826);
     EXPECT_FLOAT_EQ(out[1].median, 7.5);

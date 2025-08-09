@@ -25,7 +25,7 @@ protected:
 
 TEST_F(RnaQualityControlMetricsTest, NoSubset) {
     scran_qc::ComputeRnaQcMetricsOptions opts;
-    auto res = scran_qc::compute_rna_qc_metrics(*mat, {}, opts);
+    auto res = scran_qc::compute_rna_qc_metrics(*mat, std::vector<unsigned char*>(), opts);
     EXPECT_EQ(res.sum, tatami_stats::sums::by_column(mat.get()));
 
     auto nonzeros = tatami_stats::counts::zero::by_column(mat.get());
@@ -92,7 +92,7 @@ TEST(RnaQualityControlFilters, Basic) {
     EXPECT_TRUE(thresholds.get_subset_proportion()[1] < 1);
 
     auto keep = thresholds.filter(results);
-    std::vector<uint8_t> expected { 0, 0, 0, 0, 1, 1 };
+    std::vector<unsigned char> expected { 0, 0, 0, 0, 1, 1 };
     EXPECT_EQ(expected, keep);
 }
 
@@ -115,7 +115,7 @@ TEST(RnaQualityControlFilters, Blocked) {
         EXPECT_EQ(thresholds.get_subset_proportion()[1], bthresholds.get_subset_proportion()[1][0]);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 0, 0, 0, 0, 1, 1 };
+        std::vector<unsigned char> expected { 0, 0, 0, 0, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 
@@ -141,7 +141,7 @@ TEST(RnaQualityControlFilters, Blocked) {
         EXPECT_GT(bthresholds.get_subset_proportion()[1][1], 1);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 0, 0, 0, 0, 1, 1, 1, 1 };
+        std::vector<unsigned char> expected { 0, 0, 0, 0, 1, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 }

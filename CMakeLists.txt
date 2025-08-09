@@ -24,9 +24,10 @@ if(SCRAN_QC_FETCH_EXTERN)
 else()
     find_package(tatami_tatami 3.0.0 CONFIG REQUIRED)
     find_package(tatami_tatami_stats 1.0.0 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.1.0 CONFIG REQUIRED)
 endif()
 
-target_link_libraries(scran_qc INTERFACE tatami::tatami tatami::tatami_stats)
+target_link_libraries(scran_qc INTERFACE tatami::tatami tatami::tatami_stats ltla::sanisizer)
 
 # Tests
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

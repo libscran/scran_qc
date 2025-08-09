@@ -25,7 +25,7 @@ protected:
 
 TEST_F(AdtQualityControlMetricsTest, NoSubset) {
     scran_qc::ComputeAdtQcMetricsOptions opts;
-    auto res = scran_qc::compute_adt_qc_metrics(*mat, {}, opts);
+    auto res = scran_qc::compute_adt_qc_metrics(*mat, std::vector<unsigned char*>(), opts);
     EXPECT_EQ(res.sum, tatami_stats::sums::by_column(mat.get()));
 
     auto nonzeros = tatami_stats::counts::zero::by_column(mat.get());
@@ -57,7 +57,7 @@ TEST(AdtQualityControlFilters, Basic) {
     EXPECT_GT(thresholds.get_subset_sum()[0], 100);
 
     auto keep = thresholds.filter(results);
-    std::vector<uint8_t> expected { 1, 0, 1, 1, 1, 0 };
+    std::vector<unsigned char> expected { 1, 0, 1, 1, 1, 0 };
     EXPECT_EQ(expected, keep);
 }
 
@@ -72,7 +72,7 @@ TEST(AdtQualityControlFilters, MinDrop) {
     EXPECT_FLOAT_EQ(thresholds.get_detected(), 18);
 
     auto keep = thresholds.filter(results);
-    std::vector<uint8_t> expected { 1, 1, 1, 1, 1, 1 };
+    std::vector<unsigned char> expected { 1, 1, 1, 1, 1, 1 };
     EXPECT_EQ(expected, keep);
 
     // Disabling the drop.
@@ -81,7 +81,7 @@ TEST(AdtQualityControlFilters, MinDrop) {
     EXPECT_FLOAT_EQ(thresholds.get_detected(), 20);
 
     keep = thresholds.filter(results);
-    expected = std::vector<uint8_t>{ 1, 0, 1, 1, 1, 1 };
+    expected = std::vector<unsigned char>{ 1, 0, 1, 1, 1, 1 };
     EXPECT_EQ(expected, keep);
 }
 
@@ -100,7 +100,7 @@ TEST(AdtQualityControlFilters, Blocked) {
         EXPECT_EQ(thresholds.get_subset_sum()[0], bthresholds.get_subset_sum()[0][0]);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 1, 0, 0, 1, 1, 1 };
+        std::vector<unsigned char> expected { 1, 0, 0, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 
@@ -120,7 +120,7 @@ TEST(AdtQualityControlFilters, Blocked) {
         EXPECT_GT(bthresholds.get_subset_sum()[0][1], 100);
 
         auto keep = bthresholds.filter(results, block.data());
-        std::vector<uint8_t> expected { 1, 0, 0, 1, 1, 1, 1, 1 };
+        std::vector<unsigned char> expected { 1, 0, 0, 1, 1, 1, 1, 1 };
         EXPECT_EQ(expected, keep);
     }
 }
