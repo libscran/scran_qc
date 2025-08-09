@@ -127,8 +127,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1AdtQcBlockedFilters.html</anchorfile>
-      <anchor>afe4f3775109aedf656932869b79531b6</anchor>
-      <arglist>(Index_ num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+      <anchor>a64bf64bad7c8ad92df342cb67b2fbde8</anchor>
+      <arglist>(std::size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -181,8 +181,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1AdtQcFilters.html</anchorfile>
-      <anchor>a6f0d85ffdf2c57adc055925a110764ee</anchor>
-      <arglist>(size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, Output_ *output) const</arglist>
+      <anchor>a10dd92d9ac36628681168bd0ad058c3f</anchor>
+      <arglist>(std::size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -555,8 +555,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1CrisprQcBlockedFilters.html</anchorfile>
-      <anchor>a44f363dbc7840246e6c73082f73b9925</anchor>
-      <arglist>(size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+      <anchor>a17f4c2105786e7116ccec2e682b16b8b</anchor>
+      <arglist>(std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -595,8 +595,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1CrisprQcFilters.html</anchorfile>
-      <anchor>a9976a82aea3347ebc9e9de71e3635473</anchor>
-      <arglist>(size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *output) const</arglist>
+      <anchor>a1804eb2c44562f8476257e78177ae448</anchor>
+      <arglist>(std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -654,27 +654,26 @@
     <name>scran_qc::FindMedianMadWorkspace</name>
     <filename>classscran__qc_1_1FindMedianMadWorkspace.html</filename>
     <templarg>typename Float_</templarg>
-    <templarg>typename Index_</templarg>
     <member kind="function">
       <type></type>
       <name>FindMedianMadWorkspace</name>
       <anchorfile>classscran__qc_1_1FindMedianMadWorkspace.html</anchorfile>
-      <anchor>aeae95f397659c83bb36cd285abea2bf1</anchor>
-      <arglist>(Index_ num, const Block_ *block)</arglist>
+      <anchor>ab39ea8b3e82d768463339161cf924d67</anchor>
+      <arglist>(std::size_t num, const Block_ *block)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>FindMedianMadWorkspace</name>
       <anchorfile>classscran__qc_1_1FindMedianMadWorkspace.html</anchorfile>
-      <anchor>ae93e046aae243cca42c88d7e2bcfe1bc</anchor>
+      <anchor>a31b798de9d038f4b92500426c690bdbc</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>set</name>
       <anchorfile>classscran__qc_1_1FindMedianMadWorkspace.html</anchorfile>
-      <anchor>aa7d6807c6583a392c042617d9e62ae7a</anchor>
-      <arglist>(Index_ num, const Block_ *block)</arglist>
+      <anchor>a1963b03f60072240c60f6421317a5359</anchor>
+      <arglist>(std::size_t num, const Block_ *block)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -880,8 +879,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1RnaQcBlockedFilters.html</anchorfile>
-      <anchor>a25e4c9825bdb4d078c89b61538e4b015</anchor>
-      <arglist>(Index_ num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
+      <anchor>a2651f0f14900b101d97ffdac95e1660d</anchor>
+      <arglist>(std::size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -948,8 +947,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1RnaQcFilters.html</anchorfile>
-      <anchor>ab0413953bafb8b4f1bf9a99a189d029a</anchor>
-      <arglist>(size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, Output_ *output) const</arglist>
+      <anchor>a46cc5532ddd42fb60a98e657ece300b6</anchor>
+      <arglist>(std::size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, Output_ *output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1013,8 +1012,8 @@
       <type>AdtQcFilters&lt; Float_ &gt;</type>
       <name>compute_adt_qc_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a4e0708c006f7362c4ca7587802293e01</anchor>
-      <arglist>(size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const ComputeAdtQcFiltersOptions &amp;options)</arglist>
+      <anchor>acaa1ac8e1429f239b1192cd9e36bc42a</anchor>
+      <arglist>(std::size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const ComputeAdtQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>AdtQcFilters&lt; Float_ &gt;</type>
@@ -1027,8 +1026,8 @@
       <type>AdtQcBlockedFilters&lt; Float_ &gt;</type>
       <name>compute_adt_qc_filters_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a47a6f3d70501f5b3bcac0f44cbc82349</anchor>
-      <arglist>(size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const ComputeAdtQcFiltersOptions &amp;options)</arglist>
+      <anchor>a50f12f3aa73b390ae87d7afc75940d2b</anchor>
+      <arglist>(std::size_t num, const ComputeAdtQcMetricsBuffers&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const ComputeAdtQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>AdtQcBlockedFilters&lt; Float_ &gt;</type>
@@ -1048,29 +1047,29 @@
       <type>ChooseFilterThresholdsResults&lt; Float_ &gt;</type>
       <name>choose_filter_thresholds</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>ae36c76ebd4e27574da1e12241a16d625</anchor>
-      <arglist>(Index_ num, Float_ *metrics, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a876cddee09a270d13625da28e42c022b</anchor>
+      <arglist>(std::size_t num, Float_ *metrics, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>ChooseFilterThresholdsResults&lt; Float_ &gt;</type>
       <name>choose_filter_thresholds</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a0d9a36257fb0f4f4a7d9a2f75af17e43</anchor>
-      <arglist>(Index_ num, const Value_ *metrics, Float_ *buffer, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a15a7167664be3ef182c1a5e930d1c3ea</anchor>
+      <arglist>(std::size_t num, const Value_ *metrics, Float_ *buffer, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
       <name>choose_filter_thresholds_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a8e8af19093a60909e202bb614bbacbeb</anchor>
-      <arglist>(const std::vector&lt; FindMedianMadResults&lt; Float_ &gt; &gt; mms, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a958e9714d759bba33f54441c527e0905</anchor>
+      <arglist>(const std::vector&lt; FindMedianMadResults&lt; Float_ &gt; &gt; &amp;mms, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
       <name>choose_filter_thresholds_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>acc052211c623c1226049a2ee24f098fe</anchor>
-      <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, FindMedianMadWorkspace&lt; Float_, Index_ &gt; *workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a25b56d5c4ed2afd83d1d38e7048dc6ef</anchor>
+      <arglist>(std::size_t num, const Value_ *metrics, const Block_ *block, FindMedianMadWorkspace&lt; Float_ &gt; *workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1090,8 +1089,8 @@
       <type>CrisprQcFilters&lt; Float_ &gt;</type>
       <name>compute_crispr_qc_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>adf29d5d3e3d5c698710b139f626c8ce0</anchor>
-      <arglist>(size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
+      <anchor>a68855fd156df34a788edba71dffed5c2</anchor>
+      <arglist>(std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>CrisprQcFilters&lt; Float_ &gt;</type>
@@ -1104,8 +1103,8 @@
       <type>CrisprQcBlockedFilters&lt; Float_ &gt;</type>
       <name>compute_crispr_qc_filters_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a2be1a5e698e0b3a8f79c3966d971fe81</anchor>
-      <arglist>(size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
+      <anchor>a288d50a2c5fee76ec4f07f113f34c49d</anchor>
+      <arglist>(std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>CrisprQcBlockedFilters&lt; Float_ &gt;</type>
@@ -1118,50 +1117,50 @@
       <type>FindMedianMadResults&lt; Float_ &gt;</type>
       <name>find_median_mad</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>aa258344640d79468c00a2c96c9e1bf1f</anchor>
-      <arglist>(Index_ num, Float_ *metrics, const FindMedianMadOptions &amp;options)</arglist>
+      <anchor>ad9809cc2f8c52885e7c3132f6e867b0c</anchor>
+      <arglist>(std::size_t num, Float_ *metrics, const FindMedianMadOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>FindMedianMadResults&lt; Float_ &gt;</type>
       <name>find_median_mad</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a51ca245d47de05acbb806ae736248d18</anchor>
-      <arglist>(Index_ num, const Value_ *metrics, Float_ *buffer, const FindMedianMadOptions &amp;options)</arglist>
+      <anchor>aa73d242c18f72c27eac9bad1e6f0d89c</anchor>
+      <arglist>(std::size_t num, const Value_ *metrics, Float_ *buffer, const FindMedianMadOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; FindMedianMadResults&lt; Output_ &gt; &gt;</type>
       <name>find_median_mad_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>af2fb034bba1a588f7b007fbf95ffe370</anchor>
-      <arglist>(Index_ num, const Value_ *metrics, const Block_ *block, FindMedianMadWorkspace&lt; Output_, Index_ &gt; *workspace, const FindMedianMadOptions &amp;options)</arglist>
+      <anchor>a50e94a656f14c7613e7be5c0a22da972</anchor>
+      <arglist>(std::size_t num, const Value_ *metrics, const Block_ *block, FindMedianMadWorkspace&lt; Output_ &gt; *workspace, const FindMedianMadOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>filter_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a50cadfe67abc7398be1645988e3be3a7</anchor>
-      <arglist>(Index_ num, const Keep_ *filter, std::vector&lt; Index_ &gt; &amp;output)</arglist>
+      <anchor>a107ee4114c3a4eeb7ab8114eb6736f9e</anchor>
+      <arglist>(std::size_t num, const Keep_ *filter, std::vector&lt; Index_ &gt; &amp;output)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Index_ &gt;</type>
       <name>filter_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a3afc89c4d5b58f290c88a1992dddaf0f</anchor>
-      <arglist>(Index_ num, const Keep_ *filter)</arglist>
+      <anchor>ac4c75d1e15c062cc78d910b9ba70b16e</anchor>
+      <arglist>(std::size_t num, const Keep_ *filter)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>combine_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a30925d34e2091b9e5fdf2b1cbff866e7</anchor>
-      <arglist>(size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *output)</arglist>
+      <anchor>ab53497881d41ec0677f9ce4624cc135c</anchor>
+      <arglist>(std::size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *output)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Output_ &gt;</type>
       <name>combine_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>aedcaf6807fab07ce2cbd170a57c84f85</anchor>
-      <arglist>(size_t num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
+      <anchor>a3b5e193d2818b056a9cbcbacf6868e05</anchor>
+      <arglist>(std::size_t num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1209,8 +1208,8 @@
       <type>RnaQcFilters&lt; Float_ &gt;</type>
       <name>compute_rna_qc_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>af13df69a88ca429bcf8333d61bfb5802</anchor>
-      <arglist>(size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const ComputeRnaQcFiltersOptions &amp;options)</arglist>
+      <anchor>a929c2ef9cf99fbb0a781b50ba76de411</anchor>
+      <arglist>(std::size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const ComputeRnaQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>RnaQcFilters&lt; Float_ &gt;</type>
@@ -1223,8 +1222,8 @@
       <type>RnaQcBlockedFilters&lt; Float_ &gt;</type>
       <name>compute_rna_qc_filters_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>ad3ce8f1830515304cde4417dd26cb8a6</anchor>
-      <arglist>(size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const ComputeRnaQcFiltersOptions &amp;options)</arglist>
+      <anchor>aa2b28b52f144ed4fab3f9fffde8f280e</anchor>
+      <arglist>(std::size_t num, const ComputeRnaQcMetricsBuffers&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const ComputeRnaQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>RnaQcBlockedFilters&lt; Float_ &gt;</type>

@@ -115,13 +115,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aaef8ef1d56709253f81dbb65634348e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48cf398cb340f66fdef9c293b1d3bbb1" id="r_a48cf398cb340f66fdef9c293b1d3bbb1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Float_ &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48cf398cb340f66fdef9c293b1d3bbb1">get_max_value</a> ()</td></tr>
 <tr class="separator:a48cf398cb340f66fdef9c293b1d3bbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44f363dbc7840246e6c73082f73b9925" id="r_a44f363dbc7840246e6c73082f73b9925"><td class="memTemplParams" colspan="2">template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ , typename Block_ , typename Output_ &gt; </td></tr>
-<tr class="memitem:a44f363dbc7840246e6c73082f73b9925"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a44f363dbc7840246e6c73082f73b9925">filter</a> (size_t num, const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsBuffers.html">ComputeCrisprQcMetricsBuffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
-<tr class="separator:a44f363dbc7840246e6c73082f73b9925"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17f4c2105786e7116ccec2e682b16b8b" id="r_a17f4c2105786e7116ccec2e682b16b8b"><td class="memTemplParams" colspan="2">template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ , typename Block_ , typename Output_ &gt; </td></tr>
+<tr class="memitem:a17f4c2105786e7116ccec2e682b16b8b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a17f4c2105786e7116ccec2e682b16b8b">filter</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsBuffers.html">ComputeCrisprQcMetricsBuffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
+<tr class="separator:a17f4c2105786e7116ccec2e682b16b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a981e2a2f2b42b34a5b9b372158c62eea" id="r_a981e2a2f2b42b34a5b9b372158c62eea"><td class="memTemplParams" colspan="2">template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ , typename Block_ , typename Output_ &gt; </td></tr>
 <tr class="memitem:a981e2a2f2b42b34a5b9b372158c62eea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a981e2a2f2b42b34a5b9b372158c62eea">filter</a> (const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsResults.html">ComputeCrisprQcMetricsResults</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
 <tr class="separator:a981e2a2f2b42b34a5b9b372158c62eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cd84af6eb29b9af6039a61fa7659b34" id="r_a3cd84af6eb29b9af6039a61fa7659b34"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detected_  = int, typename Value_  = double, typename Index_  = int, typename Block_  = int&gt; </td></tr>
+<tr class="memitem:a3cd84af6eb29b9af6039a61fa7659b34" id="r_a3cd84af6eb29b9af6039a61fa7659b34"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = unsigned char, typename Sum_ , typename Detected_ , typename Value_ , typename Index_ , typename Block_ &gt; </td></tr>
 <tr class="memitem:a3cd84af6eb29b9af6039a61fa7659b34"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; Output_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a3cd84af6eb29b9af6039a61fa7659b34">filter</a> (const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsResults.html">ComputeCrisprQcMetricsResults</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *block) const</td></tr>
 <tr class="separator:a3cd84af6eb29b9af6039a61fa7659b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -130,7 +130,7 @@ Public Member Functions</h2></td></tr>
 class scran_qc::CrisprQcBlockedFilters&lt; Float_ &gt;</div><p>Filter on using CRISPR-based QC metrics with blocking. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for filter thresholds. Instances of this class are typically created by <code><a class="el" href="namespacescran__qc.html#a2be1a5e698e0b3a8f79c3966d971fe81">compute_crispr_qc_filters_blocked()</a></code>. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type for filter thresholds. Instances of this class are typically created by <code><a class="el" href="namespacescran__qc.html#a288d50a2c5fee76ec4f07f113f34c49d">compute_crispr_qc_filters_blocked()</a></code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -191,8 +191,8 @@ template&lt;typename Float_  = double&gt; </div>
 
 </div>
 </div>
-<a id="a44f363dbc7840246e6c73082f73b9925" name="a44f363dbc7840246e6c73082f73b9925"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44f363dbc7840246e6c73082f73b9925">&#9670;&#160;</a></span>filter() <span class="overload">[1/3]</span></h2>
+<a id="a17f4c2105786e7116ccec2e682b16b8b" name="a17f4c2105786e7116ccec2e682b16b8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17f4c2105786e7116ccec2e682b16b8b">&#9670;&#160;</a></span>filter() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,7 +207,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
         <tr>
           <td class="memname">void <a class="el" href="classscran__qc_1_1CrisprQcBlockedFilters.html">scran_qc::CrisprQcBlockedFilters</a>&lt; Float_ &gt;::filter </td>
           <td>(</td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -319,7 +319,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
 <div class="memtemplate">
 template&lt;typename Float_  = double&gt; </div>
 <div class="memtemplate">
-template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detected_  = int, typename Value_  = double, typename Index_  = int, typename Block_  = int&gt; </div>
+template&lt;typename Output_  = unsigned char, typename Sum_ , typename Detected_ , typename Value_ , typename Index_ , typename Block_ &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

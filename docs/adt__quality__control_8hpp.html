@@ -111,7 +111,9 @@ $(function(){ initResizable(false); });
 <code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
 <code>#include &quot;<a class="elRef" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html">tatami/tatami.hpp</a>&quot;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="find__median__mad_8hpp_source.html">find_median_mad.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="per__cell__qc__metrics_8hpp_source.html">per_cell_qc_metrics.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="choose__filter__thresholds_8hpp_source.html">choose_filter_thresholds.hpp</a>&quot;</code><br />
@@ -120,42 +122,47 @@ Include dependency graph for adt_quality_control.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="adt__quality__control_8hpp__incl.png" border="0" usemap="#ascran__qc_2adt__quality__control_8hpp" alt=""/></div>
 <map name="ascran__qc_2adt__quality__control_8hpp" id="ascran__qc_2adt__quality__control_8hpp">
-<area shape="rect" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="363,5,503,46"/>
-<area shape="rect" title=" " alt="" coords="191,249,249,274"/>
-<area shape="poly" title=" " alt="" coords="390,49,352,69,311,96,272,130,239,169,227,201,222,234,217,233,222,200,235,166,268,126,308,92,349,65,387,44"/>
-<area shape="rect" title=" " alt="" coords="34,249,86,274"/>
-<area shape="poly" title=" " alt="" coords="363,31,271,35,169,46,121,54,79,65,45,79,23,96,14,111,9,129,13,166,27,203,45,235,40,237,22,206,8,168,4,128,9,109,19,92,43,74,77,60,120,49,168,40,270,30,363,25"/>
-<area shape="rect" title=" " alt="" coords="515,249,589,274"/>
-<area shape="poly" title=" " alt="" coords="471,44,504,65,539,93,571,127,596,167,599,186,596,205,576,238,572,235,591,203,594,186,591,169,567,130,535,97,501,70,468,49"/>
-<area shape="rect" title=" " alt="" coords="707,94,789,120"/>
-<area shape="poly" title=" " alt="" coords="504,42,693,89,691,94,503,47"/>
-<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="613,249,734,274"/>
-<area shape="poly" title=" " alt="" coords="490,44,531,64,570,92,601,126,628,165,665,233,660,236,624,168,597,130,566,96,528,69,487,49"/>
-<area shape="rect" href="find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="249,168,396,193"/>
-<area shape="poly" title=" " alt="" coords="421,48,342,156,338,153,417,45"/>
-<area shape="rect" href="per__cell__qc__metrics_8hpp.html" title="Compute per&#45;cell quality control metrics." alt="" coords="419,168,581,193"/>
-<area shape="poly" title=" " alt="" coords="444,45,491,152,486,154,439,47"/>
-<area shape="rect" href="choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="33,94,218,120"/>
-<area shape="poly" title=" " alt="" coords="363,48,188,92,186,87,362,42"/>
-<area shape="poly" title=" " alt="" coords="309,196,249,241,246,237,305,192"/>
-<area shape="poly" title=" " alt="" coords="265,197,186,216,99,244,97,245,95,240,98,239,184,211,264,191"/>
-<area shape="poly" title=" " alt="" coords="362,191,503,239,508,240,506,246,502,244,360,196"/>
-<area shape="rect" title=" " alt="" coords="110,249,167,274"/>
-<area shape="poly" title=" " alt="" coords="294,196,181,244,179,245,177,240,179,239,292,191"/>
-<area shape="rect" title=" " alt="" coords="272,249,333,274"/>
-<area shape="poly" title=" " alt="" coords="322,194,312,235,307,233,317,193"/>
-<area shape="rect" title=" " alt="" coords="357,241,491,282"/>
-<area shape="poly" title=" " alt="" coords="340,192,389,230,385,234,336,196"/>
-<area shape="poly" title=" " alt="" coords="437,197,352,216,261,244,258,245,256,240,259,239,351,211,436,191"/>
-<area shape="poly" title=" " alt="" coords="419,195,230,221,99,244,96,245,94,240,98,239,229,216,418,190"/>
-<area shape="poly" title=" " alt="" coords="510,192,538,234,533,237,506,195"/>
-<area shape="poly" title=" " alt="" coords="528,191,634,240,632,245,525,196"/>
-<area shape="poly" title=" " alt="" coords="468,196,346,244,344,245,342,240,344,239,466,191"/>
-<area shape="poly" title=" " alt="" coords="490,196,455,232,451,228,486,192"/>
-<area shape="poly" title=" " alt="" coords="135,119,207,234,202,237,130,122"/>
-<area shape="poly" title=" " alt="" coords="123,121,73,236,68,234,118,119"/>
-<area shape="poly" title=" " alt="" coords="160,118,276,159,274,165,158,123"/>
-<area shape="poly" title=" " alt="" coords="129,120,139,233,133,233,124,120"/>
+<area shape="rect" title="Simple per&#45;cell QC metrics from an ADT count matrix." alt="" coords="427,5,567,46"/>
+<area shape="rect" title=" " alt="" coords="187,249,244,274"/>
+<area shape="poly" title=" " alt="" coords="433,49,386,68,335,94,286,128,244,169,228,201,220,234,215,233,223,199,240,166,283,124,332,90,384,63,431,44"/>
+<area shape="rect" title=" " alt="" coords="29,249,82,274"/>
+<area shape="poly" title=" " alt="" coords="426,29,320,31,199,41,142,49,91,61,51,76,24,96,14,111,10,128,12,166,25,203,42,235,37,237,20,205,7,167,4,128,9,109,20,92,48,72,89,56,141,44,198,35,320,26,426,24"/>
+<area shape="rect" title=" " alt="" coords="426,249,501,274"/>
+<area shape="poly" title=" " alt="" coords="493,47,479,101,467,168,465,233,460,233,462,167,474,100,488,46"/>
+<area shape="rect" title=" " alt="" coords="815,94,896,120"/>
+<area shape="poly" title=" " alt="" coords="568,40,800,91,799,96,567,45"/>
+<area shape="rect" title=" " alt="" coords="525,249,589,274"/>
+<area shape="poly" title=" " alt="" coords="533,44,564,65,597,93,629,127,653,167,655,190,643,212,624,229,601,244,598,239,621,225,639,208,650,189,647,169,624,130,594,97,561,70,530,49"/>
+<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="788,249,909,274"/>
+<area shape="poly" title=" " alt="" coords="556,44,606,65,657,92,708,127,756,167,829,236,825,240,752,171,705,132,654,96,604,70,554,49"/>
+<area shape="rect" title=" " alt="" coords="613,249,764,274"/>
+<area shape="poly" title=" " alt="" coords="550,44,589,65,627,92,655,126,673,167,683,201,688,233,683,234,677,202,668,169,650,129,623,96,586,69,547,49"/>
+<area shape="rect" href="find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="254,168,401,193"/>
+<area shape="poly" title=" " alt="" coords="476,48,421,96,352,159,349,155,418,92,472,44"/>
+<area shape="rect" href="per__cell__qc__metrics_8hpp.html" title="Compute per&#45;cell quality control metrics." alt="" coords="476,168,637,193"/>
+<area shape="poly" title=" " alt="" coords="507,45,549,152,544,154,502,47"/>
+<area shape="rect" href="choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="33,94,219,120"/>
+<area shape="poly" title=" " alt="" coords="427,45,198,93,197,88,426,39"/>
+<area shape="poly" title=" " alt="" coords="312,196,246,242,243,238,309,192"/>
+<area shape="poly" title=" " alt="" coords="266,197,184,216,95,244,92,245,91,240,93,239,182,211,265,191"/>
+<area shape="poly" title=" " alt="" coords="349,191,431,238,428,243,347,196"/>
+<area shape="poly" title=" " alt="" coords="370,191,514,239,517,240,515,245,512,244,368,196"/>
+<area shape="poly" title=" " alt="" coords="384,191,619,242,617,248,382,197"/>
+<area shape="rect" title=" " alt="" coords="105,249,163,274"/>
+<area shape="poly" title=" " alt="" coords="296,196,176,244,174,245,172,240,174,239,294,191"/>
+<area shape="rect" title=" " alt="" coords="269,241,402,282"/>
+<area shape="poly" title=" " alt="" coords="331,193,334,226,329,226,326,194"/>
+<area shape="poly" title=" " alt="" coords="476,195,371,214,257,244,254,245,252,240,256,239,370,209,475,190"/>
+<area shape="poly" title=" " alt="" coords="476,192,269,214,168,228,95,244,92,245,90,240,93,239,167,223,268,209,475,186"/>
+<area shape="poly" title=" " alt="" coords="544,196,491,241,487,237,541,192"/>
+<area shape="poly" title=" " alt="" coords="559,194,559,233,554,233,554,194"/>
+<area shape="poly" title=" " alt="" coords="602,191,790,242,788,247,601,197"/>
+<area shape="poly" title=" " alt="" coords="578,191,657,238,654,243,575,196"/>
+<area shape="poly" title=" " alt="" coords="523,196,406,238,404,233,522,191"/>
+<area shape="poly" title=" " alt="" coords="135,119,203,234,198,237,131,121"/>
+<area shape="poly" title=" " alt="" coords="123,121,70,236,65,233,118,119"/>
+<area shape="poly" title=" " alt="" coords="161,118,280,159,278,165,159,123"/>
+<area shape="poly" title=" " alt="" coords="129,120,135,233,130,233,124,120"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -183,7 +190,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>.  <a href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">scran_qc::ComputeAdtQcFiltersOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">compute_adt_qc_filters()</a></code>.  <a href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#acaa1ac8e1429f239b1192cd9e36bc42a">compute_adt_qc_filters()</a></code>.  <a href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1AdtQcFilters.html">scran_qc::AdtQcFilters&lt; Float_ &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter for high-quality cells using ADT-based metrics.  <a href="classscran__qc_1_1AdtQcFilters.html#details">More...</a><br /></td></tr>
@@ -203,18 +210,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ac96495884db86cf7ecefb3635f649cd3" id="r_ac96495884db86cf7ecefb3635f649cd3"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_ , typename Detected_ &gt; </td></tr>
 <tr class="memitem:ac96495884db86cf7ecefb3635f649cd3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">scran_qc::compute_adt_qc_metrics</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;output, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsOptions.html">ComputeAdtQcMetricsOptions</a> &amp;options)</td></tr>
 <tr class="separator:ac96495884db86cf7ecefb3635f649cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bb922c5e6e7e7beda72ed64200231fc" id="r_a4bb922c5e6e7e7beda72ed64200231fc"><td class="memTemplParams" colspan="2">template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_  = double, typename Index_  = int, typename Subset_  = const uint8_t*&gt; </td></tr>
+<tr class="memitem:a4bb922c5e6e7e7beda72ed64200231fc" id="r_a4bb922c5e6e7e7beda72ed64200231fc"><td class="memTemplParams" colspan="2">template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ , typename Index_ , typename Subset_ &gt; </td></tr>
 <tr class="memitem:a4bb922c5e6e7e7beda72ed64200231fc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html">ComputeAdtQcMetricsResults</a>&lt; Sum_, Detected_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a4bb922c5e6e7e7beda72ed64200231fc">scran_qc::compute_adt_qc_metrics</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsOptions.html">ComputeAdtQcMetricsOptions</a> &amp;options)</td></tr>
 <tr class="separator:a4bb922c5e6e7e7beda72ed64200231fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e0708c006f7362c4ca7587802293e01" id="r_a4e0708c006f7362c4ca7587802293e01"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; </td></tr>
-<tr class="memitem:a4e0708c006f7362c4ca7587802293e01"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcFilters.html">AdtQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">scran_qc::compute_adt_qc_filters</a> (size_t num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
-<tr class="separator:a4e0708c006f7362c4ca7587802293e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaa1ac8e1429f239b1192cd9e36bc42a" id="r_acaa1ac8e1429f239b1192cd9e36bc42a"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; </td></tr>
+<tr class="memitem:acaa1ac8e1429f239b1192cd9e36bc42a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcFilters.html">AdtQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#acaa1ac8e1429f239b1192cd9e36bc42a">scran_qc::compute_adt_qc_filters</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
+<tr class="separator:acaa1ac8e1429f239b1192cd9e36bc42a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7984fd78d63b52283aeb3be2e2d1e234" id="r_a7984fd78d63b52283aeb3be2e2d1e234"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; </td></tr>
 <tr class="memitem:a7984fd78d63b52283aeb3be2e2d1e234"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcFilters.html">AdtQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a7984fd78d63b52283aeb3be2e2d1e234">scran_qc::compute_adt_qc_filters</a> (const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html">ComputeAdtQcMetricsResults</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
 <tr class="separator:a7984fd78d63b52283aeb3be2e2d1e234"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47a6f3d70501f5b3bcac0f44cbc82349" id="r_a47a6f3d70501f5b3bcac0f44cbc82349"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Block_ &gt; </td></tr>
-<tr class="memitem:a47a6f3d70501f5b3bcac0f44cbc82349"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcBlockedFilters.html">AdtQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a47a6f3d70501f5b3bcac0f44cbc82349">scran_qc::compute_adt_qc_filters_blocked</a> (size_t num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
-<tr class="separator:a47a6f3d70501f5b3bcac0f44cbc82349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50f12f3aa73b390ae87d7afc75940d2b" id="r_a50f12f3aa73b390ae87d7afc75940d2b"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:a50f12f3aa73b390ae87d7afc75940d2b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcBlockedFilters.html">AdtQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a50f12f3aa73b390ae87d7afc75940d2b">scran_qc::compute_adt_qc_filters_blocked</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
+<tr class="separator:a50f12f3aa73b390ae87d7afc75940d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeef98343dad6aec5aa287f35fe6a6515" id="r_aeef98343dad6aec5aa287f35fe6a6515"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Block_ &gt; </td></tr>
 <tr class="memitem:aeef98343dad6aec5aa287f35fe6a6515"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1AdtQcBlockedFilters.html">AdtQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#aeef98343dad6aec5aa287f35fe6a6515">scran_qc::compute_adt_qc_filters_blocked</a> (const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html">ComputeAdtQcMetricsResults</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeAdtQcFiltersOptions.html">ComputeAdtQcFiltersOptions</a> &amp;options)</td></tr>
 <tr class="separator:aeef98343dad6aec5aa287f35fe6a6515"><td class="memSeparator" colspan="2">&#160;</td></tr>

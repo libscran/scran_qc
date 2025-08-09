@@ -111,6 +111,7 @@ $(function(){ initResizable(false); });
 <code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
 <code>#include &quot;<a class="elRef" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html">tatami/tatami.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="find__median__mad_8hpp_source.html">find_median_mad.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="per__cell__qc__metrics_8hpp_source.html">per_cell_qc_metrics.hpp</a>&quot;</code><br />
@@ -120,42 +121,46 @@ Include dependency graph for rna_quality_control.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="rna__quality__control_8hpp__incl.png" border="0" usemap="#ascran__qc_2rna__quality__control_8hpp" alt=""/></div>
 <map name="ascran__qc_2rna__quality__control_8hpp" id="ascran__qc_2rna__quality__control_8hpp">
-<area shape="rect" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="363,5,503,46"/>
-<area shape="rect" title=" " alt="" coords="191,249,249,274"/>
-<area shape="poly" title=" " alt="" coords="390,49,352,69,311,96,272,130,239,169,227,201,222,234,217,233,222,200,235,166,268,126,308,92,349,65,387,44"/>
-<area shape="rect" title=" " alt="" coords="34,249,86,274"/>
-<area shape="poly" title=" " alt="" coords="363,31,271,35,169,46,121,54,79,65,45,79,23,96,14,111,9,129,13,166,27,203,45,235,40,237,22,206,8,168,4,128,9,109,19,92,43,74,77,60,120,49,168,40,270,30,363,25"/>
-<area shape="rect" title=" " alt="" coords="515,249,589,274"/>
-<area shape="poly" title=" " alt="" coords="471,44,504,65,539,93,571,127,596,167,599,186,596,205,576,238,572,235,591,203,594,186,591,169,567,130,535,97,501,70,468,49"/>
-<area shape="rect" title=" " alt="" coords="707,94,789,120"/>
-<area shape="poly" title=" " alt="" coords="504,42,693,89,691,94,503,47"/>
-<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="613,249,734,274"/>
-<area shape="poly" title=" " alt="" coords="490,44,531,64,570,92,601,126,628,165,665,233,660,236,624,168,597,130,566,96,528,69,487,49"/>
-<area shape="rect" href="find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="249,168,396,193"/>
-<area shape="poly" title=" " alt="" coords="421,48,342,156,338,153,417,45"/>
-<area shape="rect" href="per__cell__qc__metrics_8hpp.html" title="Compute per&#45;cell quality control metrics." alt="" coords="419,168,581,193"/>
-<area shape="poly" title=" " alt="" coords="444,45,491,152,486,154,439,47"/>
-<area shape="rect" href="choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="33,94,218,120"/>
-<area shape="poly" title=" " alt="" coords="363,48,188,92,186,87,362,42"/>
-<area shape="poly" title=" " alt="" coords="309,196,249,241,246,237,305,192"/>
-<area shape="poly" title=" " alt="" coords="265,197,186,216,99,244,97,245,95,240,98,239,184,211,264,191"/>
-<area shape="poly" title=" " alt="" coords="362,191,503,239,508,240,506,246,502,244,360,196"/>
-<area shape="rect" title=" " alt="" coords="110,249,167,274"/>
-<area shape="poly" title=" " alt="" coords="294,196,181,244,179,245,177,240,179,239,292,191"/>
-<area shape="rect" title=" " alt="" coords="272,249,333,274"/>
-<area shape="poly" title=" " alt="" coords="322,194,312,235,307,233,317,193"/>
-<area shape="rect" title=" " alt="" coords="357,241,491,282"/>
-<area shape="poly" title=" " alt="" coords="340,192,389,230,385,234,336,196"/>
-<area shape="poly" title=" " alt="" coords="437,197,352,216,261,244,258,245,256,240,259,239,351,211,436,191"/>
-<area shape="poly" title=" " alt="" coords="419,195,230,221,99,244,96,245,94,240,98,239,229,216,418,190"/>
-<area shape="poly" title=" " alt="" coords="510,192,538,234,533,237,506,195"/>
-<area shape="poly" title=" " alt="" coords="528,191,634,240,632,245,525,196"/>
-<area shape="poly" title=" " alt="" coords="468,196,346,244,344,245,342,240,344,239,466,191"/>
-<area shape="poly" title=" " alt="" coords="490,196,455,232,451,228,486,192"/>
-<area shape="poly" title=" " alt="" coords="135,119,207,234,202,237,130,122"/>
-<area shape="poly" title=" " alt="" coords="123,121,73,236,68,234,118,119"/>
-<area shape="poly" title=" " alt="" coords="160,118,276,159,274,165,158,123"/>
-<area shape="poly" title=" " alt="" coords="129,120,139,233,133,233,124,120"/>
+<area shape="rect" title="Simple per&#45;cell QC metrics from an RNA count matrix." alt="" coords="439,5,579,46"/>
+<area shape="rect" title=" " alt="" coords="174,249,231,274"/>
+<area shape="poly" title=" " alt="" coords="450,49,402,69,348,95,295,129,248,169,226,202,212,235,207,233,221,199,244,166,292,125,346,91,400,64,448,44"/>
+<area shape="rect" title=" " alt="" coords="16,249,69,274"/>
+<area shape="poly" title=" " alt="" coords="439,29,330,31,206,40,147,48,95,60,53,76,26,96,16,111,10,128,10,166,19,203,32,234,27,236,14,204,5,166,5,127,11,109,22,92,50,71,93,55,146,43,205,34,330,25,438,23"/>
+<area shape="rect" title=" " alt="" coords="588,249,662,274"/>
+<area shape="poly" title=" " alt="" coords="527,45,566,98,605,167,617,201,624,233,618,234,611,202,600,169,561,101,523,48"/>
+<area shape="rect" title=" " alt="" coords="767,94,848,120"/>
+<area shape="poly" title=" " alt="" coords="580,43,753,88,751,93,579,48"/>
+<area shape="rect" title=" " alt="" coords="686,249,751,274"/>
+<area shape="poly" title=" " alt="" coords="536,45,590,92,655,168,704,234,699,237,650,172,586,96,533,49"/>
+<area shape="rect" target="_parent" href="https://tatami-inc.github.io/tatami/tatami_8hpp.html" title=" " alt="" coords="775,249,896,274"/>
+<area shape="poly" title=" " alt="" coords="544,44,619,92,727,171,811,237,808,241,723,175,616,96,541,49"/>
+<area shape="rect" href="find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="259,168,405,193"/>
+<area shape="poly" title=" " alt="" coords="488,49,359,159,355,155,484,45"/>
+<area shape="rect" href="per__cell__qc__metrics_8hpp.html" title="Compute per&#45;cell quality control metrics." alt="" coords="428,168,590,193"/>
+<area shape="poly" title=" " alt="" coords="512,46,512,152,506,152,506,46"/>
+<area shape="rect" href="choose__filter__thresholds_8hpp.html" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="35,94,220,120"/>
+<area shape="poly" title=" " alt="" coords="439,44,202,93,201,88,438,39"/>
+<area shape="poly" title=" " alt="" coords="313,196,236,243,234,238,311,191"/>
+<area shape="poly" title=" " alt="" coords="263,197,176,216,82,244,79,245,78,240,80,239,174,211,262,191"/>
+<area shape="poly" title=" " alt="" coords="391,191,479,212,576,239,582,241,580,246,575,244,478,217,390,197"/>
+<area shape="poly" title=" " alt="" coords="406,190,554,214,675,239,680,240,678,245,674,244,553,219,405,195"/>
+<area shape="rect" title=" " alt="" coords="92,249,150,274"/>
+<area shape="poly" title=" " alt="" coords="295,196,163,244,161,245,159,240,161,239,293,191"/>
+<area shape="rect" title=" " alt="" coords="430,241,564,282"/>
+<area shape="poly" title=" " alt="" coords="358,192,443,232,441,237,356,196"/>
+<area shape="rect" title=" " alt="" coords="255,249,406,274"/>
+<area shape="poly" title=" " alt="" coords="334,194,333,233,328,233,329,194"/>
+<area shape="poly" title=" " alt="" coords="434,197,342,216,243,244,241,245,239,240,242,239,341,211,433,191"/>
+<area shape="poly" title=" " alt="" coords="428,195,216,224,82,244,79,245,77,240,80,239,215,218,428,190"/>
+<area shape="poly" title=" " alt="" coords="528,192,596,238,593,242,525,196"/>
+<area shape="poly" title=" " alt="" coords="546,191,675,239,678,240,676,245,673,244,544,196"/>
+<area shape="poly" title=" " alt="" coords="563,191,763,239,776,242,774,247,762,244,561,196"/>
+<area shape="poly" title=" " alt="" coords="510,194,505,226,500,226,505,193"/>
+<area shape="poly" title=" " alt="" coords="483,196,373,245,371,240,480,191"/>
+<area shape="poly" title=" " alt="" coords="136,119,192,234,188,236,131,121"/>
+<area shape="poly" title=" " alt="" coords="123,121,59,237,54,234,119,119"/>
+<area shape="poly" title=" " alt="" coords="163,118,284,160,282,165,161,123"/>
+<area shape="poly" title=" " alt="" coords="130,120,125,233,120,233,125,120"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -183,7 +188,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code>.  <a href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">scran_qc::ComputeRnaQcFiltersOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#af13df69a88ca429bcf8333d61bfb5802">compute_rna_qc_filters()</a></code>.  <a href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#a929c2ef9cf99fbb0a781b50ba76de411">compute_rna_qc_filters()</a></code>.  <a href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1RnaQcFilters.html">scran_qc::RnaQcFilters&lt; Float_ &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter for high-quality cells using RNA-based metrics.  <a href="classscran__qc_1_1RnaQcFilters.html#details">More...</a><br /></td></tr>
@@ -203,18 +208,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a11547d21005ac59afdfa595581c534bc" id="r_a11547d21005ac59afdfa595581c534bc"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_ , typename Detected_ , typename Proportion_ &gt; </td></tr>
 <tr class="memitem:a11547d21005ac59afdfa595581c534bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a11547d21005ac59afdfa595581c534bc">scran_qc::compute_rna_qc_metrics</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html">ComputeRnaQcMetricsBuffers</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;output, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsOptions.html">ComputeRnaQcMetricsOptions</a> &amp;options)</td></tr>
 <tr class="separator:a11547d21005ac59afdfa595581c534bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10981f9d0493eb03130bc2985ce702ff" id="r_a10981f9d0493eb03130bc2985ce702ff"><td class="memTemplParams" colspan="2">template&lt;typename Sum_  = double, typename Detected_  = int, typename Proportion_  = double, typename Value_  = double, typename Index_  = int, typename Subset_  = const uint8_t*&gt; </td></tr>
+<tr class="memitem:a10981f9d0493eb03130bc2985ce702ff" id="r_a10981f9d0493eb03130bc2985ce702ff"><td class="memTemplParams" colspan="2">template&lt;typename Sum_  = double, typename Detected_  = int, typename Proportion_  = double, typename Value_ , typename Index_ , typename Subset_ &gt; </td></tr>
 <tr class="memitem:a10981f9d0493eb03130bc2985ce702ff"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html">ComputeRnaQcMetricsResults</a>&lt; Sum_, Detected_, Proportion_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a10981f9d0493eb03130bc2985ce702ff">scran_qc::compute_rna_qc_metrics</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; &amp;mat, const std::vector&lt; Subset_ &gt; &amp;subsets, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsOptions.html">ComputeRnaQcMetricsOptions</a> &amp;options)</td></tr>
 <tr class="separator:a10981f9d0493eb03130bc2985ce702ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af13df69a88ca429bcf8333d61bfb5802" id="r_af13df69a88ca429bcf8333d61bfb5802"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_  = double, typename Detected_  = int, typename Proportion_  = double&gt; </td></tr>
-<tr class="memitem:af13df69a88ca429bcf8333d61bfb5802"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcFilters.html">RnaQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#af13df69a88ca429bcf8333d61bfb5802">scran_qc::compute_rna_qc_filters</a> (size_t num, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html">ComputeRnaQcMetricsBuffers</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
-<tr class="separator:af13df69a88ca429bcf8333d61bfb5802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a661f34a170913e18ce0e23e82b83899a" id="r_a661f34a170913e18ce0e23e82b83899a"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_  = double, typename Detected_  = int, typename Proportion_  = double&gt; </td></tr>
+<tr class="memitem:a929c2ef9cf99fbb0a781b50ba76de411" id="r_a929c2ef9cf99fbb0a781b50ba76de411"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Proportion_ &gt; </td></tr>
+<tr class="memitem:a929c2ef9cf99fbb0a781b50ba76de411"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcFilters.html">RnaQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a929c2ef9cf99fbb0a781b50ba76de411">scran_qc::compute_rna_qc_filters</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html">ComputeRnaQcMetricsBuffers</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
+<tr class="separator:a929c2ef9cf99fbb0a781b50ba76de411"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a661f34a170913e18ce0e23e82b83899a" id="r_a661f34a170913e18ce0e23e82b83899a"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Proportion_ &gt; </td></tr>
 <tr class="memitem:a661f34a170913e18ce0e23e82b83899a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcFilters.html">RnaQcFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a661f34a170913e18ce0e23e82b83899a">scran_qc::compute_rna_qc_filters</a> (const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html">ComputeRnaQcMetricsResults</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
 <tr class="separator:a661f34a170913e18ce0e23e82b83899a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3ce8f1830515304cde4417dd26cb8a6" id="r_ad3ce8f1830515304cde4417dd26cb8a6"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Proportion_ , typename Block_ &gt; </td></tr>
-<tr class="memitem:ad3ce8f1830515304cde4417dd26cb8a6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcBlockedFilters.html">RnaQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ad3ce8f1830515304cde4417dd26cb8a6">scran_qc::compute_rna_qc_filters_blocked</a> (size_t num, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html">ComputeRnaQcMetricsBuffers</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
-<tr class="separator:ad3ce8f1830515304cde4417dd26cb8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2b28b52f144ed4fab3f9fffde8f280e" id="r_aa2b28b52f144ed4fab3f9fffde8f280e"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Proportion_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:aa2b28b52f144ed4fab3f9fffde8f280e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcBlockedFilters.html">RnaQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#aa2b28b52f144ed4fab3f9fffde8f280e">scran_qc::compute_rna_qc_filters_blocked</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html">ComputeRnaQcMetricsBuffers</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
+<tr class="separator:aa2b28b52f144ed4fab3f9fffde8f280e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6123dbe90d91d7c6bf8200ed582e10f" id="r_ad6123dbe90d91d7c6bf8200ed582e10f"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , typename Proportion_ , typename Block_ &gt; </td></tr>
 <tr class="memitem:ad6123dbe90d91d7c6bf8200ed582e10f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classscran__qc_1_1RnaQcBlockedFilters.html">RnaQcBlockedFilters</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ad6123dbe90d91d7c6bf8200ed582e10f">scran_qc::compute_rna_qc_filters_blocked</a> (const <a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html">ComputeRnaQcMetricsResults</a>&lt; Sum_, Detected_, Proportion_ &gt; &amp;metrics, const Block_ *block, const <a class="el" href="structscran__qc_1_1ComputeRnaQcFiltersOptions.html">ComputeRnaQcFiltersOptions</a> &amp;options)</td></tr>
 <tr class="separator:ad6123dbe90d91d7c6bf8200ed582e10f"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -119,13 +119,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a820a26d0849559bc0aad49246d27016c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e069e030648f8bdc3d1b6355b91dc0a" id="r_a6e069e030648f8bdc3d1b6355b91dc0a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; Float_ &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e069e030648f8bdc3d1b6355b91dc0a">get_subset_sum</a> ()</td></tr>
 <tr class="separator:a6e069e030648f8bdc3d1b6355b91dc0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe4f3775109aedf656932869b79531b6" id="r_afe4f3775109aedf656932869b79531b6"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Sum_ , typename Detected_ , typename Block_ , typename Output_ &gt; </td></tr>
-<tr class="memitem:afe4f3775109aedf656932869b79531b6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#afe4f3775109aedf656932869b79531b6">filter</a> (Index_ num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
-<tr class="separator:afe4f3775109aedf656932869b79531b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64bf64bad7c8ad92df342cb67b2fbde8" id="r_a64bf64bad7c8ad92df342cb67b2fbde8"><td class="memTemplParams" colspan="2">template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Output_ &gt; </td></tr>
+<tr class="memitem:a64bf64bad7c8ad92df342cb67b2fbde8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a64bf64bad7c8ad92df342cb67b2fbde8">filter</a> (std::size_t num, const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html">ComputeAdtQcMetricsBuffers</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
+<tr class="separator:a64bf64bad7c8ad92df342cb67b2fbde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab138c0aa333321c81a8eaf883375c37d" id="r_ab138c0aa333321c81a8eaf883375c37d"><td class="memTemplParams" colspan="2">template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Output_ &gt; </td></tr>
 <tr class="memitem:ab138c0aa333321c81a8eaf883375c37d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab138c0aa333321c81a8eaf883375c37d">filter</a> (const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html">ComputeAdtQcMetricsResults</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block, Output_ *output) const</td></tr>
 <tr class="separator:ab138c0aa333321c81a8eaf883375c37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a491295abe0732ec55ccd4016e2eae223" id="r_a491295abe0732ec55ccd4016e2eae223"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detected_  = int, typename Block_  = int&gt; </td></tr>
+<tr class="memitem:a491295abe0732ec55ccd4016e2eae223" id="r_a491295abe0732ec55ccd4016e2eae223"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = unsigned char, typename Sum_ , typename Detected_ , typename Block_ &gt; </td></tr>
 <tr class="memitem:a491295abe0732ec55ccd4016e2eae223"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; Output_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a491295abe0732ec55ccd4016e2eae223">filter</a> (const <a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html">ComputeAdtQcMetricsResults</a>&lt; Sum_, Detected_ &gt; &amp;metrics, const Block_ *block) const</td></tr>
 <tr class="separator:a491295abe0732ec55ccd4016e2eae223"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -138,7 +138,7 @@ class scran_qc::AdtQcBlockedFilters&lt; Float_ &gt;</div><p>Filter on ADT-based 
   </table>
   </dd>
 </dl>
-<p>Instances of this class are typically created by <code><a class="el" href="namespacescran__qc.html#a47a6f3d70501f5b3bcac0f44cbc82349">compute_adt_qc_filters_blocked()</a></code>. </p>
+<p>Instances of this class are typically created by <code><a class="el" href="namespacescran__qc.html#a50f12f3aa73b390ae87d7afc75940d2b">compute_adt_qc_filters_blocked()</a></code>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab5381c5c02453a54a0c99191666e84ca" name="ab5381c5c02453a54a0c99191666e84ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab5381c5c02453a54a0c99191666e84ca">&#9670;&#160;</a></span>get_detected() <span class="overload">[1/2]</span></h2>
@@ -252,15 +252,15 @@ template&lt;typename Float_  = double&gt; </div>
 
 </div>
 </div>
-<a id="afe4f3775109aedf656932869b79531b6" name="afe4f3775109aedf656932869b79531b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe4f3775109aedf656932869b79531b6">&#9670;&#160;</a></span>filter() <span class="overload">[1/3]</span></h2>
+<a id="a64bf64bad7c8ad92df342cb67b2fbde8" name="a64bf64bad7c8ad92df342cb67b2fbde8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64bf64bad7c8ad92df342cb67b2fbde8">&#9670;&#160;</a></span>filter() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Float_  = double&gt; </div>
 <div class="memtemplate">
-template&lt;typename Index_ , typename Sum_ , typename Detected_ , typename Block_ , typename Output_ &gt; </div>
+template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Output_ &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -268,7 +268,7 @@ template&lt;typename Index_ , typename Sum_ , typename Detected_ , typename Bloc
         <tr>
           <td class="memname">void <a class="el" href="classscran__qc_1_1AdtQcBlockedFilters.html">scran_qc::AdtQcBlockedFilters</a>&lt; Float_ &gt;::filter </td>
           <td>(</td>
-          <td class="paramtype">Index_</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -304,7 +304,7 @@ template&lt;typename Index_ , typename Sum_ , typename Detected_ , typename Bloc
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of cells. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">compute_adt_qc_filters()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#acaa1ac8e1429f239b1192cd9e36bc42a">compute_adt_qc_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
@@ -359,7 +359,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Outp
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">compute_adt_qc_filters()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#acaa1ac8e1429f239b1192cd9e36bc42a">compute_adt_qc_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
@@ -376,7 +376,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Block_ , typename Outp
 <div class="memtemplate">
 template&lt;typename Float_  = double&gt; </div>
 <div class="memtemplate">
-template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detected_  = int, typename Block_  = int&gt; </div>
+template&lt;typename Output_  = unsigned char, typename Sum_ , typename Detected_ , typename Block_ &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -409,7 +409,7 @@ template&lt;typename Output_  = uint8_t, typename Sum_  = double, typename Detec
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#a4e0708c006f7362c4ca7587802293e01">compute_adt_qc_filters()</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics computed by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#acaa1ac8e1429f239b1192cd9e36bc42a">compute_adt_qc_filters()</a></code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num</code> containing block identifiers. Each identifier should correspond to the same blocks used in the constructor.</td></tr>
   </table>
   </dd>
