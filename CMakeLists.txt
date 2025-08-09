@@ -22,8 +22,8 @@ option(SCRAN_QC_FETCH_EXTERN "Automatically fetch scran_qc's external dependenci
 if(SCRAN_QC_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(tatami_tatami 3.0.0 CONFIG REQUIRED)
-    find_package(tatami_tatami_stats 1.0.0 CONFIG REQUIRED)
+    find_package(tatami_tatami 4.0.0 CONFIG REQUIRED)
+    find_package(tatami_tatami_stats 2.0.0 CONFIG REQUIRED)
     find_package(ltla_sanisizer 0.1.0 CONFIG REQUIRED)
 endif()
 

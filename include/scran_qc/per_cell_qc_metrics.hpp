@@ -161,7 +161,7 @@ void compute_qc_direct_dense(
 
     tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
         auto NR = mat.nrow();
-        auto ext = tatami::consecutive_extractor<false>(&mat, false, start, length);
+        auto ext = tatami::consecutive_extractor<false>(mat, false, start, length);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
 
         bool do_max = output.max_index || output.max_value;
@@ -267,7 +267,7 @@ void compute_qc_direct_sparse(
 
     tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
         auto NR = mat.nrow();
-        auto ext = tatami::consecutive_extractor<true>(&mat, false, start, length);
+        auto ext = tatami::consecutive_extractor<true>(mat, false, start, length);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
         auto ibuffer = tatami::create_container_of_Index_size<std::vector<Index_> >(NR);
 
@@ -493,7 +493,7 @@ void compute_qc_running_dense(
 
     tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
         auto NR = mat.nrow();
-        auto ext = tatami::consecutive_extractor<false>(&mat, true, static_cast<Index_>(0), NR, start, len);
+        auto ext = tatami::consecutive_extractor<false>(mat, true, static_cast<Index_>(0), NR, start, len);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(len);
 
         PerCellQcMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
@@ -588,7 +588,7 @@ void compute_qc_running_sparse(
 
     tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
         auto NR = mat.nrow();
-        auto ext = tatami::consecutive_extractor<true>(&mat, true, static_cast<Index_>(0), NR, start, len, opt);
+        auto ext = tatami::consecutive_extractor<true>(mat, true, static_cast<Index_>(0), NR, start, len, opt);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(len);
         auto ibuffer = tatami::create_container_of_Index_size<std::vector<Index_> >(len);
 
