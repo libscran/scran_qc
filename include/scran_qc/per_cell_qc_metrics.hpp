@@ -144,7 +144,7 @@ void compute_qc_direct_dense(
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
         if constexpr(std::is_pointer<Subset_>::value) {
             auto nsubsets = subsets.size();
-            subset_indices.resize(sanisizer::cast<decltype(subset_indices.size())>(nsubsets));
+            sanisizer::resize(subset_indices, nsubsets);
             auto NR = mat.nrow();
 
             for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
@@ -387,7 +387,7 @@ public:
 
         {
             auto nsubsets = output.subset_sum.size();
-            my_subset_sum.resize(sanisizer::cast<decltype(my_subset_sum.size())>(nsubsets));
+            sanisizer::resize(my_subset_sum, nsubsets);
             for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
                 if (output.subset_sum[s]) {
                     my_subset_sum[s] = tatami_stats::LocalOutputBuffer<Sum_>(thread, start, len, output.subset_sum[s]);
@@ -397,7 +397,7 @@ public:
 
         {
             auto nsubsets = output.subset_detected.size();
-            my_subset_detected.resize(sanisizer::cast<decltype(my_subset_detected.size())>(nsubsets));
+            sanisizer::resize(my_subset_detected, nsubsets);
             for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
                 if (output.subset_detected[s]) {
                     my_subset_detected[s] = tatami_stats::LocalOutputBuffer<Detected_>(thread, start, len, output.subset_detected[s]);
@@ -909,8 +909,8 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
     auto nsubsets = subsets.size();
 
     if (options.compute_subset_sum) {
-        output.subset_sum.resize(sanisizer::cast<decltype(output.subset_sum.size())>(nsubsets));
-        buffers.subset_sum.resize(sanisizer::cast<decltype(buffers.subset_sum.size())>(nsubsets));
+        sanisizer::resize(output.subset_sum, nsubsets);
+        sanisizer::resize(buffers.subset_sum, nsubsets);
         for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
             tatami::resize_container_to_Index_size(output.subset_sum[s], ncells
 #ifdef SCRAN_QC_TEST_INIT
@@ -922,8 +922,8 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
     }
 
     if (options.compute_subset_detected) {
-        output.subset_detected.resize(sanisizer::cast<decltype(output.subset_detected.size())>(nsubsets));
-        buffers.subset_detected.resize(sanisizer::cast<decltype(buffers.subset_detected.size())>(nsubsets));
+        sanisizer::resize(output.subset_detected, nsubsets);
+        sanisizer::resize(buffers.subset_detected, nsubsets);
         for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
             tatami::resize_container_to_Index_size(output.subset_detected[s], ncells
 #ifdef SCRAN_QC_TEST_INIT

@@ -111,8 +111,8 @@ void compute_rna_qc_metrics(
         if constexpr(same_type) {
             tmp.subset_sum = output.subset_proportion;
         } else {
-            placeholder_subset.resize(sanisizer::cast<decltype(placeholder_subset.size())>(nsubsets));
-            tmp.subset_sum.resize(sanisizer::cast<decltype(tmp.subset_sum.size())>(nsubsets));
+            sanisizer::resize(placeholder_subset, nsubsets);
+            sanisizer::resize(tmp.subset_sum, nsubsets);
             for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
                 auto& b = placeholder_subset[s];
                 tatami::resize_container_to_Index_size(b, NC);
@@ -201,8 +201,8 @@ ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_> compute_rna_qc_metrics(
     buffers.detected = output.detected.data();
 
     auto nsubsets = subsets.size();
-    buffers.subset_proportion.resize(sanisizer::cast<decltype(buffers.subset_proportion.size())>(nsubsets));
-    output.subset_proportion.resize(sanisizer::cast<decltype(output.subset_proportion.size())>(nsubsets));
+    sanisizer::resize(buffers.subset_proportion, nsubsets);
+    sanisizer::resize(output.subset_proportion, nsubsets);
     for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
         tatami::resize_container_to_Index_size(output.subset_proportion[s], NC
 #ifdef SCRAN_QC_TEST_INIT
@@ -290,7 +290,7 @@ void rna_populate(Host_& host, std::size_t n, const ComputeRnaQcMetricsBuffers<S
 
         auto nsubsets = res.subset_proportion.size();
         auto& subhost = host.get_subset_proportion();
-        subhost.resize(sanisizer::cast<decltype(subhost.size())>(nsubsets));
+        sanisizer::resize(subhost, nsubsets);
         for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
             auto sub = res.subset_proportion[s];
             subhost[s] = [&]{

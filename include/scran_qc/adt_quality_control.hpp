@@ -175,8 +175,8 @@ ComputeAdtQcMetricsResults<Sum_, Detected_> compute_adt_qc_metrics(
     x.detected = output.detected.data();
 
     auto nsubsets = subsets.size();
-    x.subset_sum.resize(sanisizer::cast<decltype(x.subset_sum.size())>(nsubsets));
-    output.subset_sum.resize(sanisizer::cast<decltype(output.subset_sum.size())>(nsubsets));
+    sanisizer::resize(x.subset_sum, nsubsets);
+    sanisizer::resize(output.subset_sum, nsubsets);
     for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
         tatami::resize_container_to_Index_size(output.subset_sum[s], NC
 #ifdef SCRAN_QC_TEST_INIT
@@ -247,7 +247,7 @@ void adt_populate(Host_& host, std::size_t n, const ComputeAdtQcMetricsBuffers<S
     {
         auto nsubsets = res.subset_sum.size();
         auto& host_subsets = host.get_subset_sum();
-        host_subsets.resize(sanisizer::cast<decltype(host_subsets.size())>(nsubsets));
+        sanisizer::resize(host_subsets, nsubsets);
 
         ChooseFilterThresholdsOptions opts;
         opts.num_mads = options.subset_sum_num_mads;

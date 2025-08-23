@@ -151,7 +151,7 @@ template<typename Float_ = double, typename Value_>
 FindMedianMadResults<Float_> find_median_mad(std::size_t num, const Value_* metrics, Float_* buffer, const FindMedianMadOptions& options) {
     std::vector<Float_> xbuffer;
     if (buffer == NULL) {
-        xbuffer.resize(sanisizer::cast<decltype(xbuffer.size())>(num)
+        sanisizer::resize(xbuffer, num
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
 #endif
@@ -217,12 +217,12 @@ public:
             }
         }
 
-        my_buffer.resize(sanisizer::cast<decltype(my_buffer.size())>(num)
+        sanisizer::resize(my_buffer, num
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
 #endif
         );
-        my_block_ends.resize(my_block_starts.size()
+        sanisizer::resize(my_block_ends, num
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
 #endif
