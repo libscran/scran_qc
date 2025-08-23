@@ -23,7 +23,7 @@ namespace scran_qc {
 struct FindMedianMadOptions {
     /**
      * Whether to compute the median and MAD after log-transformation of the values.
-     * This is useful for defining thresholds based on fold changes from the center.
+     * This is useful for defining thresholds based on fold-changes from the center.
      * If `true`, all values are assumed to be non-negative.
      */
     bool log = false;
@@ -65,7 +65,7 @@ struct FindMedianMadResults {
  * Pretty much as it says on the can; calculates the median of an array of values first,
  * and uses the median to then compute the median absolute deviation (MAD) from that array.
  *
- * @tparam Float_ Floating-point type for input and output.
+ * @tparam Float_ Floating-point type of the input and output.
  *
  * @param num Number of observations.
  * @param[in] metrics Pointer to an array of observations of length `num`.
@@ -135,14 +135,14 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, c
  * Overload of `find_median_mad()` that uses an auxiliary buffer to avoid mutating the input array of values.
  *
  * @tparam Value_ Type for the input.
- * @tparam Float_ Floating-point type for output.
+ * @tparam Float_ Floating-point type of the output.
  *
  * @param num Number of observations.
  * @param[in] metrics Pointer to an array of observations of length `num`.
  * NaNs are ignored.
- * Array contents are arbitrarily modified on function return and should not be used afterwards.
  * @param[out] buffer Pointer to an array of length `num`, containing a buffer to use for storing intermediate results.
- * This can also be NULL in which case a buffer is allocated.
+ * Array contents are arbitrarily modified on function return and should not be used afterwards.
+ * This can also be `NULL` in which case a buffer is allocated.
  * @param options Further options.
  *
  * @return Median and MAD for `metrics`, possibly after log-transformation.
@@ -167,13 +167,13 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, const Value_* metr
  *
  * This can be re-used across multiple `find_median_mad_blocked()` calls to avoid reallocation.
  *
- * @tparam Float_ Floating-point type for buffering.
+ * @tparam Float_ Floating-point type of the buffer.
  */
 template<typename Float_>
 class FindMedianMadWorkspace {
 public:
     /**
-     * @tparam Block_ Integer type for the block identifiers.
+     * @tparam Block_ Integer type of the block identifiers.
      * @param num Number of observations.
      * @param[in] block Pointer to an array of block identifiers. 
      * The array should be of length equal to `num`.
@@ -190,7 +190,7 @@ public:
     FindMedianMadWorkspace() = default;
 
     /**
-     * @tparam Block_ Integer type for the block identifiers.
+     * @tparam Block_ Integer type of the block identifiers.
      * @param num Number of observations.
      * @param[in] block Pointer to an array of block identifiers.
      * The array should be of length equal to `num`.
@@ -247,9 +247,9 @@ public:
  * For blocked datasets, this function computes the median and MAD for each block.
  * It is equivalent to calling `find_median_mad()` separately on all observations from each block.
  *
- * @tparam Output_ Floating-point type for the output.
+ * @tparam Output_ Floating-point type of the output.
  * @tparam Block_ Integer type, containing the block IDs.
- * @tparam Value_ Numeric type for the input.
+ * @tparam Value_ Numeric type of the input.
  *
  * @param num Number of observations.
  * @param[in] metrics Pointer to an array of observations of length `num`.
@@ -260,7 +260,7 @@ public:
  * If a null pointer is supplied, all observations are assumed to belong to the same block.
  * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `FindMedianMadWorkspace::set()` on `num` and `block`.
  * The same object can be re-used across multiple calls to `find_median_mad_blocked()` with the same `num` and `block`.
- * This can also be NULL in which case a new workspace is allocated. 
+ * This can also be `NULL` in which case a new workspace is allocated. 
  * @param options Further options.
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.

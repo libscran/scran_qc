@@ -20,8 +20,8 @@ namespace scran_qc {
  * This is most easily done by using `tatami::make_DelayedSubset()` to subset the `tatami::Matrix` with the indices of the high-quality cells.
  * For this purpose, we can use `filter_index()` to convert the boolean filtering vector into a vector of sorted and unique column indices.
  *
- * @tparam Keep_ Boolean type for the filter.
- * @tparam Index_ Integer type for array indices.
+ * @tparam Keep_ Boolean type of the filter.
+ * @tparam Index_ Integer type of array indices.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filter Pointer to an array of length `num`, indicating whether a cell is of high quality.
@@ -40,8 +40,8 @@ void filter_index(std::size_t num, const Keep_* filter, std::vector<Index_>& out
 /**
  * Overload of `filter_index()` that returns a vector directly.
  *
- * @tparam Index_ Integer type for array indices.
- * @tparam Keep_ Boolean type for each filter modality.
+ * @tparam Index_ Integer type of array indices.
+ * @tparam Keep_ Boolean type of each filter modality.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filter Pointer to an array of length `num`, indicating whether a cell is of high quality.
@@ -63,8 +63,8 @@ std::vector<Index_> filter_index(std::size_t num, const Keep_* filter) {
  * our default strategy is to take the intersection, i.e., we only retain cells that are considered to be high quality in all modalities.
  * This ensures that downstream analyses can be safely performed on each modality in the filtered dataset. 
  *
- * @tparam Keep_ Boolean type for each filter modality.
- * @tparam Output_ Boolean type for the output.
+ * @tparam Keep_ Boolean type of each filter modality.
+ * @tparam Output_ Boolean type of the output.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filters Vector of pointers to arrays of length `num`.
@@ -87,8 +87,8 @@ void combine_filters(std::size_t num, const std::vector<Keep_*>& filters, Output
 /**
  * Overload of `combine_filters()` that returns a vector directly.
  *
- * @tparam Output_ Boolean type for the output.
- * @tparam Keep_ Boolean type for each filter modality.
+ * @tparam Output_ Boolean type of the output.
+ * @tparam Keep_ Boolean type of each filter modality.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filters Vector of pointers to arrays of length `num`.
@@ -110,7 +110,7 @@ std::vector<Output_> combine_filters(std::size_t num, const std::vector<const Ke
 /**
  * This has the same behavior as `combine_filters()` followed by `filter_index()`.
  *
- * @tparam Keep_ Boolean type for each filter modality.
+ * @tparam Keep_ Boolean type of each filter modality.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filters Vector of pointers to arrays of length `num`.
@@ -139,8 +139,8 @@ void combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters,
 /**
  * Overload of `combine_filters_index()` that returns a vector directly.
  *
- * @tparam Index_ Integer type for array indices.
- * @tparam Keep_ Boolean type for each filter modality.
+ * @tparam Index_ Integer type of array indices.
+ * @tparam Keep_ Boolean type of each filter modality.
  *
  * @param num Number of cells in the dataset.
  * @param[in] filters Vector of pointers to arrays of length `num`.

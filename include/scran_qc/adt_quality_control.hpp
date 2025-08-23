@@ -65,16 +65,16 @@ struct ComputeAdtQcMetricsBuffers {
  * Given a feature-by-cell ADT count matrix, this function uses `per_cell_qc_metrics()` to compute several ADT-relevant QC metrics:
  * 
  * - The sum of counts for each cell, which (in theory) represents the efficiency of library preparation and sequencing.
- *   This is less useful as a QC metric for ADT data given that the sum is strongly influenced by biological variation in the abundance of the targeted features.
+ *   Compared to RNA data, the sum is less useful as a QC metric for ADT data as it is strongly influenced by biological variation in the abundance of the targeted features.
  *   Nonetheless, we compute it for diagnostic purposes.
  * - The number of detected tags per cell.
- *   Even though ADTs are commonly applied in situations where few features are highly abundant, 
+ *   Even though ADTs are typically used in situations where few features are highly abundant (e.g., cell type-specific markers), 
  *   we still expect detectable coverage of most features due to ambient contamination, non-specific binding or some background expression.
- *   The absence of detectable coverage indicates that library preparation or sequencing depth was suboptimal.
+ *   Low numbers of detected tags indicates that library preparation or sequencing depth was suboptimal.
  * - The sum of counts in pre-defined feature subsets.
- *   While the exact interpretation depends on the nature of the subset, the most common use case involves isotype control (IgG) features.
- *   IgG antibodies should not bind to anything, so high coverage suggests that non-specific binding is a problem, e.g., due to antibody conjugates.
- *   (We do not use proportions here, as it is entirely possible for a cell to have no counts for other tags due to the absence of their targeted features;
+ *   The exact interpretation depends on the nature of the feature subset but the most common use case involves isotype control (IgG) features.
+ *   IgG antibodies should not bind to anything so a high subset sum suggests that non-specific binding is a problem, e.g., due to antibody conjugates.
+ *   (Unlike RNA quality control, we do not use proportions here as it is entirely possible for a cell to have low counts for other tags due to the absence of their targeted features;
  *   this would result in a high proportion even if the cell has a "normal" level of non-specific binding.)
  *
  * We use these metrics to define thresholds for filtering in `compute_adt_qc_filters()`.
@@ -85,7 +85,7 @@ struct ComputeAdtQcMetricsBuffers {
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
- * @param mat A **tatami** matrix containing count data.
+ * @param mat A matrix of non-negative counts.
  * Rows correspond to ADT features while columns correspond to cells.
  * @param[in] subsets Vector of feature subsets, typically IgG controls. 
  * See `per_cell_qc_metrics()` for more details on the expected format.
@@ -142,7 +142,7 @@ struct ComputeAdtQcMetricsResults {
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
- * @param mat A **tatami** matrix containing count data.
+ * @param mat A matrix of non-negative counts.
  * Rows correspond to ADT features while columns correspond to cells.
  * @param[in] subsets Vector of feature subsets, typically IgG controls.
  * See `per_cell_qc_metrics()` for more details on the expected format.
@@ -320,7 +320,7 @@ ComputeAdtQcMetricsBuffers<const Sum_, const Detected_> to_buffer(const ComputeA
 
 /**
  * @brief Filter for high-quality cells using ADT-based metrics. 
- * @tparam Float_ Floating-point type for filter thresholds.
+ * @tparam Float_ Floating-point type of the filter thresholds.
  *
  * Instances of this class are typically created by `compute_adt_qc_filters()`.
  */
@@ -417,17 +417,20 @@ public:
 };
 
 /**
- * Using the ADT-relevant QC metrics from `compute_adt_qc_metrics()`,
+ * Given the ADT-relevant QC metrics from `compute_adt_qc_metrics()`,
  * we consider low-quality cells to be those with a low number of detected tags and high subset sums.
- * We define thresholds for each metric using an MAD-based outlier approach (see `choose_filter_thresholds()` for details).
- * For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics.
  *
- * For the number of detected features, we supplement the MAD-based threshold with a minimum drop in the proportion from the median.
- * That is, cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage.
- * By default, the number must drop by at least 10% from the median.
+ * For each subset's sum, we define the upper threshold using the MAD-based outlier approach implemented in `choose_filter_thresholds()`.
+ * This is done using the specified `ComputeAdtQcFiltersOptions::num_mads` and after log-transformation of the sums.
+ *
+ * For the number of detected features, we define a lower threshold as the lower of:
+ * - The MAD-based outlier threshold from `choose_filter_thresholds()`, computed using the specified `ComputeAdtQcFiltersOptions::num_mads` and after log-transformation.
+ * - The product of the median number across all cells and `1 - ComputeAdtQcFiltersOptions::min_detected_drop`.
+ *
+ * So by default, cells are only considered to be low quality if the number of detected features drops 10% or more below the median.
  * This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.
  *
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
@@ -445,7 +448,7 @@ AdtQcFilters<Float_> compute_adt_qc_filters(std::size_t num, const ComputeAdtQcM
 }
 
 /**
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  *
@@ -461,7 +464,7 @@ AdtQcFilters<Float_> compute_adt_qc_filters(const ComputeAdtQcMetricsResults<Sum
 
 /**
  * @brief Filter on ADT-based QC metrics with blocking.
- * @tparam Float_ Floating-point type for filter thresholds.
+ * @tparam Float_ Floating-point type of the filter thresholds.
  *
  * Instances of this class are typically created by `compute_adt_qc_filters_blocked()`.
  */
@@ -511,7 +514,7 @@ public:
     /**
      * @tparam Sum_ Numeric type to store the summed expression.
      * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param num Number of cells.
@@ -530,7 +533,7 @@ public:
     /**
      * @tparam Sum_ Numeric type to store the summed expression.
      * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
@@ -549,7 +552,7 @@ public:
      * @tparam Output_ Boolean type to store the high quality flags.
      * @tparam Sum_ Numeric type to store the summed expression.
      * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      *
      * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
@@ -577,7 +580,7 @@ public:
  *
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Block_ Integer type for the block assignments.
+ * @tparam Block_ Integer type of the block assignments.
  *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
@@ -602,7 +605,7 @@ AdtQcBlockedFilters<Float_> compute_adt_qc_filters_blocked(
 /**
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Block_ Integer type for the block assignments.
+ * @tparam Block_ Integer type of the block assignments.
  *
  * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.

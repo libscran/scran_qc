@@ -788,11 +788,11 @@ struct PerCellQcMetricsResults {
 };
 
 /**
- * Given a feature-by-cell expression matrix (usually containing counts), we compute several QC metrics:
+ * Given a feature-by-cell expression matrix (usually containing non-negative counts), we compute several QC metrics:
  * 
  * - The sum of expression values for each cell, which represents the efficiency of library preparation and sequencing.
  *   Low sums indicate that the library was not successfully captured.
- * - The number of detected features (i.e., with non-zero counts).
+ * - The number of detected features, i.e., with non-zero counts.
  *   This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.
  * - The maximum value across all features.
  *   This is useful in situations where only one feature is expected to be present, e.g., CRISPR guides, hash tags.
@@ -800,7 +800,7 @@ struct PerCellQcMetricsResults {
  *   If multiple features are tied for the maximum count, the earliest feature is reported.
  * - The sum of expression values in pre-defined feature subsets.
  *   The exact interpretation depends on the nature of the subset -
- *   most commonly, one subset will contain all genes on the mitochondrial chromosome,
+ *   for example, one subset for RNA data will typically contain all genes on the mitochondrial chromosome,
  *   where higher proportions of counts in the mitochondrial subset indicate cell damage due to loss of cytoplasmic transcripts.
  *   Spike-in proportions can be interpreted in a similar manner.
  * - The number of detected features in pre-defined feature subsets.
@@ -808,11 +808,11 @@ struct PerCellQcMetricsResults {
  *
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
- * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
+ * @tparam Subset_ Either a pointer to an array of booleans or a `std::vector` of indices.
  * @tparam Sum_ Floating point type to store the sums.
  * @tparam Detected_ Integer type to store the number of detected cells.
  *
- * @param mat A **tatami** matrix, typically containing count data.
+ * @param mat A matrix of non-negative counts.
  * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
  * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.
@@ -847,11 +847,11 @@ void per_cell_qc_metrics(
 /**
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
- * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
+ * @tparam Subset_ Either a pointer to an array of booleans or a `std::vector` of indices.
  * @tparam Sum_ Floating point type to store the sums.
  * @tparam Detected_ Integer type to store the number of detected cells.
  *
- * @param mat A **tatami** matrix, typically containing count data.
+ * @param mat A matrix of non-negative counts.
  * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
  * @param[in] subsets Vector of feature subsets, where each entry represents a feature subset and may be either:
  * - A pointer to an array of length equal to `mat.nrow()` where each entry is interpretable as a boolean.

@@ -33,25 +33,27 @@ struct ChooseFilterThresholdsOptions {
     /**
      * Number of MADs to use to define outliers.
      * Larger values result in more relaxed thresholds.
-     * By default, we require 3 MADs, which is motivated by the low probability (less than 1%) of obtaining such a value under the normal distribution.
+     * By default, we require 3 MADs, which is motivated by the low probability (less than 1%) of obtaining such a value for normally distributed data.
      */
     double num_mads = 3;
 
     /**
      * Minimum difference from the median to define outliers.
      * This enforces a more relaxed threshold in cases where the MAD may be too small.
-     * If `ChooseFilterThresholdsOptions::log = true`, this difference is interpreted as a unit on the log-scale.
+     * If `ChooseFilterThresholdsOptions::log = true`, this difference is interpreted as a unit on the natural log-scale.
      */
     double min_diff = 0;
 
     /**
-     * Whether the supplied median and MAD should be computed on the log-scale (i.e., `FindMedianMadOptions::log = true`).
-     * This focuses on the fold-change from the median when defining outliers.
+     * Whether the median and MAD should computed on the log-scale, i.e., `FindMedianMadOptions::log = true`.
+     * (Or, for the overload that accepts a `FindMedianMadResult`, whether the median and MAD were already computed the log-scale.)
+     *
+     * Using a log-transformation instructs the outlier definition to focus on the fold-change from the median. 
      * In practice, this is useful for metrics that are always positive and have right-skewed distributions,
      * as the log-transformation symmetrizes the distribution and makes it more normal-like such that the `ChooseFilterThresholdsOptions::num_mads` interpretation can be applied.
      * It also ensures that the defined threshold is always positive.
      *
-     * If this is set to true, the thresholds are converted back to the original scale of the metrics prior to filtering.
+     * If this is `true`, the reported thresholds are still converted back to the original scale of the metrics. 
      */
     bool log = false;
 };
@@ -64,7 +66,7 @@ template<typename Float_>
 struct ChooseFilterThresholdsResults {
     /**
      * Lower threshold.
-     * Cells where the relevant QC metric is below this threshold are considered to be low quality.j
+     * Cells where the relevant QC metric is below this threshold are considered to be low quality.
      * This is set to negative infinity if `ChooseFilterThresholdsOptions::lower = false`.
      */
     Float_ lower = 0;

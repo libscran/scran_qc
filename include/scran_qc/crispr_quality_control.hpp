@@ -69,18 +69,16 @@ struct ComputeCrisprQcMetricsBuffers {
 };
 
 /**
- * Given a feature-by-cell guide count matrix, this function uses `per_cell_qc_metrics()` to compute several CRISPR-relevant QC metrics:
+ * Given a guide-by-cell count matrix, this function uses `per_cell_qc_metrics()` to compute several CRISPR-relevant QC metrics:
  * 
  * - The sum of counts for each cell.
- *   Low counts indicate that the cell was not successfully transfected with a construct,
- *   or that library preparation and sequencing failed.
+ *   Low counts indicate that the cell was not successfully transfected with a construct or that library preparation and sequencing failed.
  * - The number of detected guides per cell.
  *   In theory, this should be 1, as each cell should express no more than one guide construct.
  *   However, ambient contamination may introduce non-zero counts for multiple guides, without necessarily interfering with downstream analyses.
  *   As such, this metric is less useful for guide data, though we compute it anyway.
  * - The maximum count in the most abundant guide construct.
- *   Low values indicate that the cell was not successfully transfected,
- *   or that library preparation and sequencing failed.
+ *   Low values indicate that the cell was not successfully transfected or that library preparation and sequencing failed.
  *   The identity of the most abundant guide is also reported.
  *
  * We use these metrics to define thresholds for filtering in `compute_crispr_qc_filters()`.
@@ -88,11 +86,9 @@ struct ComputeCrisprQcMetricsBuffers {
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Sum_ Numeric type to store the summed expression.
- *
- * Meaningful instances of this object should generally be constructed by calling the `compute_crispr_qc_metrics()` function.
  * @tparam Detected_ Integer type to store the number of cells.
  *
- * @param mat A **tatami** matrix containing count data.
+ * @param mat A matrix of non-negative counts.
  * Rows correspond to CRISPR guides while columns correspond to cells.
  * @param[out] output `ComputeCrisprQcMetricsBuffers` object in which to store the output.
  * @param options Further options.
@@ -120,6 +116,8 @@ void compute_crispr_qc_metrics(
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
+ *
+ * Meaningful instances of this object should generally be constructed by calling the `compute_crispr_qc_metrics()` function.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Value_ = double, typename Index_ = int>
 struct ComputeCrisprQcMetricsResults {
@@ -153,8 +151,8 @@ struct ComputeCrisprQcMetricsResults {
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
  *
- * @param mat A **tatami** matrix containing counts.
- * Each row should correspond to a guide while each column should correspond to a cell.
+ * @param mat A matrix of non-negative counts.
+ * Each row should correspond to a CRISPR guide while each column should correspond to a cell.
  * @param options Further options.
  *
  * @return An object containing the QC metrics.
@@ -309,7 +307,7 @@ ComputeCrisprQcMetricsBuffers<const Sum_, const Detected_, const Value_, const I
 
 /**
  * @brief Filter for high-quality cells using CRISPR-based metrics. 
- * @tparam Float_ Floating-point type for filter thresholds.
+ * @tparam Float_ Floating-point type of the filter thresholds.
  *
  * Instances of this class are typically created by `compute_crispr_qc_filters()`.
  */
@@ -390,27 +388,27 @@ public:
 };
 
 /**
- * In CRISPR data, low-quality cells are defined as those with a low count for the most abundant guides.
- * However, directly defining a threshold on the maximum count is somewhat tricky as unsuccessful transfection is not uncommon.
- * This often results in a large subpopulation with low maximum counts, inflating the MAD and compromising the threshold calculation.
+ * In CRISPR data, a cell is considered to be of low quality if it has a low count for its most abundant guide.
+ * However, directly applying `choose_filter_thresholds()` on the maximum count is somewhat tricky as unsuccessful transfection can be common.
+ * This results in a large subpopulation with low maximum counts, inflating the MAD and compromising the threshold calculation.
  * Instead, we use the following approach:
  *
- * 1. Compute the median of the proportion of counts in the most abundant guide (i.e., the maximum proportion),
- * 2. Subset the cells to only those with maximum proportions above the median.
- * 3. Define a threshold for low outliers on the log-transformed maximum count within the subset (see `choose_filter_thresholds()` for details).
+ * 1. Compute the proportion of counts in the most abundant guide (i.e., the maximum proportion) in each cell.
+ * Cells that were successfully transfected should have high maximum proportions.
+ * In contrast, unsuccessfully transfected cells will be dominated by ambient contamination and have low proportions.
+ * 2. Subset the dataset to only retain those cells with maximum proportions above the median.
+ * This assumes that at least 50% of cells were successfully transfected.
+ * Thus, we remove all of the unsucessful transfections and enrich for mostly-high-quality cells.
+ * 3. Define a MAD-based threshold for low outliers on the log-transformed maximum count within the subset (see `choose_filter_thresholds()` for details).
+ * This is now possible as we can assume that most of the remaining cells are of high quality.
  *
- * This assumes that over 50% of cells were successfully transfected with a single guide construct and have high maximum proportions.
- * In contrast, unsuccessful transfections will be dominated by ambient contamination and have low proportions.
- * By taking the subset above the median proportion, we remove all of the unsuccessful transfections and enrich for mostly-high-quality cells.
- * From there, we can apply the usual outlier detection methods on the maximum count, with log-transformation to avoid a negative threshold.
+ * Note that the maximum proportion is only used to define the subset for threshold calculation.
+ * Once the maximum count threshold is computed, it is applied to all cells regardless of their maximum proportions.
+ * This ensures that we correctly remove cells with low coverage, even if the proportion is high.
+ * It also allows us to retain cells transfected with multiple guides, as long as the maximum is high enough -
+ * such cells are not necessarily uninteresting, e.g., for examining interaction effects, so we will err on the side of caution and leave them in.
  *
- * Keep in mind that the maximum proportion is only used to define the subset for threshold calculation.
- * Once the maximum count threshold is computed, they are applied to all cells, regardless of their maximum proportions.
- * This allows us to recover good cells that would have been filtered out by our aggressive median subset.
- * It also ensures that we do not remove cells transfected with multiple guides - such cells are not necessarily uninteresting, e.g., for examining interaction effects,
- * so we will err on the side of caution and leave them in.
- *
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Value_ Type of matrix value.
@@ -434,7 +432,7 @@ CrisprQcFilters<Float_> compute_crispr_qc_filters(
 }
 
 /**
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Value_ Type of matrix value.
@@ -455,7 +453,7 @@ CrisprQcFilters<Float_> compute_crispr_qc_filters(
 
 /**
  * @brief Filter on using CRISPR-based QC metrics with blocking.
- * @tparam Float_ Floating-point type for filter thresholds.
+ * @tparam Float_ Floating-point type of the filter thresholds.
  * Instances of this class are typically created by `compute_crispr_qc_filters_blocked()`.
  */
 template<typename Float_ = double>
@@ -487,7 +485,7 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param num Number of cells.
@@ -507,7 +505,7 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      * @tparam Output_ Boolean type to store the high quality flags.
      *
      * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
@@ -527,7 +525,7 @@ public:
      * @tparam Detected_ Integer type to store the number of cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
-     * @tparam Block_ Integer type for the block assignment.
+     * @tparam Block_ Integer type of the block assignment.
      * 
      * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
@@ -556,7 +554,7 @@ public:
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
- * @tparam Block_ Integer type for the block assignments.
+ * @tparam Block_ Integer type of the block assignments.
  *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
@@ -583,7 +581,7 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
  * @tparam Detected_ Integer type to store the number of cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
- * @tparam Block_ Integer type for the block assignments.
+ * @tparam Block_ Integer type of the block assignments.
  *
  * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
