@@ -324,9 +324,9 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 </div><div class="memdoc">
 <p>Given a feature-by-cell ADT count matrix, this function uses <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> to compute several ADT-relevant QC metrics:</p>
 <ul>
-<li>The sum of counts for each cell, which (in theory) represents the efficiency of library preparation and sequencing. This is less useful as a QC metric for ADT data given that the sum is strongly influenced by biological variation in the abundance of the targeted features. Nonetheless, we compute it for diagnostic purposes.</li>
-<li>The number of detected tags per cell. Even though ADTs are commonly applied in situations where few features are highly abundant, we still expect detectable coverage of most features due to ambient contamination, non-specific binding or some background expression. The absence of detectable coverage indicates that library preparation or sequencing depth was suboptimal.</li>
-<li>The sum of counts in pre-defined feature subsets. While the exact interpretation depends on the nature of the subset, the most common use case involves isotype control (IgG) features. IgG antibodies should not bind to anything, so high coverage suggests that non-specific binding is a problem, e.g., due to antibody conjugates. (We do not use proportions here, as it is entirely possible for a cell to have no counts for other tags due to the absence of their targeted features; this would result in a high proportion even if the cell has a "normal" level of non-specific binding.)</li>
+<li>The sum of counts for each cell, which (in theory) represents the efficiency of library preparation and sequencing. Compared to RNA data, the sum is less useful as a QC metric for ADT data as it is strongly influenced by biological variation in the abundance of the targeted features. Nonetheless, we compute it for diagnostic purposes.</li>
+<li>The number of detected tags per cell. Even though ADTs are typically used in situations where few features are highly abundant (e.g., cell type-specific markers), we still expect detectable coverage of most features due to ambient contamination, non-specific binding or some background expression. Low numbers of detected tags indicates that library preparation or sequencing depth was suboptimal.</li>
+<li>The sum of counts in pre-defined feature subsets. The exact interpretation depends on the nature of the feature subset but the most common use case involves isotype control (IgG) features. IgG antibodies should not bind to anything so a high subset sum suggests that non-specific binding is a problem, e.g., due to antibody conjugates. (Unlike RNA quality control, we do not use proportions here as it is entirely possible for a cell to have low counts for other tags due to the absence of their targeted features; this would result in a high proportion even if the cell has a "normal" level of non-specific binding.)</li>
 </ul>
 <p>We use these metrics to define thresholds for filtering in <code><a class="el" href="#acaa1ac8e1429f239b1192cd9e36bc42a">compute_adt_qc_filters()</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -341,7 +341,7 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing count data. Rows correspond to ADT features while columns correspond to cells. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows correspond to ADT features while columns correspond to cells. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically IgG controls. See <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td><code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsBuffers.html" title="Buffers for compute_adt_qc_metrics().">ComputeAdtQcMetricsBuffers</a></code> object in which to store the output. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options. </td></tr>
@@ -389,7 +389,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing count data. Rows correspond to ADT features while columns correspond to cells. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows correspond to ADT features while columns correspond to cells. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically IgG controls. See <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
@@ -424,11 +424,16 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; <
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Using the ADT-relevant QC metrics from <code><a class="el" href="#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>, we consider low-quality cells to be those with a low number of detected tags and high subset sums. We define thresholds for each metric using an MAD-based outlier approach (see <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code> for details). For the number of detected features and the subset sums, the outliers are defined after log-transformation of the metrics.</p>
-<p>For the number of detected features, we supplement the MAD-based threshold with a minimum drop in the proportion from the median. That is, cells are only considered to be low quality if the difference in the number of detected features from the median is greater than a certain percentage. By default, the number must drop by at least 10% from the median. This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.</p>
+<p>Given the ADT-relevant QC metrics from <code><a class="el" href="#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>, we consider low-quality cells to be those with a low number of detected tags and high subset sums.</p>
+<p>For each subset's sum, we define the upper threshold using the MAD-based outlier approach implemented in <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>. This is done using the specified <code>ComputeAdtQcFiltersOptions::num_mads</code> and after log-transformation of the sums.</p>
+<p>For the number of detected features, we define a lower threshold as the lower of:</p><ul>
+<li>The MAD-based outlier threshold from <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>, computed using the specified <code>ComputeAdtQcFiltersOptions::num_mads</code> and after log-transformation.</li>
+<li>The product of the median number across all cells and <code>1 - ComputeAdtQcFiltersOptions::min_detected_drop</code>.</li>
+</ul>
+<p>So by default, cells are only considered to be low quality if the number of detected features drops 10% or more below the median. This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
   </table>
@@ -468,7 +473,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; <
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
   </table>
@@ -520,7 +525,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
   <table class="tparams">
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -566,7 +571,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
   <table class="tparams">
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -836,30 +841,25 @@ template&lt;typename Value_ , typename Index_ , typename Sum_ , typename Detecte
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Given a feature-by-cell guide count matrix, this function uses <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> to compute several CRISPR-relevant QC metrics:</p>
+<p>Given a guide-by-cell count matrix, this function uses <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> to compute several CRISPR-relevant QC metrics:</p>
 <ul>
-<li>The sum of counts for each cell. Low counts indicate that the cell was not successfully transfected with a construct, or that library preparation and sequencing failed.</li>
+<li>The sum of counts for each cell. Low counts indicate that the cell was not successfully transfected with a construct or that library preparation and sequencing failed.</li>
 <li>The number of detected guides per cell. In theory, this should be 1, as each cell should express no more than one guide construct. However, ambient contamination may introduce non-zero counts for multiple guides, without necessarily interfering with downstream analyses. As such, this metric is less useful for guide data, though we compute it anyway.</li>
-<li>The maximum count in the most abundant guide construct. Low values indicate that the cell was not successfully transfected, or that library preparation and sequencing failed. The identity of the most abundant guide is also reported.</li>
+<li>The maximum count in the most abundant guide construct. Low values indicate that the cell was not successfully transfected or that library preparation and sequencing failed. The identity of the most abundant guide is also reported.</li>
 </ul>
 <p>We use these metrics to define thresholds for filtering in <code><a class="el" href="#a68855fd156df34a788edba71dffed5c2">compute_crispr_qc_filters()</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression.</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>Meaningful instances of this object should generally be constructed by calling the <code><a class="el" href="#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code> function. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
+    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing count data. Rows correspond to CRISPR guides while columns correspond to cells. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows correspond to CRISPR guides while columns correspond to cells. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td><code><a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsBuffers.html" title="Buffers for compute_crispr_qc_metrics().">ComputeCrisprQcMetricsBuffers</a></code> object in which to store the output. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options. </td></tr>
   </table>
@@ -901,7 +901,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing counts. Each row should correspond to a guide while each column should correspond to a cell. </td></tr>
+    <tr><td class="paramname">mat</td><td>A matrix of non-negative counts. Each row should correspond to a CRISPR guide while each column should correspond to a cell. </td></tr>
     <tr><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
@@ -935,17 +935,16 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
         </tr>
       </table>
 </div><div class="memdoc">
-<p>In CRISPR data, low-quality cells are defined as those with a low count for the most abundant guides. However, directly defining a threshold on the maximum count is somewhat tricky as unsuccessful transfection is not uncommon. This often results in a large subpopulation with low maximum counts, inflating the MAD and compromising the threshold calculation. Instead, we use the following approach:</p>
+<p>In CRISPR data, a cell is considered to be of low quality if it has a low count for its most abundant guide. However, directly applying <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code> on the maximum count is somewhat tricky as unsuccessful transfection can be common. This results in a large subpopulation with low maximum counts, inflating the MAD and compromising the threshold calculation. Instead, we use the following approach:</p>
 <ol type="1">
-<li>Compute the median of the proportion of counts in the most abundant guide (i.e., the maximum proportion),</li>
-<li>Subset the cells to only those with maximum proportions above the median.</li>
-<li>Define a threshold for low outliers on the log-transformed maximum count within the subset (see <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code> for details).</li>
+<li>Compute the proportion of counts in the most abundant guide (i.e., the maximum proportion) in each cell. Cells that were successfully transfected should have high maximum proportions. In contrast, unsuccessfully transfected cells will be dominated by ambient contamination and have low proportions.</li>
+<li>Subset the dataset to only retain those cells with maximum proportions above the median. This assumes that at least 50% of cells were successfully transfected. Thus, we remove all of the unsucessful transfections and enrich for mostly-high-quality cells.</li>
+<li>Define a MAD-based threshold for low outliers on the log-transformed maximum count within the subset (see <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code> for details). This is now possible as we can assume that most of the remaining cells are of high quality.</li>
 </ol>
-<p>This assumes that over 50% of cells were successfully transfected with a single guide construct and have high maximum proportions. In contrast, unsuccessful transfections will be dominated by ambient contamination and have low proportions. By taking the subset above the median proportion, we remove all of the unsuccessful transfections and enrich for mostly-high-quality cells. From there, we can apply the usual outlier detection methods on the maximum count, with log-transformation to avoid a negative threshold.</p>
-<p>Keep in mind that the maximum proportion is only used to define the subset for threshold calculation. Once the maximum count threshold is computed, they are applied to all cells, regardless of their maximum proportions. This allows us to recover good cells that would have been filtered out by our aggressive median subset. It also ensures that we do not remove cells transfected with multiple guides - such cells are not necessarily uninteresting, e.g., for examining interaction effects, so we will err on the side of caution and leave them in.</p>
+<p>Note that the maximum proportion is only used to define the subset for threshold calculation. Once the maximum count threshold is computed, it is applied to all cells regardless of their maximum proportions. This ensures that we correctly remove cells with low coverage, even if the proportion is high. It also allows us to retain cells transfected with multiple guides, as long as the maximum is high enough - such cells are not necessarily uninteresting, e.g., for examining interaction effects, so we will err on the side of caution and leave them in.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
@@ -987,7 +986,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
@@ -1043,7 +1042,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1091,7 +1090,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1135,7 +1134,7 @@ template&lt;typename Float_ &gt; </div>
 <p>Pretty much as it says on the can; calculates the median of an array of values first, and uses the median to then compute the median absolute deviation (MAD) from that array.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for input and output.</td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the input and output.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1185,15 +1184,15 @@ template&lt;typename Float_  = double, typename Value_ &gt; </div>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type for the input. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for output.</td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the output.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of observations. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of observations of length <code>num</code>. NaNs are ignored. Array contents are arbitrarily modified on function return and should not be used afterwards. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Pointer to an array of length <code>num</code>, containing a buffer to use for storing intermediate results. This can also be NULL in which case a buffer is allocated. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of observations of length <code>num</code>. NaNs are ignored. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Pointer to an array of length <code>num</code>, containing a buffer to use for storing intermediate results. Array contents are arbitrarily modified on function return and should not be used afterwards. This can also be <code>NULL</code> in which case a buffer is allocated. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
@@ -1240,9 +1239,9 @@ template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; <
 <p>For blocked datasets, this function computes the median and MAD for each block. It is equivalent to calling <code><a class="el" href="#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad()</a></code> separately on all observations from each block.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Output_</td><td>Floating-point type for the output. </td></tr>
+    <tr><td class="paramname">Output_</td><td>Floating-point type of the output. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type, containing the block IDs. </td></tr>
-    <tr><td class="paramname">Value_</td><td>Numeric type for the input.</td></tr>
+    <tr><td class="paramname">Value_</td><td>Numeric type of the input.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1251,7 +1250,7 @@ template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; <
     <tr><td class="paramdir"></td><td class="paramname">num</td><td>Number of observations. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of observations of length <code>num</code>. NaNs are ignored. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Optional pointer to an array of block identifiers. If provided, the array should be of length equal to <code>num</code>. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. If a null pointer is supplied, all observations are assumed to belong to the same block. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Pointer to a workspace object, either (i) constructed on <code>num</code> and <code>block</code> or (ii) configured using <code><a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">FindMedianMadWorkspace::set()</a></code> on <code>num</code> and <code>block</code>. The same object can be re-used across multiple calls to <code><a class="el" href="#a50e94a656f14c7613e7be5c0a22da972">find_median_mad_blocked()</a></code> with the same <code>num</code> and <code>block</code>. This can also be NULL in which case a new workspace is allocated. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Pointer to a workspace object, either (i) constructed on <code>num</code> and <code>block</code> or (ii) configured using <code><a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">FindMedianMadWorkspace::set()</a></code> on <code>num</code> and <code>block</code>. The same object can be re-used across multiple calls to <code><a class="el" href="#a50e94a656f14c7613e7be5c0a22da972">find_median_mad_blocked()</a></code> with the same <code>num</code> and <code>block</code>. This can also be <code>NULL</code> in which case a new workspace is allocated. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
@@ -1288,8 +1287,8 @@ template&lt;typename Keep_ , typename Index_ &gt; </div>
 <p>Convert the filtering vectors produced by <code><a class="el" href="#a929c2ef9cf99fbb0a781b50ba76de411">compute_rna_qc_filters()</a></code> and friends into formats that can be used for downstream analysis. In particular, we want to slice the original feature-by-cell matrix so only the high-quality subset of cells are retained. This is most easily done by using <code><a class="elRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a77fad1d2a2553899a7860521d6284f50">tatami::make_DelayedSubset()</a></code> to subset the <code><a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a></code> with the indices of the high-quality cells. For this purpose, we can use <code><a class="el" href="#a107ee4114c3a4eeb7ab8114eb6736f9e">filter_index()</a></code> to convert the boolean filtering vector into a vector of sorted and unique column indices.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Keep_</td><td>Boolean type for the filter. </td></tr>
-    <tr><td class="paramname">Index_</td><td>Integer type for array indices.</td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of the filter. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of array indices.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1327,8 +1326,8 @@ template&lt;typename Index_ , typename Keep_ &gt; </div>
 <p>Overload of <code><a class="el" href="#a107ee4114c3a4eeb7ab8114eb6736f9e">filter_index()</a></code> that returns a vector directly.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for array indices. </td></tr>
-    <tr><td class="paramname">Keep_</td><td>Boolean type for each filter modality.</td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of array indices. </td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of each filter modality.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1371,8 +1370,8 @@ template&lt;typename Keep_ , typename Output_ &gt; </div>
 <p>When dealing with multiple filters from different modalities (e.g., <code><a class="el" href="classscran__qc_1_1CrisprQcFilters.html#a1804eb2c44562f8476257e78177ae448">CrisprQcFilters::filter()</a></code>, <code><a class="el" href="classscran__qc_1_1AdtQcFilters.html#a10dd92d9ac36628681168bd0ad058c3f">AdtQcFilters::filter()</a></code>), our default strategy is to take the intersection, i.e., we only retain cells that are considered to be high quality in all modalities. This ensures that downstream analyses can be safely performed on each modality in the filtered dataset.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Keep_</td><td>Boolean type for each filter modality. </td></tr>
-    <tr><td class="paramname">Output_</td><td>Boolean type for the output.</td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of each filter modality. </td></tr>
+    <tr><td class="paramname">Output_</td><td>Boolean type of the output.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1410,8 +1409,8 @@ template&lt;typename Output_  = unsigned char, typename Keep_ &gt; </div>
 <p>Overload of <code><a class="el" href="#ab53497881d41ec0677f9ce4624cc135c">combine_filters()</a></code> that returns a vector directly.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Output_</td><td>Boolean type for the output. </td></tr>
-    <tr><td class="paramname">Keep_</td><td>Boolean type for each filter modality.</td></tr>
+    <tr><td class="paramname">Output_</td><td>Boolean type of the output. </td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of each filter modality.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1454,7 +1453,7 @@ template&lt;typename Index_ , typename Keep_ &gt; </div>
 <p>This has the same behavior as <code><a class="el" href="#ab53497881d41ec0677f9ce4624cc135c">combine_filters()</a></code> followed by <code><a class="el" href="#a107ee4114c3a4eeb7ab8114eb6736f9e">filter_index()</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Keep_</td><td>Boolean type for each filter modality.</td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of each filter modality.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1492,8 +1491,8 @@ template&lt;typename Index_ , typename Keep_ &gt; </div>
 <p>Overload of <code><a class="el" href="#a8af35779ffe55f2cb003e5bbed71e175">combine_filters_index()</a></code> that returns a vector directly.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for array indices. </td></tr>
-    <tr><td class="paramname">Keep_</td><td>Boolean type for each filter modality.</td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of array indices. </td></tr>
+    <tr><td class="paramname">Keep_</td><td>Boolean type of each filter modality.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1538,20 +1537,20 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Given a feature-by-cell expression matrix (usually containing counts), we compute several QC metrics:</p>
+<p>Given a feature-by-cell expression matrix (usually containing non-negative counts), we compute several QC metrics:</p>
 <ul>
 <li>The sum of expression values for each cell, which represents the efficiency of library preparation and sequencing. Low sums indicate that the library was not successfully captured.</li>
-<li>The number of detected features (i.e., with non-zero counts). This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.</li>
+<li>The number of detected features, i.e., with non-zero counts. This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.</li>
 <li>The maximum value across all features. This is useful in situations where only one feature is expected to be present, e.g., CRISPR guides, hash tags.</li>
 <li>The row index of the feature with the maximum count. If multiple features are tied for the maximum count, the earliest feature is reported.</li>
-<li>The sum of expression values in pre-defined feature subsets. The exact interpretation depends on the nature of the subset - most commonly, one subset will contain all genes on the mitochondrial chromosome, where higher proportions of counts in the mitochondrial subset indicate cell damage due to loss of cytoplasmic transcripts. Spike-in proportions can be interpreted in a similar manner.</li>
+<li>The sum of expression values in pre-defined feature subsets. The exact interpretation depends on the nature of the subset - for example, one subset for RNA data will typically contain all genes on the mitochondrial chromosome, where higher proportions of counts in the mitochondrial subset indicate cell damage due to loss of cytoplasmic transcripts. Spike-in proportions can be interpreted in a similar manner.</li>
 <li>The number of detected features in pre-defined feature subsets. Analogous to the number of detected features for the entire feature space.</li>
 </ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices. </td></tr>
+    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Floating point type to store the sums. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of detected cells.</td></tr>
   </table>
@@ -1559,7 +1558,7 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix, typically containing count data. Rows should correspond to features (e.g., genes) while columns should correspond to cells. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows should correspond to features (e.g., genes) while columns should correspond to cells. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, where each entry represents a feature subset and may be either:<ul>
 <li>A pointer to an array of length equal to <code>mat.nrow()</code> where each entry is interpretable as a boolean. This indicates whether each row in <code>mat</code> belongs to the subset.</li>
 <li>A <code>std::vector</code> containing sorted and unique row indices. This specifies the rows in <code>mat</code> that belong to the subset. </li>
@@ -1602,7 +1601,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices. </td></tr>
+    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Floating point type to store the sums. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of detected cells.</td></tr>
   </table>
@@ -1610,7 +1609,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix, typically containing count data. Rows should correspond to features (e.g., genes) while columns should correspond to cells. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows should correspond to features (e.g., genes) while columns should correspond to cells. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, where each entry represents a feature subset and may be either:<ul>
 <li>A pointer to an array of length equal to <code>mat.nrow()</code> where each entry is interpretable as a boolean. This indicates whether each row in <code>mat</code> belongs to the subset.</li>
 <li>A <code>std::vector</code> containing sorted and unique row indices. This specifies the rows in <code>mat</code> that belong to the subset. </li>
@@ -1657,8 +1656,8 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 <p>Given a feature-by-cell RNA count matrix, we compute several metrics for filtering high-quality cells:</p>
 <ul>
 <li>The total sum of counts for each cell, which represents the efficiency of library preparation and sequencing. Low totals indicate that the library was not successfully captured.</li>
-<li>The number of detected features. This also quantifies the library preparation efficiency, but with a greater focus on capturing the transcriptional complexity.</li>
-<li>The proportion of counts in pre-defined feature subsets, the exact interpretation of which depends on the nature of the subset. Typically, one subset contains all genes on the mitochondrial chromosome, where higher proportions are representative of cell damage; the assumption is that cytoplasmic transcripts leak through tears in the cell membrane while the mitochondria are still trapped inside. The prportion of spike-in transcripts can be interpreted in a similar manner, where the loss of endogenous transcripts results in higher spike-in proportions.</li>
+<li>The number of detected features. This also quantifies library preparation efficiency but with greater focus on capturing transcriptional complexity.</li>
+<li>The proportion of counts in pre-defined feature subsets, the exact interpretation of which depends on the nature of the subset. Typically, one subset contains all genes on the mitochondrial chromosome, where higher proportions are representative of cell damage; the assumption is that cytoplasmic transcripts leak through tears in the cell membrane while the mitochondria are still trapped inside. The proportion of spike-in transcripts can be interpreted in a similar manner, where the loss of endogenous transcripts results in higher spike-in proportions.</li>
 </ul>
 <p>We use these metrics to define thresholds for filtering in <code><a class="el" href="#a929c2ef9cf99fbb0a781b50ba76de411">compute_rna_qc_filters()</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -1674,8 +1673,8 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing counts. Rows should correspond to genes while columns should correspond to cells. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts. See <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows should correspond to genes while columns should correspond to cells. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts. See the argument of the same name in <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Collection of buffers in which to store the output. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options. </td></tr>
   </table>
@@ -1717,14 +1716,14 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices.</td></tr>
+    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A <b>tatami</b> matrix containing counts. Rows should correspond to genes while columns should correspond to cells. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts. See <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows should correspond to genes while columns should correspond to cells. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, typically mitochondrial genes or spike-in transcripts. See the argument of the same name in <code><a class="el" href="#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> for more details on the expected format. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
@@ -1758,10 +1757,10 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Using the RNA-relevant QC metrics from <code><a class="el" href="#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code>, we consider low-quality cells to be those with a low sum, a low number of detected genes, and high subset proportions. we define thresholds for each metric using an MAD-based outlier approach. For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics.</p>
+<p>Given the RNA-relevant QC metrics from <code><a class="el" href="#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code>, we consider low-quality cells to be those with a low sum, a low number of detected genes, or high subset proportions. We define thresholds for each metric using the MAD-based outlier approach implemented in <code><a class="el" href="#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>. For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
@@ -1803,7 +1802,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <p>This function computes filter thresholds for RNA-derived QC metrics in blocked datasets (e.g., cells from multiple batches or samples). Each blocking level has its own thresholds, equivalent to calling <code><a class="el" href="#a929c2ef9cf99fbb0a781b50ba76de411">compute_rna_qc_filters()</a></code> on the cells from each block. This ensures that uninteresting inter-block differences do not inflate the MAD, see <code><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked()</a></code> for more details.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the thresholds. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
@@ -1856,7 +1855,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1903,7 +1902,7 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
     <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
     <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
-    <tr><td class="paramname">Block_</td><td>Integer type for the block assignments.</td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
 </dl>

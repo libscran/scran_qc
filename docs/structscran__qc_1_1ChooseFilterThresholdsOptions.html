@@ -166,7 +166,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Number of MADs to use to define outliers. Larger values result in more relaxed thresholds. By default, we require 3 MADs, which is motivated by the low probability (less than 1%) of obtaining such a value under the normal distribution. </p>
+<p>Number of MADs to use to define outliers. Larger values result in more relaxed thresholds. By default, we require 3 MADs, which is motivated by the low probability (less than 1%) of obtaining such a value for normally distributed data. </p>
 
 </div>
 </div>
@@ -181,7 +181,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Minimum difference from the median to define outliers. This enforces a more relaxed threshold in cases where the MAD may be too small. If <code><a class="el" href="#a7896ba64781d12a2153a0cbbda3b10d0">ChooseFilterThresholdsOptions::log</a> = true</code>, this difference is interpreted as a unit on the log-scale. </p>
+<p>Minimum difference from the median to define outliers. This enforces a more relaxed threshold in cases where the MAD may be too small. If <code><a class="el" href="#a7896ba64781d12a2153a0cbbda3b10d0">ChooseFilterThresholdsOptions::log</a> = true</code>, this difference is interpreted as a unit on the natural log-scale. </p>
 
 </div>
 </div>
@@ -196,8 +196,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether the supplied median and MAD should be computed on the log-scale (i.e., <code><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">FindMedianMadOptions::log</a> = true</code>). This focuses on the fold-change from the median when defining outliers. In practice, this is useful for metrics that are always positive and have right-skewed distributions, as the log-transformation symmetrizes the distribution and makes it more normal-like such that the <code><a class="el" href="#aa64296dfb5762f15989ad022806bcecc">ChooseFilterThresholdsOptions::num_mads</a></code> interpretation can be applied. It also ensures that the defined threshold is always positive.</p>
-<p>If this is set to true, the thresholds are converted back to the original scale of the metrics prior to filtering. </p>
+<p>Whether the median and MAD should computed on the log-scale, i.e., <code><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">FindMedianMadOptions::log</a> = true</code>. (Or, for the overload that accepts a <code>FindMedianMadResult</code>, whether the median and MAD were already computed the log-scale.)</p>
+<p>Using a log-transformation instructs the outlier definition to focus on the fold-change from the median. In practice, this is useful for metrics that are always positive and have right-skewed distributions, as the log-transformation symmetrizes the distribution and makes it more normal-like such that the <code><a class="el" href="#aa64296dfb5762f15989ad022806bcecc">ChooseFilterThresholdsOptions::num_mads</a></code> interpretation can be applied. It also ensures that the defined threshold is always positive.</p>
+<p>If this is <code>true</code>, the reported thresholds are still converted back to the original scale of the metrics. </p>
 
 </div>
 </div>
