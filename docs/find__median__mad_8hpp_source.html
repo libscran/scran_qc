@@ -196,7 +196,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#aa73d242c18f72c27eac9bad1e6f0d89c">  151</a></span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(std::size_t num, <span class="keyword">const</span> Value_* metrics, Float_* buffer, <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options) {</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    std::vector&lt;Float_&gt; xbuffer;</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">if</span> (buffer == NULL) {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        xbuffer.resize(sanisizer::cast&lt;<span class="keyword">decltype</span>(xbuffer.size())&gt;(num)</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        sanisizer::resize(xbuffer, num</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            , SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>#endif</div>
@@ -243,12 +243,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            }</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        }</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        my_buffer.resize(sanisizer::cast&lt;<span class="keyword">decltype</span>(my_buffer.size())&gt;(num)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        sanisizer::resize(my_buffer, num</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            , SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>#endif</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        );</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        my_block_ends.resize(my_block_starts.size()</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        sanisizer::resize(my_block_ends, num</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            , SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>#endif</div>
