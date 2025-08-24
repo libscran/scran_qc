@@ -112,219 +112,223 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;tatami_stats/tatami_stats.hpp&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;sanisizer/sanisizer.hpp&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacescran__qc.html">scran_qc</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html">   23</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">   29</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">log</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">   35</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">median_only</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;utils.hpp&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacescran__qc.html">scran_qc</a> {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html">   25</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">   31</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">log</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">   37</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">median_only</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
 </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt;</div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html">   43</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a> {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>(Float_ m1, Float_ m2) : <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">median</a>(m1), <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">mad</a>(m2) {}</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">   56</a></span>    Float_ <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">median</a> = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">   61</a></span>    Float_ <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">mad</a> = 0;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt;</div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html">   45</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>(Float_ m1, Float_ m2) : <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">median</a>(m1), <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">mad</a>(m2) {}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">   58</a></span>    Float_ <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">median</a> = 0;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">   63</a></span>    Float_ <a class="code hl_variable" href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">mad</a> = 0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt; </div>
-<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">   79</a></span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(std::size_t num, Float_* metrics, <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options) {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">static_assert</span>(std::is_floating_point&lt;Float_&gt;::value);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// Rotate all the NaNs to the front of the buffer and ignore them.</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">decltype</span>(num) lost = 0;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(num) i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordflow">if</span> (std::isnan(metrics[i])) {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            std::swap(metrics[i], metrics[lost]);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            ++lost;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        }</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    metrics += lost;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    num -= lost;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">log</a>) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(num) i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="keyword">auto</span>&amp; val = metrics[i];</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keywordflow">if</span> (val &gt; 0) {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                val = std::log(val);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (val == 0) {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                val = -std::numeric_limits&lt;double&gt;::infinity();</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;cannot log-transform negative values&quot;</span>);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">// No need to skip the NaNs again.</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> median = tatami_stats::medians::direct&lt;Float_&gt;(metrics, num, <span class="comment">/* skip_nan = */</span> <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">median_only</a> || std::isnan(median)) {</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="comment">// Giving up.</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, std::numeric_limits&lt;Float_&gt;::quiet_NaN());</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::isinf(median)) {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// MADs should be no-ops when added/subtracted from infinity. Any</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="comment">// finite value will do here, so might as well keep it simple.</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(0));</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    }</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="comment">// As an aside, there&#39;s no way to avoid passing in &#39;metrics&#39; as a Float_,</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">// even if the original values were integers, because we need to do this</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// subtraction here that could cast integers to floats. So at some point we</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">// will need a floating-point buffer, and so we might as well just pass the</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">// metrics in as floats in the first place. Technically the first sort</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// could be done with an integer buffer but then we&#39;d need an extra argument.</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(num) i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        metrics[i] = std::abs(metrics[i] - median);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    }</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">auto</span> mad = tatami_stats::medians::direct&lt;Float_&gt;(metrics, num, <span class="comment">/* skip_nan = */</span> <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    mad *= 1.4826; <span class="comment">// for equivalence with the standard deviation under normality.</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, mad);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt; </div>
+<div class="foldopen" id="foldopen00081" data-start="{" data-end="}">
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">   81</a></span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(std::size_t num, Float_* metrics, <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">static_assert</span>(std::is_floating_point&lt;Float_&gt;::value);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// Rotate all the NaNs to the front of the buffer and ignore them.</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">decltype</span>(I(num)) lost = 0;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">if</span> (std::isnan(metrics[i])) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            std::swap(metrics[i], metrics[lost]);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            ++lost;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    metrics += lost;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    num -= lost;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">log</a>) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keyword">auto</span>&amp; val = metrics[i];</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <span class="keywordflow">if</span> (val &gt; 0) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                val = std::log(val);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (val == 0) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                val = -std::numeric_limits&lt;double&gt;::infinity();</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;cannot log-transform negative values&quot;</span>);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            }</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">// No need to skip the NaNs again.</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">const</span> <span class="keyword">auto</span> median = tatami_stats::medians::direct&lt;Float_&gt;(metrics, num, <span class="comment">/* skip_nan = */</span> <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">median_only</a> || std::isnan(median)) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="comment">// Giving up.</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, std::numeric_limits&lt;Float_&gt;::quiet_NaN());</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::isinf(median)) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="comment">// MADs should be no-ops when added/subtracted from infinity. Any</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="comment">// finite value will do here, so might as well keep it simple.</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(0));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// As an aside, there&#39;s no way to avoid passing in &#39;metrics&#39; as a Float_,</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">// even if the original values were integers, because we need to do this</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">// subtraction here that could cast integers to floats. So at some point we</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// will need a floating-point buffer, and so we might as well just pass the</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">// metrics in as floats in the first place. Technically the first sort</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// could be done with an integer buffer but then we&#39;d need an extra argument.</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        metrics[i] = std::abs(metrics[i] - median);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">auto</span> mad = tatami_stats::medians::direct&lt;Float_&gt;(metrics, num, <span class="comment">/* skip_nan = */</span> <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    mad *= 1.4826; <span class="comment">// for equivalence with the standard deviation under normality.</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a>(median, mad);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>}</div>
 </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>, <span class="keyword">typename</span> Value_&gt; </div>
-<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#aa73d242c18f72c27eac9bad1e6f0d89c">  151</a></span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(std::size_t num, <span class="keyword">const</span> Value_* metrics, Float_* buffer, <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options) {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    std::vector&lt;Float_&gt; xbuffer;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">if</span> (buffer == NULL) {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        sanisizer::resize(xbuffer, num</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>#ifdef SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            , SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>#endif</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        );</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        buffer = xbuffer.data();</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    }</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    std::copy_n(metrics, num, buffer);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(num, buffer, options);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>}</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>, <span class="keyword">typename</span> Value_&gt; </div>
+<div class="foldopen" id="foldopen00153" data-start="{" data-end="}">
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a3a67cc54a76c1a538274aec61683f493">  153</a></span><a class="code hl_struct" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults&lt;Float_&gt;</a> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(<span class="keyword">const</span> std::size_t num, <span class="keyword">const</span> Value_* <span class="keyword">const</span> metrics, Float_* buffer, <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    std::vector&lt;Float_&gt; xbuffer;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordflow">if</span> (buffer == NULL) {</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        sanisizer::resize(xbuffer, num</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>#ifdef SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            , SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>#endif</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        );</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        buffer = xbuffer.data();</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    std::copy_n(metrics, num, buffer);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(num, buffer, options);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>}</div>
 </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt;</div>
-<div class="foldopen" id="foldopen00173" data-start="{" data-end="};">
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html">  173</a></span><span class="keyword">class </span><a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace</a> {</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Block_&gt;</div>
-<div class="foldopen" id="foldopen00183" data-start="{" data-end="}">
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#ab39ea8b3e82d768463339161cf924d67">  183</a></span>    <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#ab39ea8b3e82d768463339161cf924d67">FindMedianMadWorkspace</a>(std::size_t num, <span class="keyword">const</span> Block_* block) : my_buffer(num) {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">set</a>(num, block);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Float_&gt;</div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="};">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html">  175</a></span><span class="keyword">class </span><a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace</a> {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Block_&gt;</div>
+<div class="foldopen" id="foldopen00185" data-start="{" data-end="}">
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#abc1c59671bd565a8bdea3c73ad1d600d">  185</a></span>    <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#abc1c59671bd565a8bdea3c73ad1d600d">FindMedianMadWorkspace</a>(<span class="keyword">const</span> std::size_t num, <span class="keyword">const</span> Block_* <span class="keyword">const</span> block) :</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        my_buffer(sanisizer::cast&lt;decltype(I(my_buffer.size()))&gt;(num))</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#abc0911b3a07310b427d838e7d35f9247">set</a>(num, block);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    }</div>
 </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#a31b798de9d038f4b92500426c690bdbc">  190</a></span>    <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#a31b798de9d038f4b92500426c690bdbc">FindMedianMadWorkspace</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Block_&gt;</div>
-<div class="foldopen" id="foldopen00200" data-start="{" data-end="}">
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">  200</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">set</a>(std::size_t num, <span class="keyword">const</span> Block_* block) {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        my_block_starts.clear();</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <span class="keywordflow">if</span> (block) { </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(num) i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                <span class="keyword">auto</span> candidate = block[i];</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                <span class="keywordflow">if</span> (sanisizer::is_greater_than_or_equal(candidate, my_block_starts.size())) {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    my_block_starts.resize(sanisizer::sum&lt;<span class="keyword">decltype</span>(my_block_starts.size())&gt;(candidate, 1));</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                }</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                ++my_block_starts[candidate];</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            }</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            std::size_t sofar = 0;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; s : my_block_starts) {</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                <span class="keyword">auto</span> last = sofar;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                sofar += s;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                s = last;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            }</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        }</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        sanisizer::resize(my_buffer, num</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>#ifdef SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            , SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>#endif</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        );</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        sanisizer::resize(my_block_ends, num</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>#ifdef SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            , SCRAN_QC_TEST_INIT</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>#endif</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        );</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#a31b798de9d038f4b92500426c690bdbc">  194</a></span>    <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#a31b798de9d038f4b92500426c690bdbc">FindMedianMadWorkspace</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Block_&gt;</div>
+<div class="foldopen" id="foldopen00204" data-start="{" data-end="}">
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="classscran__qc_1_1FindMedianMadWorkspace.html#abc0911b3a07310b427d838e7d35f9247">  204</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classscran__qc_1_1FindMedianMadWorkspace.html#abc0911b3a07310b427d838e7d35f9247">set</a>(<span class="keyword">const</span> std::size_t num, <span class="keyword">const</span> Block_* <span class="keyword">const</span> block) {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        my_block_starts.clear();</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordflow">if</span> (block) { </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                <span class="keyword">const</span> <span class="keyword">auto</span> candidate = block[i];</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                <span class="keywordflow">if</span> (sanisizer::is_greater_than_or_equal(candidate, my_block_starts.size())) {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                    my_block_starts.resize(sanisizer::sum&lt;<span class="keyword">decltype</span>(I(my_block_starts.size()))&gt;(candidate, 1));</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                ++my_block_starts[candidate];</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            }</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            std::size_t sofar = 0;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; s : my_block_starts) {</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                <span class="keyword">const</span> <span class="keyword">auto</span> last = sofar;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                sofar += s;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                s = last;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            }</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        }</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        sanisizer::resize(my_buffer, num</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>#ifdef SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            , SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>#endif</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        );</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        sanisizer::resize(my_block_ends, num</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>#ifdef SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            , SCRAN_QC_TEST_INIT</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>#endif</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        );</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    }</div>
 </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="comment">// Can&#39;t figure out how to make compute_blocked() a friend,</span></div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="comment">// so these puppies are public for simplicity.</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    std::vector&lt;Float_&gt; my_buffer;</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    std::vector&lt;std::size_t&gt; my_block_starts;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    std::vector&lt;std::size_t&gt; my_block_ends;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>};</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="comment">// Can&#39;t figure out how to make compute_blocked() a friend,</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="comment">// so these puppies are public for simplicity.</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    std::vector&lt;Float_&gt; my_buffer;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    std::vector&lt;std::size_t&gt; my_block_starts;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    std::vector&lt;std::size_t&gt; my_block_ends;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>};</div>
 </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Output_ = <span class="keywordtype">double</span>, <span class="keyword">typename</span> Value_, <span class="keyword">typename</span> Block_&gt;</div>
-<div class="foldopen" id="foldopen00269" data-start="{" data-end="}">
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a50e94a656f14c7613e7be5c0a22da972">  269</a></span>std::vector&lt;FindMedianMadResults&lt;Output_&gt; &gt; <a class="code hl_function" href="namespacescran__qc.html#a50e94a656f14c7613e7be5c0a22da972">find_median_mad_blocked</a>(</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    std::size_t num,</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keyword">const</span> Value_* metrics, </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keyword">const</span> Block_* block,</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace&lt;Output_&gt;</a>* workspace,</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options)</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>{</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    std::unique_ptr&lt;FindMedianMadWorkspace&lt;Output_&gt; &gt; xworkspace;</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keywordflow">if</span> (workspace == NULL) {</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        xworkspace = std::make_unique&lt;FindMedianMadWorkspace&lt;Output_&gt; &gt;(num, block);</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        workspace = xworkspace.get();</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    }</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    std::vector&lt;FindMedianMadResults&lt;Output_&gt; &gt; output;</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keyword">auto</span>&amp; buffer = workspace-&gt;my_buffer;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keywordflow">if</span> (!block) {</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        std::copy_n(metrics, num, buffer.begin());</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        output.push_back(<a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(num, buffer.data(), options));</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    }</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; starts = workspace-&gt;my_block_starts;</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keyword">auto</span>&amp; ends = workspace-&gt;my_block_ends;</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    std::copy(starts.begin(), starts.end(), ends.begin());</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(num) i = 0; i &lt; num; ++i) {</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keyword">auto</span>&amp; pos = ends[block[i]];</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        buffer[pos] = metrics[i];</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        ++pos;</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    }</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="comment">// Using the ranges on the buffer.</span></div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keyword">auto</span> nblocks = starts.size();</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    output.reserve(nblocks);</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nblocks) g = 0; g &lt; nblocks; ++g) {</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        output.push_back(<a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(ends[g] - starts[g], buffer.data() + starts[g], options));</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    }</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="keywordflow">return</span> output;</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>}</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Output_ = <span class="keywordtype">double</span>, <span class="keyword">typename</span> Value_, <span class="keyword">typename</span> Block_&gt;</div>
+<div class="foldopen" id="foldopen00273" data-start="{" data-end="}">
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#aebf6a0321ea6cdd2b3765929a5652739">  273</a></span>std::vector&lt;FindMedianMadResults&lt;Output_&gt; &gt; <a class="code hl_function" href="namespacescran__qc.html#aebf6a0321ea6cdd2b3765929a5652739">find_median_mad_blocked</a>(</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">const</span> std::size_t num,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keyword">const</span> Value_* <span class="keyword">const</span> metrics, </div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keyword">const</span> Block_* <span class="keyword">const</span> block,</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <a class="code hl_class" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace&lt;Output_&gt;</a>* workspace,</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options)</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>{</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    std::unique_ptr&lt;FindMedianMadWorkspace&lt;Output_&gt; &gt; xworkspace;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="keywordflow">if</span> (workspace == NULL) {</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        xworkspace = std::make_unique&lt;FindMedianMadWorkspace&lt;Output_&gt; &gt;(num, block);</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        workspace = xworkspace.get();</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    }</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    std::vector&lt;FindMedianMadResults&lt;Output_&gt; &gt; output;</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="keyword">auto</span>&amp; buffer = workspace-&gt;my_buffer;</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="keywordflow">if</span> (!block) {</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        std::copy_n(metrics, num, buffer.begin());</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        output.push_back(<a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(num, buffer.data(), options));</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        <span class="keywordflow">return</span> output;</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    }</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; starts = workspace-&gt;my_block_starts;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <span class="keyword">auto</span>&amp; ends = workspace-&gt;my_block_ends;</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    std::copy(starts.begin(), starts.end(), ends.begin());</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        <span class="keyword">auto</span>&amp; pos = ends[block[i]];</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        buffer[pos] = metrics[i];</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        ++pos;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="comment">// Using the ranges on the buffer.</span></div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nblocks = starts.size();</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    output.reserve(nblocks);</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nblocks)) g = 0; g &lt; nblocks; ++g) {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        output.push_back(<a class="code hl_function" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad</a>(ends[g] - starts[g], buffer.data() + starts[g], options));</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    }</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordflow">return</span> output;</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>}</div>
 </div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>}</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html">scran_qc::FindMedianMadWorkspace</a></div><div class="ttdoc">Temporary data structures for find_median_mad_blocked().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:173</div></div>
-<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html_a1963b03f60072240c60f6421317a5359"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html#a1963b03f60072240c60f6421317a5359">scran_qc::FindMedianMadWorkspace::set</a></div><div class="ttdeci">void set(std::size_t num, const Block_ *block)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:200</div></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>}</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html">scran_qc::FindMedianMadWorkspace</a></div><div class="ttdoc">Temporary data structures for find_median_mad_blocked().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:175</div></div>
 <div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html_a31b798de9d038f4b92500426c690bdbc"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html#a31b798de9d038f4b92500426c690bdbc">scran_qc::FindMedianMadWorkspace::FindMedianMadWorkspace</a></div><div class="ttdeci">FindMedianMadWorkspace()=default</div></div>
-<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html_ab39ea8b3e82d768463339161cf924d67"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html#ab39ea8b3e82d768463339161cf924d67">scran_qc::FindMedianMadWorkspace::FindMedianMadWorkspace</a></div><div class="ttdeci">FindMedianMadWorkspace(std::size_t num, const Block_ *block)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:183</div></div>
-<div class="ttc" id="anamespacescran__qc_html"><div class="ttname"><a href="namespacescran__qc.html">scran_qc</a></div><div class="ttdoc">Simple quality control for single-cell data.</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:22</div></div>
-<div class="ttc" id="anamespacescran__qc_html_a50e94a656f14c7613e7be5c0a22da972"><div class="ttname"><a href="namespacescran__qc.html#a50e94a656f14c7613e7be5c0a22da972">scran_qc::find_median_mad_blocked</a></div><div class="ttdeci">std::vector&lt; FindMedianMadResults&lt; Output_ &gt; &gt; find_median_mad_blocked(std::size_t num, const Value_ *metrics, const Block_ *block, FindMedianMadWorkspace&lt; Output_ &gt; *workspace, const FindMedianMadOptions &amp;options)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:269</div></div>
-<div class="ttc" id="anamespacescran__qc_html_ad9809cc2f8c52885e7c3132f6e867b0c"><div class="ttname"><a href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">scran_qc::find_median_mad</a></div><div class="ttdeci">FindMedianMadResults&lt; Float_ &gt; find_median_mad(std::size_t num, Float_ *metrics, const FindMedianMadOptions &amp;options)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:79</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html">scran_qc::FindMedianMadOptions</a></div><div class="ttdoc">Options for find_median_mad().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:23</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html_a4706e6f124a7eef17c5a2afc1dd6427d"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">scran_qc::FindMedianMadOptions::log</a></div><div class="ttdeci">bool log</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:29</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html_a95e62ad6e3a447f23e04003d74700469"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">scran_qc::FindMedianMadOptions::median_only</a></div><div class="ttdeci">bool median_only</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:35</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html">scran_qc::FindMedianMadResults</a></div><div class="ttdoc">Results of find_median_mad().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:43</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html_a6e2bb8ea88a3c06f19d1d96a3befaa81"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">scran_qc::FindMedianMadResults::median</a></div><div class="ttdeci">Float_ median</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:56</div></div>
-<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html_aeaf95eecfa996193c6ce322929ae32fe"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">scran_qc::FindMedianMadResults::mad</a></div><div class="ttdeci">Float_ mad</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:61</div></div>
+<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html_abc0911b3a07310b427d838e7d35f9247"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html#abc0911b3a07310b427d838e7d35f9247">scran_qc::FindMedianMadWorkspace::set</a></div><div class="ttdeci">void set(const std::size_t num, const Block_ *const block)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:204</div></div>
+<div class="ttc" id="aclassscran__qc_1_1FindMedianMadWorkspace_html_abc1c59671bd565a8bdea3c73ad1d600d"><div class="ttname"><a href="classscran__qc_1_1FindMedianMadWorkspace.html#abc1c59671bd565a8bdea3c73ad1d600d">scran_qc::FindMedianMadWorkspace::FindMedianMadWorkspace</a></div><div class="ttdeci">FindMedianMadWorkspace(const std::size_t num, const Block_ *const block)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:185</div></div>
+<div class="ttc" id="anamespacescran__qc_html"><div class="ttname"><a href="namespacescran__qc.html">scran_qc</a></div><div class="ttdoc">Simple quality control for single-cell data.</div><div class="ttdef"><b>Definition</b> adt_quality_control.hpp:23</div></div>
+<div class="ttc" id="anamespacescran__qc_html_ad9809cc2f8c52885e7c3132f6e867b0c"><div class="ttname"><a href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">scran_qc::find_median_mad</a></div><div class="ttdeci">FindMedianMadResults&lt; Float_ &gt; find_median_mad(std::size_t num, Float_ *metrics, const FindMedianMadOptions &amp;options)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:81</div></div>
+<div class="ttc" id="anamespacescran__qc_html_aebf6a0321ea6cdd2b3765929a5652739"><div class="ttname"><a href="namespacescran__qc.html#aebf6a0321ea6cdd2b3765929a5652739">scran_qc::find_median_mad_blocked</a></div><div class="ttdeci">std::vector&lt; FindMedianMadResults&lt; Output_ &gt; &gt; find_median_mad_blocked(const std::size_t num, const Value_ *const metrics, const Block_ *const block, FindMedianMadWorkspace&lt; Output_ &gt; *workspace, const FindMedianMadOptions &amp;options)</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:273</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html">scran_qc::FindMedianMadOptions</a></div><div class="ttdoc">Options for find_median_mad().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:25</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html_a4706e6f124a7eef17c5a2afc1dd6427d"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">scran_qc::FindMedianMadOptions::log</a></div><div class="ttdeci">bool log</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:31</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadOptions_html_a95e62ad6e3a447f23e04003d74700469"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadOptions.html#a95e62ad6e3a447f23e04003d74700469">scran_qc::FindMedianMadOptions::median_only</a></div><div class="ttdeci">bool median_only</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:37</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html">scran_qc::FindMedianMadResults</a></div><div class="ttdoc">Results of find_median_mad().</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:45</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html_a6e2bb8ea88a3c06f19d1d96a3befaa81"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html#a6e2bb8ea88a3c06f19d1d96a3befaa81">scran_qc::FindMedianMadResults::median</a></div><div class="ttdeci">Float_ median</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:58</div></div>
+<div class="ttc" id="astructscran__qc_1_1FindMedianMadResults_html_aeaf95eecfa996193c6ce322929ae32fe"><div class="ttname"><a href="structscran__qc_1_1FindMedianMadResults.html#aeaf95eecfa996193c6ce322929ae32fe">scran_qc::FindMedianMadResults::mad</a></div><div class="ttdeci">Float_ mad</div><div class="ttdef"><b>Definition</b> find_median_mad.hpp:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
