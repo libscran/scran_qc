@@ -10,6 +10,8 @@
 #include "tatami_stats/tatami_stats.hpp"
 #include "sanisizer/sanisizer.hpp"
 
+#include "utils.hpp"
+
 /**
  * @file per_cell_qc_metrics.hpp
  * @brief Compute per-cell quality control metrics.
@@ -79,9 +81,9 @@ struct PerCellQcMetricsBuffers {
      */
     PerCellQcMetricsBuffers() = default;
 
-    PerCellQcMetricsBuffers(std::size_t nsubsets) : 
-        subset_sum(sanisizer::cast<decltype(subset_sum.size())>(nsubsets), NULL),
-        subset_detected(sanisizer::cast<decltype(subset_detected.size())>(nsubsets), NULL)
+    PerCellQcMetricsBuffers(const std::size_t nsubsets) : 
+        subset_sum(sanisizer::cast<decltype(I(subset_sum.size()))>(nsubsets), NULL),
+        subset_detected(sanisizer::cast<decltype(I(subset_detected.size()))>(nsubsets), NULL)
     {}
     /**
      * @endcond
@@ -138,19 +140,19 @@ void compute_qc_direct_dense(
     const tatami::Matrix<Value_, Index_>& mat,
     const std::vector<Subset_>& subsets,
     const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    int num_threads)
+    const int num_threads)
 {
     std::vector<std::vector<Index_> > subset_indices;
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
         if constexpr(std::is_pointer<Subset_>::value) {
-            auto nsubsets = subsets.size();
+            const auto nsubsets = subsets.size();
             sanisizer::resize(subset_indices, nsubsets);
-            auto NR = mat.nrow();
+            const auto NR = mat.nrow();
 
-            for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+            for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                 auto& current = subset_indices[s];
                 const auto& source = subsets[s];
-                for (decltype(NR) i = 0; i < NR; ++i) {
+                for (decltype(I(NR)) i = 0; i < NR; ++i) {
                     if (source[i]) {
                         current.push_back(i);
                     }
@@ -159,14 +161,14 @@ void compute_qc_direct_dense(
         }
     }
 
-    tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
-        auto NR = mat.nrow();
+    tatami::parallelize([&](const int, const Index_ start, const Index_ length) -> void {
+        const auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(mat, false, start, length);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
 
-        bool do_max = output.max_index || output.max_value;
+        const bool do_max = output.max_index || output.max_value;
 
-        auto nsubsets = subsets.size();
+        const auto nsubsets = subsets.size();
 
         for (Index_ c = start, end = start + length; c < end; ++c) {
             auto ptr = ext->fetch(c, vbuffer.data());
@@ -177,7 +179,7 @@ void compute_qc_direct_dense(
 
             if (output.detected) {
                 Detected_ count = 0;
-                for (decltype(NR) r = 0; r < NR; ++r) {
+                for (decltype(I(NR)) r = 0; r < NR; ++r) {
                     count += (ptr[r] != 0);
                 }
                 output.detected[c] = count;
@@ -189,7 +191,7 @@ void compute_qc_direct_dense(
 
                 if (NR) {
                     max_value = ptr[0];
-                    for (decltype(NR) r = 1; r < NR; ++r) {
+                    for (decltype(I(NR)) r = 1; r < NR; ++r) {
                         if (max_value < ptr[r]) {
                             max_value = ptr[r];
                             max_index = r;
@@ -206,7 +208,7 @@ void compute_qc_direct_dense(
             }
 
             if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty subset_indices.
-                for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+                for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                     const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subset_indices[s];
@@ -217,7 +219,7 @@ void compute_qc_direct_dense(
 
                     if (!output.subset_sum.empty() && output.subset_sum[s]) {
                         Sum_ current = 0;
-                        for (auto r : sub) {
+                        for (const auto r : sub) {
                             current += ptr[r];
                         }
                         output.subset_sum[s][c] = current;
@@ -225,7 +227,7 @@ void compute_qc_direct_dense(
 
                     if (!output.subset_detected.empty() && output.subset_detected[s]) {
                         Detected_ current = 0;
-                        for (auto r : sub) {
+                        for (const auto r : sub) {
                             current += ptr[r] != 0;
                         }
                         output.subset_detected[s][c] = current;
@@ -237,16 +239,16 @@ void compute_qc_direct_dense(
 }
 
 template<typename Index_, typename Subset_, typename Sum_, typename Detected_, typename Value_>
-std::vector<std::vector<unsigned char> > boolify_subsets(Index_ NR, const std::vector<Subset_>& subsets, const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output) {
+std::vector<std::vector<unsigned char> > boolify_subsets(const Index_ NR, const std::vector<Subset_>& subsets, const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output) {
     std::vector<std::vector<unsigned char> > is_in_subset;
 
     if (!output.subset_sum.empty() || !output.subset_detected.empty()) {
         if constexpr(!std::is_pointer<Subset_>::value) {
-            auto nsubsets = subsets.size();
-            for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+            const auto nsubsets = subsets.size();
+            for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                 is_in_subset.emplace_back(NR);
                 auto& last = is_in_subset.back();
-                for (auto i : subsets[s]) {
+                for (const auto i : subsets[s]) {
                     last[i] = 1;
                 }
             }
@@ -261,19 +263,19 @@ void compute_qc_direct_sparse(
     const tatami::Matrix<Value_, Index_>& mat,
     const std::vector<Subset_>& subsets,
     const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    int num_threads)
+    const int num_threads)
 {
-    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
+    const auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
-    tatami::parallelize([&](int, Index_ start, Index_ length) -> void {
-        auto NR = mat.nrow();
+    tatami::parallelize([&](const int, const Index_ start, const Index_ length) -> void {
+        const auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(mat, false, start, length);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
         auto ibuffer = tatami::create_container_of_Index_size<std::vector<Index_> >(NR);
 
-        bool do_max = output.max_index || output.max_value;
+        const bool do_max = output.max_index || output.max_value;
 
-        auto nsubsets = subsets.size();
+        const auto nsubsets = subsets.size();
 
         for (Index_ c = start, end = start + length; c < end; ++c) {
             auto range = ext->fetch(vbuffer.data(), ibuffer.data());
@@ -333,7 +335,7 @@ void compute_qc_direct_sparse(
             }
 
            if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty is_in_subset.
-                for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+                for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                     const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
@@ -366,7 +368,7 @@ void compute_qc_direct_sparse(
 template<typename Sum_, typename Detected_, typename Value_, typename Index_>
 class PerCellQcMetricsRunningBuffers {
 public:
-    PerCellQcMetricsRunningBuffers(const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output, int thread, Index_ start, Index_ len) {
+    PerCellQcMetricsRunningBuffers(const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output, const int thread, const Index_ start, const Index_ len) {
         if (output.sum) {
             my_sum = tatami_stats::LocalOutputBuffer<Sum_>(thread, start, len, output.sum);
         }
@@ -386,9 +388,9 @@ public:
         }
 
         {
-            auto nsubsets = output.subset_sum.size();
+            const auto nsubsets = output.subset_sum.size();
             sanisizer::resize(my_subset_sum, nsubsets);
-            for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+            for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                 if (output.subset_sum[s]) {
                     my_subset_sum[s] = tatami_stats::LocalOutputBuffer<Sum_>(thread, start, len, output.subset_sum[s]);
                 }
@@ -396,9 +398,9 @@ public:
         }
 
         {
-            auto nsubsets = output.subset_detected.size();
+            const auto nsubsets = output.subset_detected.size();
             sanisizer::resize(my_subset_detected, nsubsets);
-            for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+            for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                 if (output.subset_detected[s]) {
                     my_subset_detected[s] = tatami_stats::LocalOutputBuffer<Detected_>(thread, start, len, output.subset_detected[s]);
                 }
@@ -487,25 +489,25 @@ void compute_qc_running_dense(
     const tatami::Matrix<Value_, Index_>& mat,
     const std::vector<Subset_>& subsets,
     const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    int num_threads)
+    const int num_threads)
 {
-    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
+    const auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
-        auto NR = mat.nrow();
+        const auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<false>(mat, true, static_cast<Index_>(0), NR, start, len);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(len);
 
         PerCellQcMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
-        auto outt = locals.sum_data();
-        auto outd = locals.detected_data();
-        auto outmi = locals.max_index_data();
-        auto outmc = locals.max_value_data();
-        bool do_max = (outmi || outmc);
-        auto outst = locals.subset_sum_data();
-        auto outsd = locals.subset_detected_data();
+        const auto outt = locals.sum_data();
+        const auto outd = locals.detected_data();
+        const auto outmi = locals.max_index_data();
+        const auto outmc = locals.max_value_data();
+        const bool do_max = (outmi || outmc);
+        const auto outst = locals.subset_sum_data();
+        const auto outsd = locals.subset_detected_data();
 
-        auto nsubsets = subsets.size();
+        const auto nsubsets = subsets.size();
 
         for (Index_ r = 0; r < NR; ++r) {
             auto ptr = ext->fetch(vbuffer.data());
@@ -542,7 +544,7 @@ void compute_qc_running_dense(
             }
 
             if (!outst.empty() || !outsd.empty()) { // protect against accessing an empty is_in_subset.
-                for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+                for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                     const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
@@ -580,28 +582,28 @@ void compute_qc_running_sparse(
     const tatami::Matrix<Value_, Index_>& mat,
     const std::vector<Subset_>& subsets,
     const PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& output,
-    int num_threads)
+    const int num_threads)
 {
     tatami::Options opt;
     opt.sparse_ordered_index = false;
-    auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
+    const auto is_in_subset = boolify_subsets(mat.nrow(), subsets, output);
 
     tatami::parallelize([&](int thread, Index_ start, Index_ len) -> void {
-        auto NR = mat.nrow();
+        const auto NR = mat.nrow();
         auto ext = tatami::consecutive_extractor<true>(mat, true, static_cast<Index_>(0), NR, start, len, opt);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(len);
         auto ibuffer = tatami::create_container_of_Index_size<std::vector<Index_> >(len);
 
         PerCellQcMetricsRunningBuffers<Sum_, Detected_, Value_, Index_> locals(output, thread, start, len);
-        auto outt = locals.sum_data();
-        auto outd = locals.detected_data();
-        auto outmi = locals.max_index_data();
-        auto outmc = locals.max_value_data();
-        bool do_max = (outmi || outmc);
-        auto outst = locals.subset_sum_data();
-        auto outsd = locals.subset_detected_data();
+        const auto outt = locals.sum_data();
+        const auto outd = locals.detected_data();
+        const auto outmi = locals.max_index_data();
+        const auto outmc = locals.max_value_data();
+        const bool do_max = (outmi || outmc);
+        const auto outst = locals.subset_sum_data();
+        const auto outsd = locals.subset_detected_data();
 
-        auto nsubsets = subsets.size();
+        const auto nsubsets = subsets.size();
 
         std::vector<Index_> last_consecutive_nonzero;
         if (do_max) {
@@ -660,7 +662,7 @@ void compute_qc_running_sparse(
             }
 
             if (!outst.empty() || !outsd.empty()) { // protect against accessing an empty is_in_subset.
-                for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+                for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
                     const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
                             return subsets[s];
@@ -690,7 +692,7 @@ void compute_qc_running_sparse(
         }
 
         if (do_max) {
-            auto NR = mat.nrow();
+            const auto NR = mat.nrow();
 
             // Checking anything with non-positive maximum, and replacing it
             // with zero if there are any structural zeros.
@@ -739,9 +741,9 @@ struct PerCellQcMetricsResults {
      */
     PerCellQcMetricsResults() = default;
 
-    PerCellQcMetricsResults(std::size_t nsubsets) : 
-        subset_sum(sanisizer::cast<decltype(subset_sum.size())>(nsubsets)),
-        subset_detected(sanisizer::cast<decltype(subset_detected.size())>(nsubsets))
+    PerCellQcMetricsResults(const std::size_t nsubsets) : 
+        subset_sum(sanisizer::cast<decltype(I(subset_sum.size()))>(nsubsets)),
+        subset_detected(sanisizer::cast<decltype(I(subset_detected.size()))>(nsubsets))
     {}
     /**
      * @endcond
@@ -871,7 +873,7 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
 {
     PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
     PerCellQcMetricsBuffers<Sum_, Detected_, Value_, Index_> buffers;
-    auto ncells = mat.ncol();
+    const auto ncells = mat.ncol();
 
     if (options.compute_sum) {
         tatami::resize_container_to_Index_size(output.sum, ncells
@@ -906,12 +908,12 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
         buffers.max_value = output.max_value.data();
     }
 
-    auto nsubsets = subsets.size();
+    const auto nsubsets = subsets.size();
 
     if (options.compute_subset_sum) {
         sanisizer::resize(output.subset_sum, nsubsets);
         sanisizer::resize(buffers.subset_sum, nsubsets);
-        for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+        for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
             tatami::resize_container_to_Index_size(output.subset_sum[s], ncells
 #ifdef SCRAN_QC_TEST_INIT
                 , SCRAN_QC_TEST_INIT
@@ -924,7 +926,7 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
     if (options.compute_subset_detected) {
         sanisizer::resize(output.subset_detected, nsubsets);
         sanisizer::resize(buffers.subset_detected, nsubsets);
-        for (decltype(nsubsets) s = 0; s < nsubsets; ++s) {
+        for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
             tatami::resize_container_to_Index_size(output.subset_detected[s], ncells
 #ifdef SCRAN_QC_TEST_INIT
                 , SCRAN_QC_TEST_INIT

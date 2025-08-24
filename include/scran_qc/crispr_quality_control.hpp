@@ -13,6 +13,7 @@
 #include "find_median_mad.hpp"
 #include "per_cell_qc_metrics.hpp"
 #include "choose_filter_thresholds.hpp"
+#include "utils.hpp"
 
 /**
  * @file crispr_quality_control.hpp
@@ -162,7 +163,7 @@ ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> compute_crispr_qc
     const tatami::Matrix<Value_, Index_>& mat,
     const ComputeCrisprQcMetricsOptions& options)
 {
-    auto NC = mat.ncol();
+    const auto NC = mat.ncol();
     ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_> x;
     ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_> output;
 
@@ -215,7 +216,7 @@ struct ComputeCrisprQcFiltersOptions {
 namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_>
-void crispr_populate(Host_& host, std::size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
+void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]{
         if constexpr(unblocked) {
@@ -229,7 +230,7 @@ void crispr_populate(Host_& host, std::size_t n, const ComputeCrisprQcMetricsBuf
     static_assert(std::is_floating_point<Float_>::value);
     std::vector<Float_> maxprop;
     maxprop.reserve(n);
-    for (decltype(n) i = 0; i < n; ++i) {
+    for (decltype(I(n)) i = 0; i < n; ++i) {
         maxprop.push_back(static_cast<Float_>(res.max_value[i]) / static_cast<Float_>(res.sum[i]));
     }
 
@@ -243,7 +244,7 @@ void crispr_populate(Host_& host, std::size_t n, const ComputeCrisprQcMetricsBuf
         }
     }();
 
-    for (decltype(n) i = 0; i < n; ++i) {
+    for (decltype(I(n)) i = 0; i < n; ++i) {
         auto limit = [&]{
             if constexpr(unblocked){
                 return prop_res.median;
@@ -273,12 +274,12 @@ void crispr_populate(Host_& host, std::size_t n, const ComputeCrisprQcMetricsBuf
 }
 
 template<class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_, typename Output_>
-void crispr_filter(const Host_& host, std::size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, BlockSource_ block, Output_* output) {
+void crispr_filter(const Host_& host, const std::size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, BlockSource_ block, Output_* const output) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     std::fill_n(output, n, 1);
 
     const auto& mv = host.get_max_value();
-    for (decltype(n) i = 0; i < n; ++i) {
+    for (decltype(I(n)) i = 0; i < n; ++i) {
         auto thresh = [&]{
             if constexpr(unblocked) {
                 return mv;
@@ -345,7 +346,7 @@ public:
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Output_>
-    void filter(std::size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, Output_* output) const {
+    void filter(const std::size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, Output_* const output) const {
         internal::crispr_filter(*this, num, metrics, false, output);
     }
 
@@ -361,7 +362,7 @@ public:
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Output_>
-    void filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, Output_* output) const {
+    void filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, Output_* const output) const {
         return filter(metrics.max_value.size(), internal::to_buffer(metrics), output);
     }
 
@@ -422,7 +423,7 @@ public:
  */
 template<typename Float_ = double, typename Sum_, typename Detected_, typename Value_, typename Index_>
 CrisprQcFilters<Float_> compute_crispr_qc_filters(
-    std::size_t num,
+    const std::size_t num,
     const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics,
     const ComputeCrisprQcFiltersOptions& options)
 {
@@ -496,7 +497,7 @@ public:
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_, typename Output_>
-    void filter(std::size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block, Output_* output) const {
+    void filter(const std::size_t num, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics, const Block_* const block, Output_* const output) const {
         internal::crispr_filter(*this, num, metrics, block, output);
     }
 
@@ -515,7 +516,7 @@ public:
      * On output, this is truthy for cells considered to be of high quality, and false otherwise.
      */
     template<typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_, typename Output_>
-    void filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block, Output_* output) const {
+    void filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* const block, Output_* const output) const {
         filter(metrics.max_value.size(), internal::to_buffer(metrics), block, output);
     }
 
@@ -534,7 +535,7 @@ public:
      * @return Vector of length `num`, containing the high-quality calls.
      */
     template<typename Output_ = unsigned char, typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_>
-    std::vector<Output_> filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* block) const {
+    std::vector<Output_> filter(const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics, const Block_* const block) const {
         auto output = sanisizer::create<std::vector<Output_> >(metrics.max_value.size()
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
@@ -566,9 +567,9 @@ public:
  */
 template<typename Float_ = double, typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_>
 CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
-    std::size_t num,
+    const std::size_t num,
     const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics,
-    const Block_* block,
+    const Block_* const block,
     const ComputeCrisprQcFiltersOptions& options)
 {
     CrisprQcBlockedFilters<Float_> output;
@@ -593,7 +594,7 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
 template<typename Float_ = double, typename Sum_, typename Detected_, typename Value_, typename Index_, typename Block_>
 CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
     const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics,
-    const Block_* block,
+    const Block_* const block,
     const ComputeCrisprQcFiltersOptions& options)
 {
     return compute_crispr_qc_filters_blocked(metrics.max_value.size(), internal::to_buffer(metrics), block, options);

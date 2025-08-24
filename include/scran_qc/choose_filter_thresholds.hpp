@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "find_median_mad.hpp"
+#include "utils.hpp"
 
 /**
  * @file choose_filter_thresholds.hpp
@@ -85,7 +86,7 @@ struct ChooseFilterThresholdsResults {
 namespace internal {
 
 template<typename Float_>
-Float_ unlog_threshold(Float_ val, bool was_logged) {
+Float_ unlog_threshold(const Float_ val, const bool was_logged) {
     if (was_logged) {
         if (std::isinf(val)) {
             if (val < 0) {
@@ -140,8 +141,8 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const FindMedianM
     lthresh = -std::numeric_limits<Float_>::infinity();
     uthresh = std::numeric_limits<double>::infinity();
 
-    auto median = mm.median;
-    auto mad = mm.mad;
+    const auto median = mm.median;
+    const auto mad = mm.mad;
     if (!std::isnan(median) && !std::isnan(mad)) {
         auto delta = std::max(static_cast<Float_>(options.min_diff), options.num_mads * mad);
         if (options.lower) {
@@ -168,10 +169,10 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const FindMedianM
  * @return The upper and lower thresholds derived from `metrics`.
  */
 template<typename Float_>
-ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(std::size_t num, Float_* metrics, const ChooseFilterThresholdsOptions& options) {
+ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t num, Float_* const metrics, const ChooseFilterThresholdsOptions& options) {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    auto mm = find_median_mad(num, metrics, fopt);
+    const auto mm = find_median_mad(num, metrics, fopt);
     return choose_filter_thresholds(mm, options);
 }
 
@@ -190,10 +191,10 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(std::size_t num, 
  * @return The upper and lower thresholds derived from `metrics`.
  */
 template<typename Value_, typename Float_>
-ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(std::size_t num, const Value_* metrics, Float_* buffer, const ChooseFilterThresholdsOptions& options) {
+ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t num, const Value_* const metrics, Float_* const buffer, const ChooseFilterThresholdsOptions& options) {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    auto mm = find_median_mad(num, metrics, buffer, fopt);
+    const auto mm = find_median_mad(num, metrics, buffer, fopt);
     return choose_filter_thresholds(mm, options);
 }
 
@@ -243,15 +244,15 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
  */
 template<typename Value_, typename Block_, typename Float_>
 std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blocked(
-    std::size_t num,
-    const Value_* metrics,
-    const Block_* block,
-    FindMedianMadWorkspace<Float_>* workspace,
+    const std::size_t num,
+    const Value_* const metrics,
+    const Block_* const block,
+    FindMedianMadWorkspace<Float_>* const workspace,
     const ChooseFilterThresholdsOptions& options)
 {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    auto mms = find_median_mad_blocked(num, metrics, block, workspace, fopt);
+    const auto mms = find_median_mad_blocked(num, metrics, block, workspace, fopt);
     return choose_filter_thresholds_blocked(mms, options);
 }
 

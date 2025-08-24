@@ -7,6 +7,8 @@
 
 #include "sanisizer/sanisizer.hpp"
 
+#include "utils.hpp"
+
 /**
  * @file format_filters.hpp
  * @brief Format QC filters for downstream analysis.
@@ -28,9 +30,9 @@ namespace scran_qc {
  * @param[out] output On output, a vector of sorted and unique indices of the cells considered to be high quality.
  */
 template<typename Keep_, typename Index_>
-void filter_index(std::size_t num, const Keep_* filter, std::vector<Index_>& output) {
+void filter_index(const std::size_t num, const Keep_* const filter, std::vector<Index_>& output) {
     output.clear();
-    for (decltype(num) i = 0; i < num; ++i) {
+    for (decltype(I(num)) i = 0; i < num; ++i) {
         if (filter[i]) {
             output.push_back(i);
         }
@@ -49,7 +51,7 @@ void filter_index(std::size_t num, const Keep_* filter, std::vector<Index_>& out
  * @return Vector of sorted and unique indices of the cells considered to be high quality.
  */
 template<typename Index_, typename Keep_>
-std::vector<Index_> filter_index(std::size_t num, const Keep_* filter) {
+std::vector<Index_> filter_index(const std::size_t num, const Keep_* const filter) {
     std::vector<Index_> output;
 #ifdef SCRAN_QC_TEST_INIT
     output.resize(10, SCRAN_QC_TEST_INIT);
@@ -73,12 +75,12 @@ std::vector<Index_> filter_index(std::size_t num, const Keep_* filter) {
  * On output, this is filled with truthy values only for cells that are high quality in all modalities.
  */
 template<typename Keep_, typename Output_>
-void combine_filters(std::size_t num, const std::vector<Keep_*>& filters, Output_* output) {
+void combine_filters(const std::size_t num, const std::vector<Keep_*>& filters, Output_* const output) {
     std::copy_n(filters.front(), num, output);
-    auto nfilters = filters.size();
-    for (decltype(nfilters) f = 1; f < nfilters; ++f) {
-        auto filt = filters[f];
-        for (decltype(num) i = 0; i < num; ++i) {
+    const auto nfilters = filters.size();
+    for (decltype(I(nfilters)) f = 1; f < nfilters; ++f) {
+        const auto filt = filters[f];
+        for (decltype(I(num)) i = 0; i < num; ++i) {
             output[i] = output[i] && filt[i];
         }
     }
@@ -97,7 +99,7 @@ void combine_filters(std::size_t num, const std::vector<Keep_*>& filters, Output
  * @return Vector of length `num`, indicating which cells are high quality in all modalities.
  */
 template<typename Output_ = unsigned char, typename Keep_>
-std::vector<Output_> combine_filters(std::size_t num, const std::vector<const Keep_*>& filters) {
+std::vector<Output_> combine_filters(const std::size_t num, const std::vector<const Keep_*>& filters) {
     auto output = sanisizer::create<std::vector<Output_> >(num
 #ifdef SCRAN_QC_TEST_INIT
         , SCRAN_QC_TEST_INIT
@@ -118,13 +120,13 @@ std::vector<Output_> combine_filters(std::size_t num, const std::vector<const Ke
  * @param[out] output On output, a vector of sorted and unique indices of the cells considered to be high quality in all modalities.
  */
 template<typename Index_, typename Keep_>
-void combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters, std::vector<Index_>& output) {
+void combine_filters_index(const Index_ num, const std::vector<const Keep_*>& filters, std::vector<Index_>& output) {
     output.clear();
 
-    auto nfilters = filters.size();
-    for (decltype(num) i = 0; i < num; ++i) {
+    const auto nfilters = filters.size();
+    for (decltype(I(num)) i = 0; i < num; ++i) {
         bool keep = true;
-        for (decltype(nfilters) f = 0; f < nfilters; ++f) {
+        for (decltype(I(nfilters)) f = 0; f < nfilters; ++f) {
             if (!filters[f][i]) {
                 keep = false;
                 break;
@@ -149,7 +151,7 @@ void combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters,
  * @return Vector of sorted and unique indices of the cells considered to be high quality in all modalities.
  */
 template<typename Index_, typename Keep_>
-std::vector<Index_> combine_filters_index(Index_ num, const std::vector<const Keep_*>& filters) {
+std::vector<Index_> combine_filters_index(const Index_ num, const std::vector<const Keep_*>& filters) {
     std::vector<Index_> output;
 #ifdef SCRAN_QC_TEST_INIT
     output.resize(10, SCRAN_QC_TEST_INIT);
