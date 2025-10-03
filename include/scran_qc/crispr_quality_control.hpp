@@ -395,13 +395,13 @@ public:
  * Instead, we use the following approach:
  *
  * 1. Compute the proportion of counts in the most abundant guide (i.e., the maximum proportion) in each cell.
- * Cells that were successfully transfected should have high maximum proportions.
- * In contrast, unsuccessfully transfected cells will be dominated by ambient contamination and have low proportions.
+ *    Cells that were successfully transfected should have high maximum proportions.
+ *    In contrast, unsuccessfully transfected cells will be dominated by ambient contamination and have low proportions.
  * 2. Subset the dataset to only retain those cells with maximum proportions above the median.
- * This assumes that at least 50% of cells were successfully transfected.
- * Thus, we remove all of the unsucessful transfections and enrich for mostly-high-quality cells.
+ *    This assumes that at least 50% of cells were successfully transfected.
+ *    Thus, we remove all of the unsucessful transfections and enrich for mostly-high-quality cells.
  * 3. Define a MAD-based threshold for low outliers on the log-transformed maximum count within the subset (see `choose_filter_thresholds()` for details).
- * This is now possible as we can assume that most of the remaining cells are of high quality.
+ *    This is now possible as we can assume that most of the remaining cells are of high quality.
  *
  * Note that the maximum proportion is only used to define the subset for threshold calculation.
  * Once the maximum count threshold is computed, it is applied to all cells regardless of their maximum proportions.

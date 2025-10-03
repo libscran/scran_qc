@@ -50,9 +50,16 @@ struct ChooseFilterThresholdsOptions {
      * (Or, for the overload that accepts a `FindMedianMadResult`, whether the median and MAD were already computed the log-scale.)
      *
      * Using a log-transformation instructs the outlier definition to focus on the fold-change from the median. 
-     * In practice, this is useful for metrics that are always positive and have right-skewed distributions,
-     * as the log-transformation symmetrizes the distribution and makes it more normal-like such that the `ChooseFilterThresholdsOptions::num_mads` interpretation can be applied.
-     * It also ensures that the defined threshold is always positive.
+     * This has several benefits for right-skewed distributions of (mostly) positive values,
+     * where the log-transformation symmetrizes the distribution and makes it more normal-like.
+     * This improves the relevance of the interpretation of `ChooseFilterThresholdsOptions::num_mads`. 
+     * When defining a lower threshold, the log-transformation also ensures that the defined threshold is always positive.
+     *
+     * Some caution is required for distributions close to zero, e.g., proportions.
+     * The conversion of near-zero values to large negative log-values can unexpectedly inflate the MAD.
+     * This could be mitigated by adding a pseudo-count prior to log-transformation,
+     * but a large pseudo-count would cause the log-transformation to converge to a linear transformation,
+     * rendering this option meaningless for distributions consisting of small values.
      *
      * If this is `true`, the reported thresholds are still converted back to the original scale of the metrics. 
      */

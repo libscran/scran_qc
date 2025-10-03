@@ -481,7 +481,8 @@ public:
  * Given the RNA-relevant QC metrics from `compute_rna_qc_metrics()`,
  * we consider low-quality cells to be those with a low sum, a low number of detected genes, or high subset proportions.
  * We define thresholds for each metric using the MAD-based outlier approach implemented in `choose_filter_thresholds()`.
- * For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics.
+ * For the total counts and number of detected features, the outliers are defined after log-transformation of the metrics (see `ChooseFilterThresholdsOptions::log`).
+ * For the subset proportions, no log-transformation is performed as the conversion of near-zero proportions to large negative values would inflate the MAD.
  *
  * @tparam Float_ Floating-point type of the thresholds.
  * @tparam Sum_ Numeric type to store the summed expression.

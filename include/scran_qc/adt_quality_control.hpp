@@ -425,7 +425,8 @@ public:
  * This is done using the specified `ComputeAdtQcFiltersOptions::num_mads` and after log-transformation of the sums.
  *
  * For the number of detected features, we define a lower threshold as the lower of:
- * - The MAD-based outlier threshold from `choose_filter_thresholds()`, computed using the specified `ComputeAdtQcFiltersOptions::num_mads` and after log-transformation.
+ * - The MAD-based outlier threshold from `choose_filter_thresholds()`, computed using the specified `ComputeAdtQcFiltersOptions::num_mads`.
+ *   A log-transformation is applied during MAD calculation, see `ChooseFilterThresholdsOptions::log` for details.
  * - The product of the median number across all cells and `1 - ComputeAdtQcFiltersOptions::min_detected_drop`.
  *
  * So by default, cells are only considered to be low quality if the number of detected features drops 10% or more below the median.
