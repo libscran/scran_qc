@@ -12,7 +12,7 @@ protected:
     static void SetUpTestSuite() {
         size_t nr = 100, nc = 50;
         auto vec = scran_tests::simulate_vector(nr * nc, []{
-            scran_tests::SimulationParameters sparams;
+            scran_tests::SimulateVectorParameters sparams;
             sparams.density = 0.2;
             sparams.lower = 1;
             sparams.upper = 100;
@@ -218,7 +218,7 @@ TEST_P(PerCellQcMetricsTestMaxed, SparseNegatives) {
     {
         size_t nr = 99, nc = 47;
         auto vec = scran_tests::simulate_vector(nr * nc, [&]{
-            scran_tests::SimulationParameters sparams;
+            scran_tests::SimulateVectorParameters sparams;
             sparams.density = 0.2;
             sparams.lower = -2;
             sparams.upper = -1;
@@ -262,7 +262,7 @@ TEST_P(PerCellQcMetricsTestMaxed, DenseNegatives) {
     {
         size_t nr = 20, nc = 100;
         auto vec = scran_tests::simulate_vector(nr * nc, [&]{
-            scran_tests::SimulationParameters sparams;
+            scran_tests::SimulateVectorParameters sparams;
             sparams.lower = -5;
             sparams.upper = -1;
             sparams.seed = 123 * threads;
@@ -403,7 +403,7 @@ TEST_P(PerCellQcMetricsTestMaxed, OkayOnMissing) {
     {
         size_t nr = 20, nc = 100;
         auto vec = scran_tests::simulate_vector(nr * nc, [&]{
-            scran_tests::SimulationParameters sparams;
+            scran_tests::SimulateVectorParameters sparams;
             sparams.density = 0.2;
             sparams.lower = 1;
             sparams.upper = 5;
@@ -495,7 +495,7 @@ TEST(PerCellQcMetrics, NewType) {
 
     size_t nr = 200, nc = 60;
     auto vec = scran_tests::simulate_vector(nr * nc, []{
-        scran_tests::SimulationParameters sparams;
+        scran_tests::SimulateVectorParameters sparams;
         sparams.density = 0.2;
         sparams.lower = 1;
         sparams.upper = 100;
@@ -548,7 +548,7 @@ TEST(PerCellQcMetrics, NewType) {
 TEST(PerCellQcMetrics, Disabled) {
     size_t nr = 100, nc = 50;
     auto vec = scran_tests::simulate_vector(nr * nc, []{
-        scran_tests::SimulationParameters sparams;
+        scran_tests::SimulateVectorParameters sparams;
         sparams.density = 0.2;
         sparams.lower = 1;
         sparams.upper = 100;

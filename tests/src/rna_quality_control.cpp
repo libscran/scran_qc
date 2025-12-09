@@ -11,7 +11,7 @@ protected:
     static void SetUpTestSuite() {
         size_t nr = 211, nc = 99;
         auto vec = scran_tests::simulate_vector(nr * nc, []{
-            scran_tests::SimulationParameters sparams;
+            scran_tests::SimulateVectorParameters sparams;
             sparams.density = 0.05;
             sparams.lower = 1;
             sparams.upper = 10;
