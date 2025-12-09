@@ -117,7 +117,7 @@ $(function(){ initResizable(false); });
 <div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#accda57e0c354b921eeb47b4ed224c691">   33</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran__qc.html#accda57e0c354b921eeb47b4ed224c691">filter_index</a>(<span class="keyword">const</span> std::size_t num, <span class="keyword">const</span> Keep_* <span class="keyword">const</span> filter, std::vector&lt;Index_&gt;&amp; output) {</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    output.clear();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num)&gt; i = 0; i &lt; num; ++i) {</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordflow">if</span> (filter[i]) {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            output.push_back(i);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        }</div>
@@ -142,9 +142,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="namespacescran__qc.html#a9e36d010f9cc6ed68eb086be91f0fe4b">   78</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacescran__qc.html#a9e36d010f9cc6ed68eb086be91f0fe4b">combine_filters</a>(<span class="keyword">const</span> std::size_t num, <span class="keyword">const</span> std::vector&lt;Keep_*&gt;&amp; filters, Output_* <span class="keyword">const</span> output) {</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::copy_n(filters.front(), num, output);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nfilters = filters.size();</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nfilters)) f = 1; f &lt; nfilters; ++f) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nfilters)&gt; f = 1; f &lt; nfilters; ++f) {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keyword">const</span> <span class="keyword">auto</span> filt = filters[f];</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num)&gt; i = 0; i &lt; num; ++i) {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            output[i] = output[i] &amp;&amp; filt[i];</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
@@ -170,9 +170,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    output.clear();</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nfilters = filters.size();</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(num)) i = 0; i &lt; num; ++i) {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num)&gt; i = 0; i &lt; num; ++i) {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordtype">bool</span> keep = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nfilters)) f = 0; f &lt; nfilters; ++f) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nfilters)&gt; f = 0; f &lt; nfilters; ++f) {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">if</span> (!filters[f][i]) {</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                keep = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                <span class="keywordflow">break</span>;</div>

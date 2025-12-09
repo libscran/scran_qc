@@ -140,8 +140,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <a class="code hl_struct" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">PerCellQcMetricsBuffers</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <a class="code hl_struct" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">PerCellQcMetricsBuffers</a>(<span class="keyword">const</span> std::size_t nsubsets) : </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>(sanisizer::cast&lt;<span class="keyword">decltype</span>(I(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>.size()))&gt;(nsubsets), NULL),</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>(sanisizer::cast&lt;<span class="keyword">decltype</span>(I(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>.size()))&gt;(nsubsets), NULL)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>(sanisizer::cast&lt;I&lt;<span class="keyword">decltype</span>(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>.size())&gt; &gt;(nsubsets), NULL),</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>(sanisizer::cast&lt;I&lt;<span class="keyword">decltype</span>(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>.size())&gt; &gt;(nsubsets), NULL)</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    {}</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#a6ed4f9746c38a212f4a51d367a92f4cf">   96</a></span>    Sum_* <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#a6ed4f9746c38a212f4a51d367a92f4cf">sum</a> = NULL;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
@@ -173,10 +173,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            sanisizer::resize(subset_indices, nsubsets);</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="keyword">const</span> <span class="keyword">auto</span> NR = mat.<a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html#a54fe7b4baf78069d35ff00357a1b6cc6">nrow</a>();</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                <span class="keyword">auto</span>&amp; current = subset_indices[s];</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; source = subsets[s];</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(NR)) i = 0; i &lt; NR; ++i) {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(NR)&gt; i = 0; i &lt; NR; ++i) {</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                    <span class="keywordflow">if</span> (source[i]) {</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                        current.push_back(i);</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                    }</div>
@@ -203,7 +203,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordflow">if</span> (output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#a9290094f79352013f917fbc34c2b9373">detected</a>) {</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                Detected_ count = 0;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(NR)) r = 0; r &lt; NR; ++r) {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(NR)&gt; r = 0; r &lt; NR; ++r) {</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    count += (ptr[r] != 0);</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                }</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#a9290094f79352013f917fbc34c2b9373">detected</a>[c] = count;</div>
@@ -215,7 +215,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                <span class="keywordflow">if</span> (NR) {</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                    max_value = ptr[0];</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(NR)) r = 1; r &lt; NR; ++r) {</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(NR)&gt; r = 1; r &lt; NR; ++r) {</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                        <span class="keywordflow">if</span> (max_value &lt; ptr[r]) {</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                            max_value = ptr[r];</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                            max_index = r;</div>
@@ -232,7 +232,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            }</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            <span class="keywordflow">if</span> (!output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>.empty() || !output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>.empty()) { <span class="comment">// protect against accessing an empty subset_indices.</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sub = [&amp;]() -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;Subset_&gt;::value) {</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                            <span class="keywordflow">return</span> subset_indices[s];</div>
@@ -269,7 +269,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="keywordflow">if</span> (!output.subset_sum.empty() || !output.subset_detected.empty()) {</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(!std::is_pointer&lt;Subset_&gt;::value) {</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = subsets.size();</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                is_in_subset.emplace_back(NR);</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                <span class="keyword">auto</span>&amp; last = is_in_subset.back();</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> i : subsets[s]) {</div>
@@ -359,7 +359,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            }</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>           <span class="keywordflow">if</span> (!output.subset_sum.empty() || !output.subset_detected.empty()) { <span class="comment">// protect against accessing an empty is_in_subset.</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sub = [&amp;]() -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;Subset_&gt;::value) {</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                            <span class="keywordflow">return</span> subsets[s];</div>
@@ -414,7 +414,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        {</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = output.subset_sum.size();</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>            sanisizer::resize(my_subset_sum, nsubsets);</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>                <span class="keywordflow">if</span> (output.subset_sum[s]) {</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>                    my_subset_sum[s] = tatami_stats::LocalOutputBuffer&lt;Sum_&gt;(thread, start, len, output.subset_sum[s]);</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>                }</div>
@@ -424,7 +424,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        {</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = output.subset_detected.size();</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            sanisizer::resize(my_subset_detected, nsubsets);</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>            <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>                <span class="keywordflow">if</span> (output.subset_detected[s]) {</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>                    my_subset_detected[s] = tatami_stats::LocalOutputBuffer&lt;Detected_&gt;(thread, start, len, output.subset_detected[s]);</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>                }</div>
@@ -568,7 +568,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>            }</div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span> </div>
 <div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>            <span class="keywordflow">if</span> (!outst.empty() || !outsd.empty()) { <span class="comment">// protect against accessing an empty is_in_subset.</span></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sub = [&amp;]() -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
 <div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;Subset_&gt;::value) {</div>
 <div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>                            <span class="keywordflow">return</span> subsets[s];</div>
@@ -686,7 +686,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>            }</div>
 <div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span> </div>
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            <span class="keywordflow">if</span> (!outst.empty() || !outsd.empty()) { <span class="comment">// protect against accessing an empty is_in_subset.</span></div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sub = [&amp;]() -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_pointer&lt;Subset_&gt;::value) {</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                            <span class="keywordflow">return</span> subsets[s];</div>
@@ -749,8 +749,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>    <a class="code hl_struct" href="structscran__qc_1_1PerCellQcMetricsResults.html">PerCellQcMetricsResults</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span> </div>
 <div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>    <a class="code hl_struct" href="structscran__qc_1_1PerCellQcMetricsResults.html">PerCellQcMetricsResults</a>(<span class="keyword">const</span> std::size_t nsubsets) : </div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>(sanisizer::cast&lt;<span class="keyword">decltype</span>(I(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>.size()))&gt;(nsubsets)),</div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>(sanisizer::cast&lt;<span class="keyword">decltype</span>(I(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>.size()))&gt;(nsubsets))</div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>(sanisizer::cast&lt;I&lt;<span class="keyword">decltype</span>(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>.size())&gt; &gt;(nsubsets)),</div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>        <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>(sanisizer::cast&lt;I&lt;<span class="keyword">decltype</span>(<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>.size())&gt; &gt;(nsubsets))</div>
 <div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>    {}</div>
 <div class="line"><a id="l00756" name="l00756"></a><span class="lineno"><a class="line" href="structscran__qc_1_1PerCellQcMetricsResults.html#aac351652c341a6322813876bf0aa9200">  756</a></span>    std::vector&lt;Sum_&gt; <a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aac351652c341a6322813876bf0aa9200">sum</a>;</div>
 <div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span> </div>
@@ -839,7 +839,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a2272adf800a0475decbaab562f35898c">compute_subset_sum</a>) {</div>
 <div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>        sanisizer::resize(output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>, nsubsets);</div>
 <div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>        sanisizer::resize(buffers.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>, nsubsets);</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>            <a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a61b43d2b751c7fcca6815f3be929d4d3">tatami::resize_container_to_Index_size</a>(output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a>[s], ncells</div>
 <div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>                , SCRAN_QC_TEST_INIT</div>
@@ -852,7 +852,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>    <span class="keywordflow">if</span> (options.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a880457a8036b0ef9894b20f7dbd6cbff">compute_subset_detected</a>) {</div>
 <div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>        sanisizer::resize(output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>, nsubsets);</div>
 <div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>        sanisizer::resize(buffers.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a>, nsubsets);</div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>            <a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a61b43d2b751c7fcca6815f3be929d4d3">tatami::resize_container_to_Index_size</a>(output.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsResults.html#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a>[s], ncells</div>
 <div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>                , SCRAN_QC_TEST_INIT</div>

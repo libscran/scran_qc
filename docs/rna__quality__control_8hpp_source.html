@@ -160,7 +160,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            sanisizer::resize(placeholder_subset, nsubsets);</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            sanisizer::resize(tmp.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>, nsubsets);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                <span class="keyword">auto</span>&amp; b = placeholder_subset[s];</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                <a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a61b43d2b751c7fcca6815f3be929d4d3">tatami::resize_container_to_Index_size</a>(b, NC);</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                tmp.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>[s] = b.data();</div>
@@ -172,7 +172,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    opt.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsOptions.html#af9680e7480aee5b33eec9cc8f4160044">num_threads</a> = options.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsOptions.html#a60634e988b3cc1a7aa468ca047e9466e">num_threads</a>;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_function" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics</a>(mat, subsets, tmp, opt);</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0 ; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0 ; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">const</span> <span class="keyword">auto</span> dest = output.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html#acb794fee93b0fd3adb20b0da8e3380a7">subset_proportion</a>[s];</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">if</span> (dest) {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="keyword">const</span> <span class="keyword">auto</span> src = tmp.<a class="code hl_variable" href="structscran__qc_1_1PerCellQcMetricsBuffers.html#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a>[s];</div>
@@ -219,7 +219,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = subsets.size();</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    sanisizer::resize(buffers.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html#acb794fee93b0fd3adb20b0da8e3380a7">subset_proportion</a>, nsubsets);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    sanisizer::resize(output.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#abb188ef0d3417d6f6c433a3759dfdc15">subset_proportion</a>, nsubsets);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <a class="code hl_functionRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a61b43d2b751c7fcca6815f3be929d4d3">tatami::resize_container_to_Index_size</a>(output.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#abb188ef0d3417d6f6c433a3759dfdc15">subset_proportion</a>[s], NC</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>#ifdef SCRAN_QC_TEST_INIT</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            , SCRAN_QC_TEST_INIT</div>
@@ -292,7 +292,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = res.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html#acb794fee93b0fd3adb20b0da8e3380a7">subset_proportion</a>.size();</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <span class="keyword">auto</span>&amp; subhost = host.get_subset_proportion();</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        sanisizer::resize(subhost, nsubsets);</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="keyword">const</span> <span class="keyword">auto</span> sub = res.<a class="code hl_variable" href="structscran__qc_1_1ComputeRnaQcMetricsBuffers.html#acb794fee93b0fd3adb20b0da8e3380a7">subset_proportion</a>[s];</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            subhost[s] = [&amp;]{</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(unblocked) {</div>
@@ -311,7 +311,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    std::fill_n(output, n, 1);</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sum = host.get_sum();</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(n)) i = 0; i &lt; n; ++i) {</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(n)&gt; i = 0; i &lt; n; ++i) {</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="keyword">auto</span> thresh = [&amp;]{</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(unblocked) {</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>                <span class="keywordflow">return</span> sum;</div>
@@ -323,7 +323,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    }</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; detected = host.get_detected();</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(n)) i = 0; i &lt; n; ++i) {</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(n)&gt; i = 0; i &lt; n; ++i) {</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keyword">auto</span> thresh = [&amp;]{</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(unblocked) {</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="keywordflow">return</span> detected;</div>
@@ -335,10 +335,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    }</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nsubsets = metrics.subset_proportion.size();</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nsubsets)) s = 0; s &lt; nsubsets; ++s) {</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(nsubsets)&gt; s = 0; s &lt; nsubsets; ++s) {</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <span class="keyword">const</span> <span class="keyword">auto</span> sub = metrics.subset_proportion[s];</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sthresh = host.get_subset_proportion()[s];</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(n)) i = 0; i &lt; n; ++i) {</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(n)&gt; i = 0; i &lt; n; ++i) {</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            <span class="keyword">const</span> <span class="keyword">auto</span> thresh = [&amp;]{</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(unblocked) {</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                    <span class="keywordflow">return</span> sthresh;</div>
