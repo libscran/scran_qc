@@ -230,7 +230,7 @@ void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetr
     static_assert(std::is_floating_point<Float_>::value);
     std::vector<Float_> maxprop;
     maxprop.reserve(n);
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         maxprop.push_back(static_cast<Float_>(res.max_value[i]) / static_cast<Float_>(res.sum[i]));
     }
 
@@ -244,7 +244,7 @@ void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetr
         }
     }();
 
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         auto limit = [&]{
             if constexpr(unblocked){
                 return prop_res.median;
@@ -279,7 +279,7 @@ void crispr_filter(const Host_& host, const std::size_t n, const ComputeCrisprQc
     std::fill_n(output, n, 1);
 
     const auto& mv = host.get_max_value();
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         auto thresh = [&]{
             if constexpr(unblocked) {
                 return mv;

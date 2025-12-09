@@ -32,7 +32,7 @@ namespace scran_qc {
 template<typename Keep_, typename Index_>
 void filter_index(const std::size_t num, const Keep_* const filter, std::vector<Index_>& output) {
     output.clear();
-    for (decltype(I(num)) i = 0; i < num; ++i) {
+    for (I<decltype(num)> i = 0; i < num; ++i) {
         if (filter[i]) {
             output.push_back(i);
         }
@@ -78,9 +78,9 @@ template<typename Keep_, typename Output_>
 void combine_filters(const std::size_t num, const std::vector<Keep_*>& filters, Output_* const output) {
     std::copy_n(filters.front(), num, output);
     const auto nfilters = filters.size();
-    for (decltype(I(nfilters)) f = 1; f < nfilters; ++f) {
+    for (I<decltype(nfilters)> f = 1; f < nfilters; ++f) {
         const auto filt = filters[f];
-        for (decltype(I(num)) i = 0; i < num; ++i) {
+        for (I<decltype(num)> i = 0; i < num; ++i) {
             output[i] = output[i] && filt[i];
         }
     }
@@ -124,9 +124,9 @@ void combine_filters_index(const Index_ num, const std::vector<const Keep_*>& fi
     output.clear();
 
     const auto nfilters = filters.size();
-    for (decltype(I(num)) i = 0; i < num; ++i) {
+    for (I<decltype(num)> i = 0; i < num; ++i) {
         bool keep = true;
-        for (decltype(I(nfilters)) f = 0; f < nfilters; ++f) {
+        for (I<decltype(nfilters)> f = 0; f < nfilters; ++f) {
             if (!filters[f][i]) {
                 keep = false;
                 break;

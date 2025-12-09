@@ -178,7 +178,7 @@ ComputeAdtQcMetricsResults<Sum_, Detected_> compute_adt_qc_metrics(
     const auto nsubsets = subsets.size();
     sanisizer::resize(x.subset_sum, nsubsets);
     sanisizer::resize(output.subset_sum, nsubsets);
-    for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+    for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
         tatami::resize_container_to_Index_size(output.subset_sum[s], NC
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
@@ -255,7 +255,7 @@ void adt_populate(Host_& host, const std::size_t n, const ComputeAdtQcMetricsBuf
         opts.log = true;
         opts.lower = false;
 
-        for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+        for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
             const auto sub = res.subset_sum[s];
             host.get_subset_sum()[s] = [&]{
                 if constexpr(unblocked) {
@@ -274,7 +274,7 @@ void adt_filter(const Host_& host, const std::size_t n, const ComputeAdtQcMetric
     std::fill_n(output, n, 1);
 
     const auto& detected = host.get_detected();
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         auto thresh = [&]{
             if constexpr(unblocked) {
                 return detected;
@@ -286,10 +286,10 @@ void adt_filter(const Host_& host, const std::size_t n, const ComputeAdtQcMetric
     }
 
     const auto nsubsets = metrics.subset_sum.size();
-    for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+    for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
         const auto sub = metrics.subset_sum[s];
         const auto& sthresh = host.get_subset_sum()[s];
-        for (decltype(I(n)) i = 0; i < n; ++i) {
+        for (I<decltype(n)> i = 0; i < n; ++i) {
             auto thresh = [&]{
                 if constexpr(unblocked) {
                     return sthresh;

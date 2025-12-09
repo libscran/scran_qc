@@ -114,7 +114,7 @@ void compute_rna_qc_metrics(
         } else {
             sanisizer::resize(placeholder_subset, nsubsets);
             sanisizer::resize(tmp.subset_sum, nsubsets);
-            for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+            for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
                 auto& b = placeholder_subset[s];
                 tatami::resize_container_to_Index_size(b, NC);
                 tmp.subset_sum[s] = b.data();
@@ -126,7 +126,7 @@ void compute_rna_qc_metrics(
     opt.num_threads = options.num_threads;
     per_cell_qc_metrics(mat, subsets, tmp, opt);
 
-    for (decltype(I(nsubsets)) s = 0 ; s < nsubsets; ++s) {
+    for (I<decltype(nsubsets)> s = 0 ; s < nsubsets; ++s) {
         const auto dest = output.subset_proportion[s];
         if (dest) {
             const auto src = tmp.subset_sum[s];
@@ -204,7 +204,7 @@ ComputeRnaQcMetricsResults<Sum_, Detected_, Proportion_> compute_rna_qc_metrics(
     const auto nsubsets = subsets.size();
     sanisizer::resize(buffers.subset_proportion, nsubsets);
     sanisizer::resize(output.subset_proportion, nsubsets);
-    for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+    for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
         tatami::resize_container_to_Index_size(output.subset_proportion[s], NC
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
@@ -292,7 +292,7 @@ void rna_populate(Host_& host, const std::size_t n, const ComputeRnaQcMetricsBuf
         const auto nsubsets = res.subset_proportion.size();
         auto& subhost = host.get_subset_proportion();
         sanisizer::resize(subhost, nsubsets);
-        for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+        for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
             const auto sub = res.subset_proportion[s];
             subhost[s] = [&]{
                 if constexpr(unblocked) {
@@ -311,7 +311,7 @@ void rna_filter(const Host_& host, const std::size_t n, const ComputeRnaQcMetric
     std::fill_n(output, n, 1);
 
     const auto& sum = host.get_sum();
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         auto thresh = [&]{
             if constexpr(unblocked) {
                 return sum;
@@ -323,7 +323,7 @@ void rna_filter(const Host_& host, const std::size_t n, const ComputeRnaQcMetric
     }
 
     const auto& detected = host.get_detected();
-    for (decltype(I(n)) i = 0; i < n; ++i) {
+    for (I<decltype(n)> i = 0; i < n; ++i) {
         auto thresh = [&]{
             if constexpr(unblocked) {
                 return detected;
@@ -335,10 +335,10 @@ void rna_filter(const Host_& host, const std::size_t n, const ComputeRnaQcMetric
     }
 
     const auto nsubsets = metrics.subset_proportion.size();
-    for (decltype(I(nsubsets)) s = 0; s < nsubsets; ++s) {
+    for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
         const auto sub = metrics.subset_proportion[s];
         const auto& sthresh = host.get_subset_proportion()[s];
-        for (decltype(I(n)) i = 0; i < n; ++i) {
+        for (I<decltype(n)> i = 0; i < n; ++i) {
             const auto thresh = [&]{
                 if constexpr(unblocked) {
                     return sthresh;
