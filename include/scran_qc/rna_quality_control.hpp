@@ -34,9 +34,11 @@ struct ComputeRnaQcMetricsOptions {
 
 /**
  * @brief Buffers for `compute_rna_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow.
+ * @tparam Proportion_ Floating-point type of the proportions.
  * 
  * Note that, unlike `PerCellQcMetricsBuffers`, all pointers are expected to be non-NULL here.
  */
@@ -79,9 +81,11 @@ struct ComputeRnaQcMetricsBuffers {
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
+ * @tparam Proportion_ Floating-point type of the proportions.
  *
  * @param mat A matrix of non-negative counts.
  * Rows should correspond to genes while columns should correspond to cells.
@@ -139,9 +143,11 @@ void compute_rna_qc_metrics(
 
 /**
  * @brief Results of `compute_rna_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow. 
+ * @tparam Proportion_ Floating-point type of the proportions.
  */
 template<typename Sum_ = double, typename Detected_ = int, typename Proportion_ = double>
 struct ComputeRnaQcMetricsResults {
@@ -165,9 +171,11 @@ struct ComputeRnaQcMetricsResults {
 /**
  * Overload of `compute_rna_qc_metrics()` that allocates memory for the results.
  *
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells, typically set to the same type as `Index_`.
+ * This should be large enough to avoid integer overflow. 
+ * @tparam Proportion_ Floating-point type of the proportions.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `std::vector` of indices.
@@ -426,10 +434,10 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
+     * @tparam Output_ Boolean type of the high quality flags.
      * @param num Number of cells.
      * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_rna_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_rna_qc_filters()`.
@@ -442,10 +450,10 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
+     * @tparam Output_ Boolean type of the high quality flags.
      * @param metrics RNA-based QC metrics returned by `compute_rna_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_rna_qc_filters()`.
      * @param[out] output Pointer to an array of length `num`. 
@@ -457,10 +465,10 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
      * @param metrics RNA-based QC metrics returned by `compute_rna_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_rna_qc_filters()`.
      * @return Vector of length `num`, containing the high-quality calls.
@@ -485,9 +493,9 @@ public:
  * For the subset proportions, no log-transformation is performed as the conversion of near-zero proportions to large negative values would inflate the MAD.
  *
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * @tparam Proportion_ Floating-point type of the proportions.
  *
  * @param num Number of cells.
  * @param metrics A collection of buffers containing RNA-based QC metrics, filled by `compute_rna_qc_metrics()`.
@@ -508,9 +516,9 @@ RnaQcFilters<Float_> compute_rna_qc_filters(const std::size_t num, const Compute
  * This ensures that uninteresting inter-block differences do not inflate the MAD, see `choose_filter_thresholds_blocked()` for more details.
  *
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * @tparam Proportion_ Floating-point type of the proportions.
  *
  * @param metrics RNA-based QC metrics from `compute_rna_qc_metrics()`.
  * @param options Further options for filtering.
@@ -586,11 +594,11 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
      * @tparam Block_ Integer type of the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing RNA-based QC metrics, filled by `compute_rna_qc_metrics()`.
@@ -606,11 +614,11 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
      * @tparam Block_ Integer type of  the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param metrics RNA-based QC metrics computed by `compute_rna_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_rna_qc_filters()`.
@@ -625,10 +633,10 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Proportion_ Floating-point type to store the proportions.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Proportion_ Floating-point type of the proportions.
      * @tparam Block_ Integer type of the block assignment.
      *
      * @param metrics RNA-based QC metrics computed by `compute_rna_qc_metrics()`.
@@ -651,9 +659,9 @@ public:
 };
 
 /**
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * @tparam Proportion_ Floating-point type of the proportions.
  * @tparam Block_ Integer type of the block assignments.
  *
  * @param num Number of cells.
@@ -677,9 +685,9 @@ RnaQcBlockedFilters<Float_> compute_rna_qc_filters_blocked(
 }
 
 /**
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
- * @tparam Proportion_ Floating-point type to store the proportions.
+ * @tparam Sum_ Numeric type of the summed expression, typically floating-point.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * @tparam Proportion_ Floating-point type of the proportions.
  * @tparam Block_ Integer type of the block assignments.
  *
  * @param metrics RNA-based QC metrics computed by `compute_rna_qc_metrics()`.

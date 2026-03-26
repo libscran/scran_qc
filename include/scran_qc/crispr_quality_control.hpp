@@ -35,8 +35,11 @@ struct ComputeCrisprQcMetricsOptions {
 
 /**
  * @brief Buffers for `compute_crispr_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ *
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  *
@@ -86,8 +89,10 @@ struct ComputeCrisprQcMetricsBuffers {
  *
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  *
  * @param mat A matrix of non-negative counts.
  * Rows correspond to CRISPR guides while columns correspond to cells.
@@ -113,8 +118,11 @@ void compute_crispr_qc_metrics(
 
 /**
  * @brief Results of `compute_crispr_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ *
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  *
@@ -146,8 +154,10 @@ struct ComputeCrisprQcMetricsResults {
 /**
  * Overload of `compute_crispr_qc_metrics()` that allocates memory for the results.
  *
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
@@ -334,11 +344,11 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
@@ -351,11 +361,11 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param metrics CRISPR-based QC metrics returned by `compute_crispr_qc_metrics()`.
      * @param[out] output Pointer to an array of length `num`. 
@@ -367,9 +377,9 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
      *
@@ -410,8 +420,8 @@ public:
  * such cells are not necessarily uninteresting, e.g., for examining interaction effects, so we will err on the side of caution and leave them in.
  *
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  *
@@ -434,8 +444,8 @@ CrisprQcFilters<Float_> compute_crispr_qc_filters(
 
 /**
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  *
@@ -482,12 +492,12 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
      * @tparam Block_ Integer type of the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
@@ -502,12 +512,12 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
      * @tparam Block_ Integer type of the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
      * @param[in] block Pointer to an array of length `num` containing block identifiers.
@@ -521,9 +531,9 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Value_ Type of matrix value.
      * @tparam Index_ Type of the matrix indices.
      * @tparam Block_ Integer type of the block assignment.
@@ -551,8 +561,8 @@ public:
  * Each blocking level has its own thresholds, equivalent to calling `compute_crispr_qc_filters()` on the cells from each block.
  * This ensures that uninteresting inter-block differences do not inflate the MAD, see `choose_filter_thresholds_blocked()` for more details.
 
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Block_ Integer type of the block assignments.
@@ -578,8 +588,8 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
 }
 
 /**
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Block_ Integer type of the block assignments.

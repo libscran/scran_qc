@@ -35,8 +35,10 @@ struct ComputeAdtQcMetricsOptions {
 
 /**
  * @brief Buffers for `compute_adt_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to same type as `Index_`.
  *
  * Note that, unlike `PerCellQcMetricsBuffers`, all pointers are expected to be non-NULL here.
  */
@@ -83,8 +85,10 @@ struct ComputeAdtQcMetricsBuffers {
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to same type as `Index_`.
  *
  * @param mat A matrix of non-negative counts.
  * Rows correspond to ADT features while columns correspond to cells.
@@ -112,8 +116,10 @@ void compute_adt_qc_metrics(
 
 /**
  * @brief Results of `compute_adt_qc_metrics()`.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow.
  */
 template<typename Sum_ = double, typename Detected_ = int>
 struct ComputeAdtQcMetricsResults {
@@ -137,8 +143,10 @@ struct ComputeAdtQcMetricsResults {
 /**
  * Overload of `compute_adt_qc_metrics()` that allocates memory for the results.
  *
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to same type as `Index_`.
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `vector` of indices.
@@ -364,9 +372,9 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
@@ -381,9 +389,9 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param metrics ADT-based QC metrics returned by `compute_adt_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
@@ -396,9 +404,9 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      *
      * @param metrics ADT-based QC metrics returned by `compute_adt_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
@@ -433,8 +441,8 @@ public:
  * This avoids overly aggressive filtering when the MAD is zero due to the discrete nature of this statistic in datasets with few tags.
  *
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  *
  * @param num Number of cells.
  * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
@@ -451,8 +459,8 @@ AdtQcFilters<Float_> compute_adt_qc_filters(const std::size_t num, const Compute
 
 /**
  * @tparam Float_ Floating-point type of the thresholds.
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  *
  * @param metrics ADT-based QC metrics from `compute_adt_qc_metrics()`.
  * @param options Further options for filtering.
@@ -514,10 +522,10 @@ private:
 
 public:
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Block_ Integer type of the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param num Number of cells.
      * @param metrics A collection of arrays containing ADT-based QC metrics, filled by `compute_adt_qc_metrics()`.
@@ -533,10 +541,10 @@ public:
     }
 
     /**
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Block_ Integer type of the block assignment.
-     * @tparam Output_ Boolean type to store the high quality flags.
+     * @tparam Output_ Boolean type of the high quality flags.
      *
      * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
      * The feature subsets should be the same as those used in the `metrics` supplied to `compute_adt_qc_filters()`.
@@ -551,9 +559,9 @@ public:
     }
 
     /**
-     * @tparam Output_ Boolean type to store the high quality flags.
-     * @tparam Sum_ Numeric type to store the summed expression.
-     * @tparam Detected_ Integer type to store the number of cells.
+     * @tparam Output_ Boolean type of the high quality flags.
+     * @tparam Sum_ Numeric type of the summed expression.
+     * @tparam Detected_ Integer type of the number of detected cells.
      * @tparam Block_ Integer type of the block assignment.
      *
      * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.
@@ -580,8 +588,8 @@ public:
  * Each blocking level has its own thresholds, equivalent to calling `compute_adt_qc_filters()` on the cells from each block.
  * This ensures that uninteresting inter-block differences do not inflate the MAD, see `choose_filter_thresholds_blocked()` for more details.
  *
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Block_ Integer type of the block assignments.
  *
  * @param num Number of cells.
@@ -605,8 +613,8 @@ AdtQcBlockedFilters<Float_> compute_adt_qc_filters_blocked(
 }
 
 /**
- * @tparam Sum_ Numeric type to store the summed expression.
- * @tparam Detected_ Integer type to store the number of cells.
+ * @tparam Sum_ Numeric type of the summed expression.
+ * @tparam Detected_ Integer type of the number of detected cells.
  * @tparam Block_ Integer type of the block assignments.
  *
  * @param metrics ADT-based QC metrics computed by `compute_adt_qc_metrics()`.

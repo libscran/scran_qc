@@ -69,8 +69,10 @@ struct PerCellQcMetricsOptions {
 /**
  * @brief Buffers for `per_cell_qc_metrics()`.
  *
- * @tparam Sum_ Floating point type to store the sums.
- * @tparam Detected_ Integer type to store the number of detected cells.
+ * @tparam Sum_ Numeric type of the sums, usually floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  * @tparam Value_ Type of the matrix value.
  * @tparam Index_ Integer type of the matrix index.
  */
@@ -726,10 +728,12 @@ void compute_qc_running_sparse(
 /**
  * @brief Result store for QC metric calculations.
  * 
- * @tparam Sum_ Floating point type to store the sums.
- * @tparam Detected_ Integer type to store the number of detected cells.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  * @tparam Value_ Type of the matrix value.
- * @tparam Index_ Integer type to store the gene index.
+ * @tparam Index_ Integer type of the gene index.
  *
  * Meaningful instances of this object should generally be constructed by calling the `per_cell_qc_metrics()` functions.
  * Empty instances can be default-constructed as placeholders.
@@ -811,8 +815,10 @@ struct PerCellQcMetricsResults {
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `std::vector` of indices.
- * @tparam Sum_ Floating point type to store the sums.
- * @tparam Detected_ Integer type to store the number of detected cells.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  *
  * @param mat A matrix of non-negative counts.
  * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
@@ -850,8 +856,10 @@ void per_cell_qc_metrics(
  * @tparam Value_ Type of matrix value.
  * @tparam Index_ Type of the matrix indices.
  * @tparam Subset_ Either a pointer to an array of booleans or a `std::vector` of indices.
- * @tparam Sum_ Floating point type to store the sums.
- * @tparam Detected_ Integer type to store the number of detected cells.
+ * @tparam Sum_ Numeric type of the sums, typically floating-point.
+ * If integer, this should be large enough to avoid overflow.
+ * @tparam Detected_ Integer type of the number of detected cells.
+ * This should be large enough to avoid integer overflow, typically set to the same type as `Index_`.
  *
  * @param mat A matrix of non-negative counts.
  * Rows should correspond to features (e.g., genes) while columns should correspond to cells.
