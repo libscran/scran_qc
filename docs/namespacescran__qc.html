@@ -334,8 +334,8 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, usually floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to same type as <code>Index_</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -379,8 +379,8 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 <p>Overload of <code><a class="el" href="#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code> that allocates memory for the results.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, usually floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to same type as <code>Index_</code>. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices.</td></tr>
@@ -434,8 +434,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; <
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells.</td></tr>
   </table>
   </dd>
 </dl>
@@ -474,8 +474,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ &gt; <
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells.</td></tr>
   </table>
   </dd>
 </dl>
@@ -523,8 +523,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <p>This function computes filter thresholds for ADT-derived QC metrics in blocked datasets (e.g., cells from multiple batches or samples). Each blocking level has its own thresholds, equivalent to calling <code><a class="el" href="#ab9526ee62ccf0ba23dac92d261083f64">compute_adt_qc_filters()</a></code> on the cells from each block. This ensures that uninteresting inter-block differences do not inflate the MAD, see <code><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked()</a></code> for more details.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
@@ -569,8 +569,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
@@ -852,8 +852,8 @@ template&lt;typename Value_ , typename Index_ , typename Sum_ , typename Detecte
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, usually floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -891,8 +891,8 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
 <p>Overload of <code><a class="el" href="#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code> that allocates memory for the results.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, usually floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices.</td></tr>
@@ -945,8 +945,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices.</td></tr>
   </table>
@@ -987,8 +987,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices.</td></tr>
   </table>
@@ -1038,8 +1038,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <p>This function computes filter thresholds for CRISPR-derived QC metrics in blocked datasets (e.g., cells from multiple batches or samples). Each blocking level has its own thresholds, equivalent to calling <code><a class="el" href="#ad3349d2a4352412e10c9826843d33767">compute_crispr_qc_filters()</a></code> on the cells from each block. This ensures that uninteresting inter-block differences do not inflate the MAD, see <code><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked()</a></code> for more details.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
@@ -1086,8 +1086,8 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
@@ -1551,8 +1551,8 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Floating point type to store the sums. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of detected cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, typically floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1602,8 +1602,8 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Value_ 
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Floating point type to store the sums. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of detected cells.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, typically floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1665,9 +1665,9 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>vector</code> of indices. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, typically floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1711,9 +1711,9 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
 <p>Overload of <code><a class="el" href="#a11547d21005ac59afdfa595581c534bc">compute_rna_qc_metrics()</a></code> that allocates memory for the results.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, typically floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells, typically set to the same type as <code>Index_</code>. This should be large enough to avoid integer overflow. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
     <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices.</td></tr>
@@ -1761,9 +1761,9 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1803,9 +1803,9 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Float_</td><td>Floating-point type of the thresholds. </td></tr>
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions.</td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1852,9 +1852,9 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>
@@ -1899,9 +1899,9 @@ template&lt;typename Float_  = double, typename Sum_ , typename Detected_ , type
 </div><div class="memdoc">
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
-    <tr><td class="paramname">Proportion_</td><td>Floating-point type to store the proportions. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the summed expression, typically floating-point. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. </td></tr>
+    <tr><td class="paramname">Proportion_</td><td>Floating-point type of the proportions. </td></tr>
     <tr><td class="paramname">Block_</td><td>Integer type of the block assignments.</td></tr>
   </table>
   </dd>

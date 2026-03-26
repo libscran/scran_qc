@@ -125,8 +125,8 @@ Public Attributes</h2></td></tr>
 struct scran_qc::ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt;</div><p>Buffers for <code><a class="el" href="namespacescran__qc.html#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics()</a></code>. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Sum_</td><td>Numeric type to store the summed expression. </td></tr>
-    <tr><td class="paramname">Detected_</td><td>Integer type to store the number of cells. </td></tr>
+    <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, usually floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
+    <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>. </td></tr>
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices.</td></tr>
   </table>
