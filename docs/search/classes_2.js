@@ -25,7 +25,6 @@ var searchData=
   ['converttocompressedsparseoptions_22',['ConvertToCompressedSparseOptions',['https://tatami-inc.github.io/tatami/structtatami_1_1ConvertToCompressedSparseOptions.html',1,'tatami']]],
   ['converttodenseoptions_23',['ConvertToDenseOptions',['https://tatami-inc.github.io/tatami/structtatami_1_1ConvertToDenseOptions.html',1,'tatami']]],
   ['converttofragmentedsparseoptions_24',['ConvertToFragmentedSparseOptions',['https://tatami-inc.github.io/tatami/structtatami_1_1ConvertToFragmentedSparseOptions.html',1,'tatami']]],
-  ['countcompressedsparsenonzerosoptions_25',['CountCompressedSparseNonZerosOptions',['https://tatami-inc.github.io/tatami/structtatami_1_1CountCompressedSparseNonZerosOptions.html',1,'tatami']]],
-  ['crisprqcblockedfilters_26',['CrisprQcBlockedFilters',['../classscran__qc_1_1CrisprQcBlockedFilters.html',1,'scran_qc']]],
-  ['crisprqcfilters_27',['CrisprQcFilters',['../classscran__qc_1_1CrisprQcFilters.html',1,'scran_qc']]]
+  ['crisprqcblockedfilters_25',['CrisprQcBlockedFilters',['../classscran__qc_1_1CrisprQcBlockedFilters.html',1,'scran_qc']]],
+  ['crisprqcfilters_26',['CrisprQcFilters',['../classscran__qc_1_1CrisprQcFilters.html',1,'scran_qc']]]
 ];
