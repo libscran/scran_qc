@@ -25,24 +25,16 @@ protected:
     }
 
 public:
-    template<bool exact_ = false, class Result_>
+    template<class Result_>
     static void compare(const Result_& ref, const Result_& other) {
-        if constexpr(exact_) {
-            EXPECT_EQ(ref.sum, other.sum);
-        } else {
-            scran_tests::compare_almost_equal(ref.sum, other.sum);
-        }
+        scran_tests::compare_almost_equal(ref.sum, other.sum);
         EXPECT_EQ(ref.detected, other.detected);
         EXPECT_EQ(ref.max_value, other.max_value);
         EXPECT_EQ(ref.max_index, other.max_index);
 
         ASSERT_EQ(ref.subset_sum.size(), other.subset_sum.size());
         for (size_t i = 0; i < ref.subset_sum.size(); ++i) {
-            if constexpr(exact_) {
-                EXPECT_EQ(ref.subset_sum[i], other.subset_sum[i]);
-            } else {
-                scran_tests::compare_almost_equal(ref.subset_sum[i], other.subset_sum[i]);
-            }
+            scran_tests::compare_almost_equal(ref.subset_sum[i], other.subset_sum[i]);
         }
 
         ASSERT_EQ(ref.subset_detected.size(), other.subset_detected.size());
@@ -52,12 +44,8 @@ public:
     }
 
     template<typename Value_, typename Index_>
-    static std::vector<int> compute_num_detected(const tatami::Matrix<Value_, Index_>* mat) {
-        auto detected = tatami_stats::counts::zero::by_column(mat);
-        for (auto& z : detected) {
-            z = mat->nrow() - z;
-        }
-        return detected;
+    static std::vector<int> compute_num_detected(const tatami::Matrix<Value_, Index_>& mat) {
+        return tatami_stats::count<int>(false, mat, [](Value_ val) -> bool { return val != 0; }, {});
     }
 };
 
@@ -70,10 +58,10 @@ TEST_P(PerCellQcMetricsTestStandard, NoSubset) {
 
     if (threads > 1) {
         auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
-        compare<true>(ref, res1);
+        compare(ref, res1);
     } else {
-        EXPECT_EQ(ref.sum, tatami_stats::sums::by_column(dense_row.get()));
-        EXPECT_EQ(ref.detected, compute_num_detected(dense_row.get()));
+        EXPECT_EQ(ref.sum, tatami_stats::sum(false, *dense_row, {}));
+        EXPECT_EQ(ref.detected, compute_num_detected(*dense_row));
     }
 
     auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
@@ -98,11 +86,11 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
 
     if (threads == 1) {
         auto sub = tatami::make_DelayedSubset(dense_row, subs[0], true);
-        EXPECT_EQ(ref.subset_sum[0], tatami_stats::sums::by_column(sub.get()));
-        EXPECT_EQ(ref.subset_detected[0], compute_num_detected(sub.get()));
+        EXPECT_EQ(ref.subset_sum[0], tatami_stats::sum(false, *sub, {}));
+        EXPECT_EQ(ref.subset_detected[0], compute_num_detected(*sub));
     } else {
         auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
-        compare<true>(ref, res1);
+        compare(ref, res1);
     }
 
     auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, subs, opt);
@@ -123,7 +111,7 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
     std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data() };
 
     auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
-    compare<true>(ref, bres1);
+    compare(ref, bres1);
 
     auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
     compare(ref, bres2);
@@ -148,17 +136,17 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
 
     if (threads == 1) {
         auto ref1 = tatami::make_DelayedSubset<0>(dense_row, subs[0]);
-        auto refprop1 = tatami_stats::sums::by_column(ref1.get());
+        auto refprop1 = tatami_stats::sum(false, *ref1, {});
         EXPECT_EQ(refprop1, ref.subset_sum[0]);
-        EXPECT_EQ(ref.subset_detected[0], compute_num_detected(ref1.get()));
+        EXPECT_EQ(ref.subset_detected[0], compute_num_detected(*ref1));
 
         auto ref2 = tatami::make_DelayedSubset<0>(dense_row, subs[1]);
-        auto refprop2 = tatami_stats::sums::by_column(ref2.get());
+        auto refprop2 = tatami_stats::sum(false, *ref2, {});
         EXPECT_EQ(refprop2, ref.subset_sum[1]); 
-        EXPECT_EQ(ref.subset_detected[1], compute_num_detected(ref2.get()));
+        EXPECT_EQ(ref.subset_detected[1], compute_num_detected(*ref2));
     } else {
         auto res1 = scran_qc::per_cell_qc_metrics(*dense_row, subs, opt);
-        compare<true>(ref, res1);
+        compare(ref, res1);
     }
 
     auto res2 = scran_qc::per_cell_qc_metrics(*dense_column, subs, opt);
@@ -183,7 +171,7 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
     std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
 
     auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
-    compare<true>(ref, bres1);
+    compare(ref, bres1);
 
     auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
     compare(ref, bres2);
