@@ -74,7 +74,8 @@ TEST(CrisprQualityControlFilters, Basic) {
     // Double-checking that only the second half is used.
     scran_qc::FindMedianMadOptions fopt;
     fopt.log = true;
-    auto ref = scran_qc::find_median_mad<double>(10, results.max_value.data() + 10, NULL, fopt);
+    std::vector<double> copy_max_value(results.max_value.begin(), results.max_value.end());
+    auto ref = scran_qc::find_median_mad<double>(10, copy_max_value.data() + 10, fopt);
     scran_tests::compare_almost_equal(thresholds.get_max_value(), std::exp(ref.median - 3 * ref.mad));
 }
 
@@ -88,7 +89,7 @@ TEST(CrisprQualityControlFilters, Blocked) {
         auto thresholds = scran_qc::compute_crispr_qc_filters(results, opt);
 
         std::vector<int> block(6);
-        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), 1, opt);
         EXPECT_EQ(thresholds.get_max_value(), bthresholds.get_max_value()[0]);
 
         auto keep = bthresholds.filter(results, block.data());
@@ -103,7 +104,7 @@ TEST(CrisprQualityControlFilters, Blocked) {
 
         scran_qc::ComputeCrisprQcFiltersOptions opt;
         std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_crispr_qc_filters_blocked(results, block.data(), 2, opt);
 
         EXPECT_LT(bthresholds.get_max_value()[0], 90);
         EXPECT_GT(bthresholds.get_max_value()[0], 50);

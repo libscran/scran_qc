@@ -93,7 +93,7 @@ TEST(AdtQualityControlFilters, Blocked) {
         auto thresholds = scran_qc::compute_adt_qc_filters(results, opt);
 
         std::vector<int> block(6);
-        auto bthresholds = scran_qc::compute_adt_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_adt_qc_filters_blocked(results, block.data(), 1, opt);
         EXPECT_EQ(thresholds.get_detected(), bthresholds.get_detected()[0]);
         EXPECT_EQ(thresholds.get_subset_sum()[0], bthresholds.get_subset_sum()[0][0]);
 
@@ -109,7 +109,7 @@ TEST(AdtQualityControlFilters, Blocked) {
 
         scran_qc::ComputeAdtQcFiltersOptions opt;
         std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-        auto bthresholds = scran_qc::compute_adt_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_adt_qc_filters_blocked(results, block.data(), 2, opt);
 
         EXPECT_GT(bthresholds.get_detected()[0], 50);
         EXPECT_LT(bthresholds.get_subset_sum()[0][0], 100);

@@ -226,21 +226,28 @@ struct ComputeCrisprQcFiltersOptions {
 namespace internal {
 
 template<typename Float_, class Host_, typename Sum_, typename Detected_, typename Value_, typename Index_, typename BlockSource_>
-void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res, BlockSource_ block, const ComputeCrisprQcFiltersOptions& options) {
+void crispr_populate(
+    Host_& host,
+    const std::size_t num_cells,
+    const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& res,
+    BlockSource_ block,
+    const std::size_t num_blocks,
+    const ComputeCrisprQcFiltersOptions& options
+) {
     constexpr bool unblocked = std::is_same<BlockSource_, bool>::value;
     auto buffer = [&]{
         if constexpr(unblocked) {
-            return sanisizer::create<std::vector<Float_> >(n);
+            return sanisizer::create<std::vector<Float_> >(num_cells);
         } else {
-            return FindMedianMadWorkspace<Float_>(n, block);
+            return FindMedianMadBlockedWorkspace<Float_>(num_cells, block, num_blocks);
         }
     }();
 
     // Subsetting to the observations in the top 50% of proportions.
     static_assert(std::is_floating_point<Float_>::value);
     std::vector<Float_> maxprop;
-    maxprop.reserve(n);
-    for (I<decltype(n)> i = 0; i < n; ++i) {
+    maxprop.reserve(num_cells);
+    for (I<decltype(num_cells)> i = 0; i < num_cells; ++i) {
         maxprop.push_back(static_cast<Float_>(res.max_value[i]) / static_cast<Float_>(res.sum[i]));
     }
 
@@ -248,13 +255,14 @@ void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetr
     fopt.median_only = true;
     auto prop_res = [&]{
         if constexpr(unblocked) {
-            return find_median_mad(n, maxprop.data(), buffer.data(), fopt);
+            std::copy_n(maxprop.begin(), num_cells, buffer.begin());
+            return find_median_mad(num_cells, buffer.data(), fopt);
         } else {
-            return find_median_mad_blocked(n, maxprop.data(), block, &buffer, fopt);
+            return find_median_mad_blocked(num_cells, maxprop.data(), block, num_blocks, &buffer, fopt);
         }
     }();
 
-    for (I<decltype(n)> i = 0; i < n; ++i) {
+    for (I<decltype(num_cells)> i = 0; i < num_cells; ++i) {
         auto limit = [&]{
             if constexpr(unblocked){
                 return prop_res.median;
@@ -276,9 +284,10 @@ void crispr_populate(Host_& host, const std::size_t n, const ComputeCrisprQcMetr
     copt.upper = false;
     host.get_max_value() = [&]{
         if constexpr(unblocked) {
-            return choose_filter_thresholds(n, maxprop.data(), buffer.data(), copt).lower;
+            std::copy_n(maxprop.begin(), num_cells, buffer.begin());
+            return choose_filter_thresholds(num_cells, buffer.data(), copt).lower;
         } else {
-            return internal::strip_threshold<true>(choose_filter_thresholds_blocked(n, maxprop.data(), block, &buffer, copt));
+            return internal::strip_threshold<true>(choose_filter_thresholds_blocked(num_cells, maxprop.data(), block, num_blocks, &buffer, copt));
         }
     }();
 }
@@ -438,7 +447,7 @@ CrisprQcFilters<Float_> compute_crispr_qc_filters(
     const ComputeCrisprQcFiltersOptions& options)
 {
     CrisprQcFilters<Float_> output;
-    internal::crispr_populate<Float_>(output, num, metrics, false, options);
+    internal::crispr_populate<Float_>(output, num, metrics, false, 0, options);
     return output;
 }
 
@@ -571,6 +580,7 @@ public:
  * @param metrics A collection of arrays containing CRISPR-based QC metrics, filled by `compute_crispr_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param num_blocks Total number of blocks, i.e., \f$N\f$.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
@@ -580,10 +590,11 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
     const std::size_t num,
     const ComputeCrisprQcMetricsBuffers<Sum_, Detected_, Value_, Index_>& metrics,
     const Block_* const block,
-    const ComputeCrisprQcFiltersOptions& options)
-{
+    const std::size_t num_blocks,
+    const ComputeCrisprQcFiltersOptions& options
+) {
     CrisprQcBlockedFilters<Float_> output;
-    internal::crispr_populate<Float_>(output, num, metrics, block, options);
+    internal::crispr_populate<Float_>(output, num, metrics, block, num_blocks, options);
     return output;
 }
 
@@ -597,6 +608,7 @@ CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
  * @param metrics CRISPR-based QC metrics computed by `compute_crispr_qc_metrics()`.
  * @param[in] block Pointer to an array of length `num` containing block identifiers.
  * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param num_blocks Total number of blocks, i.e., \f$N\f$.
  * @param options Further options for filtering.
  *
  * @return Object containing filter thresholds for each block.
@@ -605,9 +617,10 @@ template<typename Float_ = double, typename Sum_, typename Detected_, typename V
 CrisprQcBlockedFilters<Float_> compute_crispr_qc_filters_blocked(
     const ComputeCrisprQcMetricsResults<Sum_, Detected_, Value_, Index_>& metrics,
     const Block_* const block,
-    const ComputeCrisprQcFiltersOptions& options)
-{
-    return compute_crispr_qc_filters_blocked(metrics.max_value.size(), internal::to_buffer(metrics), block, options);
+    const std::size_t num_blocks,
+    const ComputeCrisprQcFiltersOptions& options
+) {
+    return compute_crispr_qc_filters_blocked(metrics.max_value.size(), internal::to_buffer(metrics), block, num_blocks, options);
 }
 
 }

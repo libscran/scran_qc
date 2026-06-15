@@ -68,7 +68,7 @@ struct ChooseFilterThresholdsOptions {
 
 /**
  * @brief Results of `compute_adt_qc_metrics()`.
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  */
 template<typename Float_>
 struct ChooseFilterThresholdsResults {
@@ -132,7 +132,7 @@ std::vector<Float_> strip_threshold(const std::vector<ChooseFilterThresholdsResu
  * Outliers can be defined in both directions or just a single direction, depending on the interpretation of the QC metric.
  * We can also apply a log-transformation to the metrics to identify outliers with respect to their fold-change from the median.
  *
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @param mm Median and MADc computed by `find_median_mad()`.
  * If `ChooseFilterThresholdsOptions::log = true`, it is expected that the median and MAD are computed on the log-transformed metrics
  * (i.e., `FindMedianMadOptions::log = true`).
@@ -166,9 +166,9 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const FindMedianM
 /**
  * This overload computes the median and MAD via `find_median_mad()` before deriving thresholds with `choose_filter_thresholds()`.
  *
- * @tparam Float_ Floating-point type for the metrics and thresholds.
+ * @tparam Float_ Floating-point type of the metrics and thresholds.
  *
- * @param num Number of cells.
+ * @param num_cells Number of cells.
  * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
  * This is modified arbitrarily on output.
  * @param options Further options.
@@ -176,32 +176,10 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const FindMedianM
  * @return The upper and lower thresholds derived from `metrics`.
  */
 template<typename Float_>
-ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t num, Float_* const metrics, const ChooseFilterThresholdsOptions& options) {
+ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t num_cells, Float_* const metrics, const ChooseFilterThresholdsOptions& options) {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    const auto mm = find_median_mad(num, metrics, fopt);
-    return choose_filter_thresholds(mm, options);
-}
-
-/**
- * Overload of `choose_filter_thresholds()` that uses an auxiliary buffer to avoid mutating `metrics`.
- *
- * @tparam Value_ Type for the input data.
- * @tparam Float_ Floating-point type for the metrics and thresholds.
- *
- * @param num Number of cells.
- * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
- * @param buffer Pointer to an array of length `num` in which to store intermediate results.
- * Alternatively NULL, in which case a buffer is automatically allocated.
- * @param options Further options.
- *
- * @return The upper and lower thresholds derived from `metrics`.
- */
-template<typename Value_, typename Float_>
-ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t num, const Value_* const metrics, Float_* const buffer, const ChooseFilterThresholdsOptions& options) {
-    FindMedianMadOptions fopt;
-    fopt.log = options.log;
-    const auto mm = find_median_mad(num, metrics, buffer, fopt);
+    const auto mm = find_median_mad(num_cells, metrics, fopt);
     return choose_filter_thresholds(mm, options);
 }
 
@@ -215,7 +193,7 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t
  * it may be preferable to ignore the blocking factor and just use `choose_filter_thresholds()` instead.
  * This ensures that the MADs are increased appropriately to avoid filtering out interesting variation.
  *
- * @tparam Float_ Floating-point type for the thresholds.
+ * @tparam Float_ Floating-point type of the thresholds.
  * @param mms Vector of medians and MADs for each block.
  * @param options Further options.
  *
@@ -224,8 +202,8 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds(const std::size_t
 template<typename Float_>
 std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blocked(
     const std::vector<FindMedianMadResults<Float_> >& mms,
-    const ChooseFilterThresholdsOptions& options)
-{
+    const ChooseFilterThresholdsOptions& options
+) {
     std::vector<ChooseFilterThresholdsResults<Float_> > output;
     output.reserve(mms.size());
     for (auto& mm : mms) {
@@ -239,11 +217,12 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
  * before deriving thresholds in each block with `choose_filter_thresholds_blocked()`.
  *
  * @tparam Value_ Type for the input data.
- * @tparam Float_ Floating-point type for the metrics and thresholds.
+ * @tparam Float_ Floating-point type of the metrics and thresholds.
  *
- * @param num Number of cells.
+ * @param num_cells Number of cells.
  * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
  * @param[in] block Optional pointer to an array of block identifiers, see `find_median_mad_blocked()` for details.
+ * @param num_blocks Total number of blocks in `block`, see `find_median_mad_blocked()` for details.
  * @param workspace Pointer to a workspace object, see `find_median_mad_blocked()` for details.
  * @param options Further options.
  *
@@ -251,15 +230,16 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
  */
 template<typename Value_, typename Block_, typename Float_>
 std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blocked(
-    const std::size_t num,
+    const std::size_t num_cells,
     const Value_* const metrics,
     const Block_* const block,
-    FindMedianMadWorkspace<Float_>* const workspace,
-    const ChooseFilterThresholdsOptions& options)
-{
+    const std::size_t num_blocks,
+    FindMedianMadBlockedWorkspace<Float_>* const workspace,
+    const ChooseFilterThresholdsOptions& options
+) {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    const auto mms = find_median_mad_blocked(num, metrics, block, workspace, fopt);
+    const auto mms = find_median_mad_blocked(num_cells, metrics, block, num_blocks, workspace, fopt);
     return choose_filter_thresholds_blocked(mms, options);
 }
 

@@ -118,17 +118,14 @@ TEST(ChooseFilterThresholds, FromMetrics) {
     scran_qc::ChooseFilterThresholdsOptions opt;
 
     std::vector<double> metrics { 0, 1, 2, 3, 4, 5 };
-    auto thresholds = scran_qc::choose_filter_thresholds(metrics.size(), metrics.data(), static_cast<double*>(NULL), opt);
+    auto copy = metrics;
+    auto thresholds = scran_qc::choose_filter_thresholds(metrics.size(), copy.data(), opt);
     EXPECT_DOUBLE_EQ(thresholds.lower, 2.5 - 2.2239 * 3);
     EXPECT_DOUBLE_EQ(thresholds.upper, 2.5 + 2.2239 * 3);
 
-    auto thresholds2 = scran_qc::choose_filter_thresholds(metrics.size(), metrics.data(), opt);
-    EXPECT_EQ(thresholds.lower, thresholds2.lower);
-    EXPECT_EQ(thresholds.upper, thresholds2.upper);
-
     std::vector<int> imetrics { 0, 1, 2, 3, 4, 5 };
     std::vector<int> block { 0, 0, 0, 1, 1, 1 };
-    auto bthresholds = scran_qc::choose_filter_thresholds_blocked(imetrics.size(), imetrics.data(), block.data(), static_cast<scran_qc::FindMedianMadWorkspace<double>*>(NULL), opt);
+    auto bthresholds = scran_qc::choose_filter_thresholds_blocked<int, int, double>(imetrics.size(), imetrics.data(), block.data(), 2, NULL, opt);
     ASSERT_EQ(bthresholds.size(), 2);
     EXPECT_DOUBLE_EQ(bthresholds[0].lower, 1 - 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[0].upper, 1 + 1.4826 * 3);

@@ -6,6 +6,8 @@
 #include <cmath>
 #include <algorithm>
 #include <cstddef>
+#include <optional>
+#include <cassert>
 
 #include "quickstats/quickstats.hpp"
 #include "sanisizer/sanisizer.hpp"
@@ -64,36 +66,37 @@ struct FindMedianMadResults {
 };
 
 /**
- * Pretty much as it says on the can; calculates the median of an array of values first,
- * and uses the median to then compute the median absolute deviation (MAD) from that array.
+ * Pretty much as it says on the tin; computes the median and MAD of an array.
  *
  * @tparam Float_ Floating-point type of the input and output.
+ * This should be capable of representing NaNs.
  *
- * @param num Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `num`.
- * NaNs are ignored.
+ * @param num_obs Number of observations.
+ * @param[in] metrics Pointer to an array of observations of length `num_obs`.
  * Array contents are arbitrarily modified on function return and should not be used afterwards.
  * @param options Further options.
  *
  * @return Median and MAD for `metrics`, possibly after log-transformation.
+ * If `num_obs = 0`, both values are NaNs.
+ * If `FindMedianMadOptions::median_only = true`, the MAD is NaN.
  */
 template<typename Float_> 
-FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, const FindMedianMadOptions& options) {
+FindMedianMadResults<Float_> find_median_mad(std::size_t num_obs, Float_* metrics, const FindMedianMadOptions& options) {
     static_assert(std::is_floating_point<Float_>::value);
 
     // Rotate all the NaNs to the front of the buffer and ignore them.
-    I<decltype(num)> lost = 0;
-    for (I<decltype(num)> i = 0; i < num; ++i) {
+    I<decltype(num_obs)> lost = 0;
+    for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
         if (std::isnan(metrics[i])) {
             std::swap(metrics[i], metrics[lost]);
             ++lost;
         }
     }
     metrics += lost;
-    num -= lost;
+    num_obs -= lost;
 
     if (options.log) {
-        for (I<decltype(num)> i = 0; i < num; ++i) {
+        for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
             auto& val = metrics[i];
             if (val > 0) {
                 val = std::log(val);
@@ -105,7 +108,7 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, c
         }
     }
 
-    const auto median = quickstats::median<Float_>(num, metrics);
+    const auto median = quickstats::median<Float_>(num_obs, metrics);
     if (options.median_only || std::isnan(median)) {
         // Giving up.
         return FindMedianMadResults<Float_>(median, std::numeric_limits<Float_>::quiet_NaN());
@@ -122,109 +125,75 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, c
     // metrics in as floats in the first place. Technically the first sort
     // could be done with an integer buffer but then we'd need an extra argument.
 
-    for (I<decltype(num)> i = 0; i < num; ++i) {
+    for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
         metrics[i] = std::abs(metrics[i] - median);
     }
-    auto mad = quickstats::median<Float_>(num, metrics);
+    auto mad = quickstats::median<Float_>(num_obs, metrics);
     mad *= 1.4826; // for equivalence with the standard deviation under normality.
 
     return FindMedianMadResults<Float_>(median, mad);
 }
 
 /**
- * Overload of `find_median_mad()` that uses an auxiliary buffer to avoid mutating the input array of values.
- *
- * @tparam Value_ Type for the input.
- * @tparam Float_ Floating-point type of the output.
- *
- * @param num Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `num`.
- * NaNs are ignored.
- * @param[out] buffer Pointer to an array of length `num`, containing a buffer to use for storing intermediate results.
- * Array contents are arbitrarily modified on function return and should not be used afterwards.
- * This can also be `NULL` in which case a buffer is allocated.
- * @param options Further options.
- *
- * @return Median and MAD for `metrics`, possibly after log-transformation.
- */
-template<typename Float_ = double, typename Value_> 
-FindMedianMadResults<Float_> find_median_mad(const std::size_t num, const Value_* const metrics, Float_* buffer, const FindMedianMadOptions& options) {
-    std::vector<Float_> xbuffer;
-    if (buffer == NULL) {
-        sanisizer::resize(xbuffer, num
-#ifdef SCRAN_QC_TEST_INIT
-            , SCRAN_QC_TEST_INIT
-#endif
-        );
-        buffer = xbuffer.data();
-    }
-    std::copy_n(metrics, num, buffer);
-    return find_median_mad(num, buffer, options);
-}
-
-/**
- * @brief Temporary data structures for `find_median_mad_blocked()`.
+ * @brief Workspace for `find_median_mad_blocked()`.
  *
  * This can be re-used across multiple `find_median_mad_blocked()` calls to avoid reallocation.
  *
  * @tparam Float_ Floating-point type of the buffer.
  */
 template<typename Float_>
-class FindMedianMadWorkspace {
+class FindMedianMadBlockedWorkspace {
 public:
     /**
      * @tparam Block_ Integer type of the block identifiers.
-     * @param num Number of observations.
+     * @param num_obs Number of observations.
      * @param[in] block Pointer to an array of block identifiers. 
      * The array should be of length equal to `num`.
      * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+     * @param num_blocks Total ncumber of blocks, i.e., \f$N\f$.
      */
     template<typename Block_>
-    FindMedianMadWorkspace(const std::size_t num, const Block_* const block) :
-        my_buffer(sanisizer::cast<I<decltype(my_buffer.size())> >(num))
+    FindMedianMadBlockedWorkspace(const std::size_t num_obs, const Block_* const block, const std::size_t num_blocks) :
+        my_buffer(sanisizer::cast<I<decltype(my_buffer.size())> >(num_obs))
     {
-        set(num, block);
+        set(num_obs, block, num_blocks);
     }
 
     /**
      * Default constructor.
      */
-    FindMedianMadWorkspace() = default;
+    FindMedianMadBlockedWorkspace() = default;
 
     /**
      * @tparam Block_ Integer type of the block identifiers.
-     * @param num Number of observations.
+     * @param num_obs Number of observations.
      * @param[in] block Pointer to an array of block identifiers.
      * The array should be of length equal to `num`.
      * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+     * @param num_blocks Total ncumber of blocks, i.e., \f$N\f$.
      */
     template<typename Block_>
-    void set(const std::size_t num, const Block_* const block) {
+    void set(const std::size_t num_obs, const Block_* const block, const std::size_t num_blocks) {
         my_block_starts.clear();
 
-        if (block) { 
-            for (I<decltype(num)> i = 0; i < num; ++i) {
-                const auto candidate = block[i];
-                if (sanisizer::is_greater_than_or_equal(candidate, my_block_starts.size())) {
-                    my_block_starts.resize(sanisizer::sum<I<decltype(my_block_starts.size())> >(candidate, 1));
-                }
-                ++my_block_starts[candidate];
-            }
-
-            std::size_t sofar = 0;
-            for (auto& s : my_block_starts) {
-                const auto last = sofar;
-                sofar += s;
-                s = last;
-            }
+        sanisizer::resize(my_block_starts, num_blocks);
+        for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
+            ++my_block_starts[block[i]];
         }
 
-        sanisizer::resize(my_buffer, num
+        std::size_t sofar = 0;
+        for (auto& s : my_block_starts) {
+            const auto last = sofar;
+            sofar += s;
+            s = last;
+        }
+
+        sanisizer::resize(my_buffer, num_obs
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
 #endif
         );
-        sanisizer::resize(my_block_ends, num
+        sanisizer::resize(my_block_ends, my_block_starts.size()
 #ifdef SCRAN_QC_TEST_INIT
             , SCRAN_QC_TEST_INIT
 #endif
@@ -253,56 +222,51 @@ public:
  * @tparam Block_ Integer type, containing the block IDs.
  * @tparam Value_ Numeric type of the input.
  *
- * @param num Number of observations.
+ * @param num_obs Number of observations.
  * @param[in] metrics Pointer to an array of observations of length `num`.
  * NaNs are ignored.
- * @param[in] block Optional pointer to an array of block identifiers.
- * If provided, the array should be of length equal to `num`.
- * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
- * If a null pointer is supplied, all observations are assumed to belong to the same block.
- * @param workspace Pointer to a workspace object, either (i) constructed on `num` and `block` or (ii) configured using `FindMedianMadWorkspace::set()` on `num` and `block`.
+ * @param[in] block Pointer to an array of length `num_obs`, containing block assignments.
+ * Eacn entry should be an integer ID in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param num_blocks Total number of blocks, i.e., \f$N\f$.
+ * @param workspace Pointer to a workspace object, either (i) constructed on `num_obs`, `block` and `num_blocks`
+ * or (ii) configured using `FindMedianMadWorkspace::set()` on `num_obs`, `block` and `num_blocks`.
  * The same object can be re-used across multiple calls to `find_median_mad_blocked()` with the same `num` and `block`.
- * This can also be `NULL` in which case a new workspace is allocated. 
+ * This can also be `NULL` in which case a new workspace is allocated inside this function. 
  * @param options Further options.
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
  */
 template<typename Output_ = double, typename Value_, typename Block_>
 std::vector<FindMedianMadResults<Output_> > find_median_mad_blocked(
-    const std::size_t num,
+    const std::size_t num_obs,
     const Value_* const metrics, 
     const Block_* const block,
-    FindMedianMadWorkspace<Output_>* workspace,
-    const FindMedianMadOptions& options)
-{
-    std::unique_ptr<FindMedianMadWorkspace<Output_> > xworkspace;
+    const std::size_t num_blocks,
+    FindMedianMadBlockedWorkspace<Output_>* workspace,
+    const FindMedianMadOptions& options
+) {
+    std::optional<FindMedianMadBlockedWorkspace<Output_> > xworkspace;
     if (workspace == NULL) {
-        xworkspace = std::make_unique<FindMedianMadWorkspace<Output_> >(num, block);
-        workspace = xworkspace.get();
+        xworkspace.emplace(num_obs, block, num_blocks);
+        workspace = &(*xworkspace);
+    } else {
+        assert(num_blocks == workspace->my_block_starts.size());
+        assert(num_obs == workspace->my_buffer.size());
     }
-
-    std::vector<FindMedianMadResults<Output_> > output;
 
     auto& buffer = workspace->my_buffer;
-    if (!block) {
-        std::copy_n(metrics, num, buffer.begin());
-        output.push_back(find_median_mad(num, buffer.data(), options));
-        return output;
-    }
-
     const auto& starts = workspace->my_block_starts;
     auto& ends = workspace->my_block_ends;
     std::copy(starts.begin(), starts.end(), ends.begin());
-    for (I<decltype(num)> i = 0; i < num; ++i) {
+    for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
         auto& pos = ends[block[i]];
         buffer[pos] = metrics[i];
         ++pos;
     }
 
-    // Using the ranges on the buffer.
-    const auto nblocks = starts.size();
-    output.reserve(nblocks);
-    for (I<decltype(nblocks)> g = 0; g < nblocks; ++g) {
+    std::vector<FindMedianMadResults<Output_> > output;
+    output.reserve(num_blocks);
+    for (I<decltype(num_blocks)> g = 0; g < num_blocks; ++g) {
         output.push_back(find_median_mad(ends[g] - starts[g], buffer.data() + starts[g], options));
     }
 

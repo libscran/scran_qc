@@ -106,7 +106,7 @@ TEST(RnaQualityControlFilters, Blocked) {
         auto thresholds = scran_qc::compute_rna_qc_filters(results, opt);
 
         std::vector<int> block(6);
-        auto bthresholds = scran_qc::compute_rna_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_rna_qc_filters_blocked(results, block.data(), 1, opt);
         EXPECT_EQ(thresholds.get_sum(), bthresholds.get_sum()[0]);
         EXPECT_EQ(thresholds.get_detected(), bthresholds.get_detected()[0]);
         EXPECT_EQ(thresholds.get_subset_proportion()[0], bthresholds.get_subset_proportion()[0][0]);
@@ -126,7 +126,7 @@ TEST(RnaQualityControlFilters, Blocked) {
 
         scran_qc::ComputeRnaQcFiltersOptions opt;
         std::vector<int> block { 0, 0, 0, 0, 1, 1, 1, 1 };
-        auto bthresholds = scran_qc::compute_rna_qc_filters_blocked(results, block.data(), opt);
+        auto bthresholds = scran_qc::compute_rna_qc_filters_blocked(results, block.data(), 2, opt);
 
         EXPECT_GT(bthresholds.get_sum()[0], 100);
         EXPECT_GT(bthresholds.get_detected()[0], 100);
