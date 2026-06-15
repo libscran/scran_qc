@@ -42,7 +42,7 @@ struct PerCellQcMetricsOptions {
     bool compute_max_value = true;
 
     /**
-     * Whether to store the index of the feature with the maximum value for each cell.
+     * Whether to report the index of the feature with the maximum value for each cell.
      * This option only affects the `per_cell_qc_metrics()` overload that returns a `PerCellQcMetricsResults` object.
      */
     bool compute_max_index = true;
@@ -104,16 +104,17 @@ struct PerCellQcMetricsBuffers {
     Detected_* detected = NULL;
 
     /**
-     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::max_index`.
-     * Set to `NULL` to skip this calculation.
-     */
-    Index_* max_index = NULL;
-
-    /**
      * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::max_value`.
      * Set to `NULL` to skip this calculation.
      */
     Value_* max_value = NULL;
+
+    /**
+     * Pointer to an array of length equal to the number of cells, equivalent to `PerCellQcMetricsResults::max_index`.
+     * On ties, the first feature is arbitrarily chosen.
+     * Set to `NULL` to skip this calculation.
+     */
+    Index_* max_index = NULL;
 
     /**
      * Vector of pointers of length equal to the number of feature subsets,
@@ -168,9 +169,8 @@ void compute_qc_direct_dense(
         auto ext = tatami::consecutive_extractor<false>(mat, false, start, length);
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
 
-        const bool do_max = output.max_index || output.max_value;
-
         const auto nsubsets = subsets.size();
+        const bool do_max = output.max_value || output.max_index;
 
         for (Index_ c = start, end = start + length; c < end; ++c) {
             auto ptr = ext->fetch(c, vbuffer.data());
@@ -188,24 +188,21 @@ void compute_qc_direct_dense(
             }
 
             if (do_max) {
-                Index_ max_index = 0;
-                Value_ max_value = 0;
-
                 if (NR) {
-                    max_value = ptr[0];
-                    for (I<decltype(NR)> r = 1; r < NR; ++r) {
-                        if (max_value < ptr[r]) {
-                            max_value = ptr[r];
-                            max_index = r;
-                        }
+                    const auto it = std::max_element(ptr, ptr + NR);
+                    if (output.max_value) {
+                        output.max_value[c] = *it;
                     }
-                }
-
-                if (output.max_index) {
-                    output.max_index[c] = max_index;
-                }
-                if (output.max_value) {
-                    output.max_value[c] = max_value;
+                    if (output.max_index) {
+                        output.max_index[c] = it - ptr;
+                    }
+                } else {
+                    if (output.max_value) {
+                        output.max_value[c] = 0;
+                    }
+                    if (output.max_index) {
+                        output.max_index[c] = 0;
+                    }
                 }
             }
 
@@ -275,9 +272,8 @@ void compute_qc_direct_sparse(
         auto vbuffer = tatami::create_container_of_Index_size<std::vector<Value_> >(NR);
         auto ibuffer = tatami::create_container_of_Index_size<std::vector<Index_> >(NR);
 
-        const bool do_max = output.max_index || output.max_value;
-
         const auto nsubsets = subsets.size();
+        const bool do_max = output.max_value || output.max_index;
 
         for (Index_ c = start, end = start + length; c < end; ++c) {
             auto range = ext->fetch(vbuffer.data(), ibuffer.data());
@@ -295,48 +291,53 @@ void compute_qc_direct_sparse(
             }
 
             if (do_max) {
-                Index_ max_index = 0;
-                Value_ max_value = 0;
-
                 if (range.number) {
-                    max_value = range.value[0];
-                    max_index = range.index[0];
-                    for (Index_ i = 1; i < range.number; ++i) {
-                        if (max_value < range.value[i]) {
-                            max_value = range.value[i];
-                            max_index = range.index[i];
+                    const auto it = std::max_element(range.value, range.value + range.number);
+                    if (*it > 0 || range.number == NR) {
+                        if (output.max_value) {
+                            output.max_value[c] = *it;
                         }
-                    }
-
-                    if (max_value <= 0 && range.number < NR) {
                         if (output.max_index) {
-                            // Figuring out the index of the first zero, assuming range.index is sorted.
-                            Index_ last = 0;
-                            for (Index_ i = 0; i < range.number; ++i) {
-                                if (range.index[i] > last) { // must be at least one intervening structural zero.
-                                    break;
-                                } else if (range.value[i] == 0) { // appears earlier than any structural zero, so it's already the maximum.
-                                    break;
-                                }
-                                last = range.index[i] + 1;
-                            }
-                            max_index = last;
+                            output.max_index[c] = range.index[it - range.value];
                         }
-                        max_value = 0;
+                    } else {
+                        if (output.max_value) {
+                            output.max_value[c] = 0;
+                        }
+                        if (output.max_index) {
+                            if (*it < 0) {
+                                // Find the first structural zero. 
+                                output.max_index[c] = range.number;
+                                for (Index_ i = 0; i < range.number; ++i) {
+                                    if (range.index[i] != i) { 
+                                        output.max_index[c] = i;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                // Find the first structural zero that occurs before the structural non-zero with a value of zero.
+                                const Index_ candidate = it - range.value; 
+                                output.max_index[c] = range.index[candidate];
+                                for (Index_ i = 0; i <= candidate; ++i) {
+                                    if (range.index[i] != i) {
+                                        output.max_index[c] = i;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                } else if (NR) {
-                    max_value = 0;
-                }
-
-                if (output.max_index) {
-                    output.max_index[c] = max_index;
-                }
-                if (output.max_value) {
-                    output.max_value[c] = max_value;
+                } else {
+                    if (output.max_value) {
+                        output.max_value[c] = 0;
+                    }
+                    if (output.max_index) {
+                        output.max_index[c] = 0;
+                    } 
                 }
             }
 
-           if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty is_in_subset.
+            if (!output.subset_sum.empty() || !output.subset_detected.empty()) { // protect against accessing an empty is_in_subset.
                 for (I<decltype(nsubsets)> s = 0; s < nsubsets; ++s) {
                     const auto& sub = [&]() -> const auto& {
                         if constexpr(std::is_pointer<Subset_>::value) {
@@ -382,6 +383,18 @@ void compute_qc_running(
      *** Setting up result containers ***
      ************************************/
 
+    const bool do_max = output.max_value || output.max_index;
+    std::optional<std::vector<Value_> > tmp_max_value;
+    Value_* max_value_output_ptr;
+    if (do_max) {
+        if (!output.max_value) {
+            tmp_max_value.emplace(tatami::cast_Index_to_container_size<std::vector<Index_> >(NC));
+            max_value_output_ptr = tmp_max_value->data();
+        } else {
+            max_value_output_ptr = output.max_value;
+        }
+    }
+
     const bool do_parallel = num_threads > 1;
     std::optional<std::vector<std::optional<std::vector<Sum_> > > > partial_sum;
     std::optional<std::vector<std::optional<std::vector<Detected_> > > > partial_detected;
@@ -396,14 +409,11 @@ void compute_qc_running(
         if (output.detected) {
             partial_detected.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_detected)> >(num_threads - 1));
         }
-        if (output.max_value) {
+        if (do_max) {
             partial_max_value.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_max_value)> >(num_threads - 1));
-        } else if (output.max_index) {
-            // We need the maximum value to determine the maximum index.
-            partial_max_value.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_max_value)> >(num_threads));
-        }
-        if (output.max_index) {
-            partial_max_index.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_max_index)> >(num_threads - 1));
+            if (output.max_index) {
+                partial_max_index.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_max_index)> >(num_threads - 1));
+            }
         }
         if (output.subset_sum.size()) {
             partial_subset_sum.emplace(tatami::cast_Index_to_container_size<I<decltype(*partial_subset_sum)> >(num_threads - 1));
@@ -420,11 +430,11 @@ void compute_qc_running(
     if (output.detected) {
         std::fill_n(output.detected, NC, 0);
     }
-    if (output.max_index) {
-        std::fill_n(output.max_index, NC, 0);
-    }
-    if (output.max_value) {
+    if (do_max && NR == 0) { // no need to zero if it's not empty, as it'll get filled by thread 0 upon encountering the first column.
         std::fill_n(output.max_value, NC, 0);
+        if (output.max_index) {
+            std::fill_n(output.max_index, NC, 0);
+        }
     }
     for (const auto sptr : output.subset_sum) {
         if (sptr) {
@@ -464,7 +474,7 @@ void compute_qc_running(
         if (!do_parallel || thread == 0) {
             sum_ptr = output.sum;
             detected_ptr = output.detected;
-            max_value_ptr = output.max_value;
+            max_value_ptr = max_value_output_ptr;
             max_index_ptr = output.max_index;
             if (output.subset_sum.size()) {
                 subset_sum_ptr = output.subset_sum.data();
@@ -482,13 +492,13 @@ void compute_qc_running(
                 detected_buffer.emplace(tatami::cast_Index_to_container_size<I<decltype(*detected_buffer)> >(NC));
                 detected_ptr = detected_buffer->data();
             }
-            if (output.max_value) {
+            if (do_max) {
                 max_value_buffer.emplace(tatami::cast_Index_to_container_size<I<decltype(*max_value_buffer)> >(NC));
                 max_value_ptr = max_value_buffer->data();
-            }
-            if (output.max_index) {
-                max_index_buffer.emplace(tatami::cast_Index_to_container_size<I<decltype(*max_index_buffer)> >(NC));
-                max_index_ptr = max_index_buffer->data();
+                if (output.max_index) {
+                    max_index_buffer.emplace(tatami::cast_Index_to_container_size<I<decltype(*max_index_buffer)> >(NC));
+                    max_index_ptr = max_index_buffer->data();
+                }
             }
             if (output.subset_sum.size()) {
                 subset_sum_ptrs.emplace(tatami::cast_Index_to_container_size<I<decltype(*subset_sum_ptrs)> >(nsubsets));
@@ -515,12 +525,6 @@ void compute_qc_running(
                     }
                 }
             }
-        }
-
-        // If we want the maximum index, we always need a space to store the current maximum value. 
-        if (max_index_ptr && !max_value_ptr) {
-            max_value_buffer.emplace(tatami::cast_Index_to_container_size<I<decltype(*max_value_buffer)> >(NC));
-            max_value_ptr = max_value_buffer->data();
         }
 
         if (is_sparse) {
@@ -553,9 +557,9 @@ void compute_qc_running(
                     }
                 }
 
-                if (max_value_ptr) {
+                if (do_max) {
                     if (r == 0) {
-                        // If it's non-zero, we set it; and if it's not set, then max_value_ptr was already zeroed, so it makes sense either way.
+                        std::fill_n(max_value_ptr, NC, 0);
                         for (Index_ i = 0; i < range.number; ++i) {
                             const auto j = range.index[i];
                             max_value_ptr[j] = range.value[i];
@@ -614,7 +618,7 @@ void compute_qc_running(
                 }
             }
 
-            if (max_value_ptr) {
+            if (do_max) {
                 // Checking anything with non-positive maximum, and replacing it with zero if there are any structural zeros.
                 for (Index_ c = 0; c < NC; ++c) {
                     const auto last_nz = (*nonzeros_at_start)[c];
@@ -666,7 +670,7 @@ void compute_qc_running(
                     }
                 }
 
-                if (max_value_ptr) {
+                if (do_max) {
                     if (r == 0) {
                         std::copy_n(ptr, NC, max_value_ptr);
                         if (max_index_ptr) {
@@ -725,11 +729,11 @@ void compute_qc_running(
                 if (output.detected) {
                     (*partial_detected)[thread - 1] = std::move(detected_buffer);
                 }
-                if (output.max_value) {
+                if (do_max) {
                     (*partial_max_value)[thread - 1] = std::move(max_value_buffer);
-                }
-                if (output.max_index) {
-                    (*partial_max_index)[thread - 1] = std::move(max_index_buffer);
+                    if (output.max_index) {
+                        (*partial_max_index)[thread - 1] = std::move(max_index_buffer);
+                    }
                 }
                 if (output.subset_sum.size()) {
                     (*partial_subset_sum)[thread - 1] = std::move(subset_sum_buffers);
@@ -737,10 +741,6 @@ void compute_qc_running(
                 if (output.subset_detected.size()) {
                     (*partial_subset_detected)[thread - 1] = std::move(subset_detected_buffers);
                 }
-            }
-            if (!output.max_value && output.max_index) {
-                // We always need the maximum value to determine which thread's maximum is bigger.
-                (*partial_max_value)[thread] = std::move(max_value_buffer);
             }
         }
     }, NR, num_threads);
@@ -769,13 +769,13 @@ void compute_qc_running(
         }
 
         // All used threads will have processed non-empty ranges, so we don't need to worry about the validity of the maxima from each thread.
-        if (output.max_value && output.max_index) {
+        if (output.max_index) {
             for (int u = 1; u < num_used; ++u) {
                 const auto& curmaxval = *((*partial_max_value)[u - 1]);
                 const auto& curmaxidx = *((*partial_max_index)[u - 1]);
                 for (Index_ c = 0; c < NC; ++c) {
-                    if (curmaxval[c] > output.max_value[c]) {
-                        output.max_value[c] = curmaxval[c];
+                    if (curmaxval[c] > max_value_output_ptr[c]) {
+                        max_value_output_ptr[c] = curmaxval[c];
                         output.max_index[c] = curmaxidx[c];
                     }
                 }
@@ -786,18 +786,6 @@ void compute_qc_running(
                 for (Index_ c = 0; c < NC; ++c) {
                     if (curmaxval[c] > output.max_value[c]) {
                         output.max_value[c] = curmaxval[c];
-                    }
-                }
-            }
-        } else if (output.max_index) {
-            auto& refmaxval = *((*partial_max_value)[0]);
-            for (int u = 1; u < num_used; ++u) {
-                const auto& curmaxval = *((*partial_max_value)[u]);
-                const auto& curmaxidx = *((*partial_max_index)[u - 1]);
-                for (Index_ c = 0; c < NC; ++c) {
-                    if (curmaxval[c] > refmaxval[c]) {
-                        refmaxval[c] = curmaxval[c];
-                        output.max_index[c] = curmaxidx[c];
                     }
                 }
             }
@@ -881,17 +869,17 @@ struct PerCellQcMetricsResults {
     std::vector<Detected_> detected;
 
     /**
-     * Row index of the most-expressed feature in each cell.
-     * On ties, the first feature is arbitrarily chosen.
-     * Empty if `PerCellQcMetricsOptions::compute_max_index` is false.
-     */
-    std::vector<Index_> max_index;
-
-    /**
      * Maximum value in each cell.
      * Empty if `PerCellQcMetricsOptions::compute_max_value` is false.
      */
     std::vector<Value_> max_value;
+
+    /**
+     * Row index of the most-expressed feature in each cell.
+     * On ties, the first feature is arbitrarily chosen.
+     * Empty if either `PerCellQcMetricsOptions::compute_max_index` or `PerCellQcMetricsOptions::compute_max_value` is false.
+     */
+    std::vector<Index_> max_index;
 
     /**
      * Sum of expression values for each feature subset in each cell.
@@ -1002,6 +990,7 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
         );
         buffers.sum = output.sum.data();
     }
+
     if (options.compute_detected) {
         tatami::resize_container_to_Index_size(output.detected, ncells
 #ifdef SCRAN_QC_TEST_INIT
@@ -1010,14 +999,7 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
         );
         buffers.detected = output.detected.data();
     }
-    if (options.compute_max_index) {
-        tatami::resize_container_to_Index_size(output.max_index, ncells
-#ifdef SCRAN_QC_TEST_INIT
-            , SCRAN_QC_TEST_INIT
-#endif
-        );
-        buffers.max_index = output.max_index.data();
-    }
+
     if (options.compute_max_value) {
         tatami::resize_container_to_Index_size(output.max_value, ncells
 #ifdef SCRAN_QC_TEST_INIT
@@ -1025,6 +1007,14 @@ PerCellQcMetricsResults<Sum_, Detected_, Value_, Index_> per_cell_qc_metrics(
 #endif
         );
         buffers.max_value = output.max_value.data();
+    }
+    if (options.compute_max_index) {
+        tatami::resize_container_to_Index_size(output.max_index, ncells
+#ifdef SCRAN_QC_TEST_INIT
+            , SCRAN_QC_TEST_INIT
+#endif
+        );
+        buffers.max_index = output.max_index.data();
     }
 
     const auto nsubsets = subsets.size();

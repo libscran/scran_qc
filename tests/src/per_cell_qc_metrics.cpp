@@ -190,6 +190,8 @@ INSTANTIATE_TEST_SUITE_P(
     ::testing::Values(1, 3) // number of threads
 );
 
+/**********************************/
+
 class PerCellQcMetricsTestMaxed : public ::testing::TestWithParam<int> {
 protected:
     std::shared_ptr<tatami::NumericMatrix> dense_row, dense_column, sparse_row, sparse_column;
@@ -294,7 +296,7 @@ TEST_P(PerCellQcMetricsTestMaxed, DenseNegatives) {
     EXPECT_EQ(res4.max_index, ref.max_index);
 }
 
-TEST_P(PerCellQcMetricsTestMaxed, AllZeros) {
+TEST_P(PerCellQcMetricsTestMaxed, DenseZeros) {
     int threads = GetParam();
 
     {
@@ -334,12 +336,60 @@ TEST_P(PerCellQcMetricsTestMaxed, AllZeros) {
     EXPECT_EQ(res4.max_index, ref.max_index);
 }
 
-TEST_P(PerCellQcMetricsTestMaxed, StructuralZeros) {
+TEST_P(PerCellQcMetricsTestMaxed, SparseZeros) {
     int threads = GetParam();
 
     {
-        // Fewer rows, so we're more likely to get a row where the maximum
-        // is determined by one of the structural zeros.
+        size_t nr = 53, nc = 1001;
+
+        std::vector<int> i;
+        std::vector<double> x;
+        std::vector<size_t> p(1);
+        std::mt19937_64 rng(98712 * threads);
+        std::uniform_real_distribution<> structural(0.0, 1.0);
+
+        for (size_t c = 0; c < nc; ++c) {
+            const double density = structural(rng); // try out different densities for different cells.
+            for (size_t r = 0; r < nr; ++r) {
+                if (structural(rng) < density) {
+                    i.push_back(r);
+                    x.push_back(0); // spiking in structural non-zeros that are actually zero.
+                }
+            }
+            p.push_back(i.size());
+        }
+
+        // Conversion to row-major doesn't discard structural zeros when convert_to_compressed_sparse is used.
+        sparse_column.reset(new tatami::CompressedSparseColumnMatrix<double, int>(nr, nc, std::move(x), std::move(i), std::move(p)));
+        sparse_row = tatami::convert_to_compressed_sparse(sparse_column.get(), true);
+        dense_row = tatami::convert_to_dense(sparse_column.get(), true);
+        dense_column = tatami::convert_to_dense(sparse_column.get(), false);
+    }
+
+    scran_qc::PerCellQcMetricsOptions opt;
+    opt.num_threads = threads;
+    auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
+    EXPECT_EQ(ref.max_value, std::vector<double>(dense_row->ncol()));
+    EXPECT_EQ(ref.max_index, std::vector<int>(dense_row->ncol()));
+
+    auto res1 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
+    EXPECT_EQ(res1.max_value, ref.max_value);
+    EXPECT_EQ(res1.max_index, ref.max_index);
+
+    auto res2 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
+    EXPECT_EQ(res2.max_value, ref.max_value);
+    EXPECT_EQ(res2.max_index, ref.max_index);
+
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
+    EXPECT_EQ(res3.max_value, ref.max_value);
+    EXPECT_EQ(res3.max_index, ref.max_index);
+}
+
+TEST_P(PerCellQcMetricsTestMaxed, SparseMixed) {
+    int threads = GetParam();
+
+    {
+        // Fewer rows, so we're more likely to get a row where the maximum is determined by one of the structural zeros.
         size_t nr = 9, nc = 1001;
 
         std::vector<int> i;
@@ -349,59 +399,67 @@ TEST_P(PerCellQcMetricsTestMaxed, StructuralZeros) {
         std::uniform_real_distribution<> structural(0.0, 1.0);
 
         for (size_t c = 0; c < nc; ++c) {
+            // Try out different densities for different cells.
+            // We also try out different mixes of negative/zero/positive values.
+            const double overall_density = structural(rng);
+
+            const double negative_share = structural(rng); 
+            const double zero_share = structural(rng); 
+            const double denom = negative_share + zero_share;
+            const double negative_threshold = negative_share / denom;
+
             for (size_t r = 0; r < nr; ++r) {
-                if (structural(rng) < 0.2) {
+                if (structural(rng) < overall_density) {
                     i.push_back(r);
-                    auto choice = structural(rng);
-                    if (choice < 0.3) {
+                    const auto choice = structural(rng);
+                    if (choice < negative_threshold) {
                         x.push_back(-1);
-                    } else if (choice < 0.7) {
-                        x.push_back(0); // spiking in structural values that are actually non-zero.
                     } else {
-                        x.push_back(1);
+                        x.push_back(0);
                     }
                 }
             }
             p.push_back(i.size());
         }
 
-        // Tests are only relevant to sparse matrices here. Conversion to row-major
-        // doesn't discard structural zeros when convert_to_compressed_sparse is used.
+        // Conversion to row-major doesn't discard structural zeros when convert_to_compressed_sparse is used.
         sparse_column.reset(new tatami::CompressedSparseColumnMatrix<double, int>(nr, nc, std::move(x), std::move(i), std::move(p)));
         sparse_row = tatami::convert_to_compressed_sparse(sparse_column.get(), true);
-
         dense_row = tatami::convert_to_dense(sparse_column.get(), true);
+        dense_column = tatami::convert_to_dense(sparse_column.get(), false);
     }
 
     scran_qc::PerCellQcMetricsOptions opt;
+    opt.num_threads = threads;
     auto ref = scran_qc::per_cell_qc_metrics(*dense_row, std::vector<char*>{}, opt);
 
-    opt.num_threads = threads;
-    auto res1 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
+    auto res1 = scran_qc::per_cell_qc_metrics(*dense_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res1.max_value, ref.max_value);
     EXPECT_EQ(res1.max_index, ref.max_index);
 
-    auto res2 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
+    auto res2 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
     EXPECT_EQ(res2.max_value, ref.max_value);
     EXPECT_EQ(res2.max_index, ref.max_index);
+
+    auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
+    EXPECT_EQ(res3.max_value, ref.max_value);
+    EXPECT_EQ(res3.max_index, ref.max_index);
 }
 
-TEST_P(PerCellQcMetricsTestMaxed, OkayOnMissing) {
+TEST_P(PerCellQcMetricsTestMaxed, SkipMax) {
     auto threads = GetParam();
 
-    {
-        size_t nr = 20, nc = 100;
-        auto vec = scran_tests::simulate_vector(nr * nc, [&]{
-            scran_tests::SimulateVectorParameters sparams;
-            sparams.density = 0.2;
-            sparams.lower = 1;
-            sparams.upper = 5;
-            sparams.seed = 42 * threads;
-            return sparams;
-        }());
-        dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
-        propagate();
-    }
+    size_t nr = 20, nc = 100;
+    auto vec = scran_tests::simulate_vector(nr * nc, [&]{
+        scran_tests::SimulateVectorParameters sparams;
+        sparams.density = 0.2;
+        sparams.lower = 1;
+        sparams.upper = 5;
+        sparams.seed = 42 * threads;
+        return sparams;
+    }());
+    dense_row.reset(new tatami::DenseRowMatrix<double, int>(nr, nc, std::move(vec)));
+    propagate();
 
     {
         scran_qc::PerCellQcMetricsOptions opt;
@@ -419,7 +477,7 @@ TEST_P(PerCellQcMetricsTestMaxed, OkayOnMissing) {
         auto res3 = scran_qc::per_cell_qc_metrics(*sparse_row, std::vector<char*>{}, opt);
         EXPECT_TRUE(res3.max_value.empty());
         EXPECT_EQ(res3.max_index, res1.max_index);
-        
+
         auto res4 = scran_qc::per_cell_qc_metrics(*sparse_column, std::vector<char*>{}, opt);
         EXPECT_TRUE(res4.max_value.empty());
         EXPECT_EQ(res4.max_index, res1.max_index);
@@ -453,6 +511,8 @@ INSTANTIATE_TEST_SUITE_P(
     PerCellQcMetricsTestMaxed,
     ::testing::Values(1, 3) // number of threads
 );
+
+/**********************************/
 
 TEST(PerCellQcMetrics, Empty) {
     size_t nr = 0, nc = 50;
