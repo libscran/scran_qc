@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['findmedianmadoptions_0',['FindMedianMadOptions',['../structscran__qc_1_1FindMedianMadOptions.html',1,'scran_qc']]],
-  ['findmedianmadresults_1',['FindMedianMadResults',['../structscran__qc_1_1FindMedianMadResults.html',1,'scran_qc']]],
-  ['findmedianmadworkspace_2',['FindMedianMadWorkspace',['../classscran__qc_1_1FindMedianMadWorkspace.html',1,'scran_qc']]],
+  ['findmedianmadblockedworkspace_0',['FindMedianMadBlockedWorkspace',['../classscran__qc_1_1FindMedianMadBlockedWorkspace.html',1,'scran_qc']]],
+  ['findmedianmadoptions_1',['FindMedianMadOptions',['../structscran__qc_1_1FindMedianMadOptions.html',1,'scran_qc']]],
+  ['findmedianmadresults_2',['FindMedianMadResults',['../structscran__qc_1_1FindMedianMadResults.html',1,'scran_qc']]],
   ['fixedvectororacle_3',['FixedVectorOracle',['https://tatami-inc.github.io/tatami/classtatami_1_1FixedVectorOracle.html',1,'tatami']]],
   ['fixedvieworacle_4',['FixedViewOracle',['https://tatami-inc.github.io/tatami/classtatami_1_1FixedViewOracle.html',1,'tatami']]],
   ['forceddense_5',['ForcedDense',['https://tatami-inc.github.io/tatami/classtatami_1_1ForcedDense.html',1,'tatami']]],

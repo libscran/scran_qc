@@ -112,6 +112,8 @@ $(function(){ initResizable(false); });
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
 <code>#include &quot;quickstats/quickstats.hpp&quot;</code><br />
 <code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
 <code>#include &quot;utils.hpp&quot;</code><br />
@@ -120,23 +122,27 @@ Include dependency graph for find_median_mad.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="find__median__mad_8hpp__incl.png" border="0" usemap="#ascran__qc_2find__median__mad_8hpp" alt=""/></div>
 <map name="ascran__qc_2find__median__mad_8hpp" id="ascran__qc_2find__median__mad_8hpp">
-<area shape="rect" title="Compute the median and MAD from an array of values." alt="" coords="254,5,401,46"/>
+<area shape="rect" title="Compute the median and MAD from an array of values." alt="" coords="344,5,492,46"/>
 <area shape="rect" title=" " alt="" coords="5,94,63,120"/>
-<area shape="poly" title=" " alt="" coords="254,49,78,96,77,90,253,44"/>
+<area shape="poly" title=" " alt="" coords="344,42,223,65,78,96,77,91,222,59,343,37"/>
 <area shape="rect" title=" " alt="" coords="86,94,139,120"/>
-<area shape="poly" title=" " alt="" coords="275,49,154,93,152,88,273,44"/>
+<area shape="poly" title=" " alt="" coords="344,47,154,96,153,90,343,42"/>
 <area shape="rect" title=" " alt="" coords="163,94,220,120"/>
-<area shape="poly" title=" " alt="" coords="295,49,226,88,224,84,292,44"/>
+<area shape="poly" title=" " alt="" coords="362,49,236,93,234,88,361,44"/>
 <area shape="rect" title=" " alt="" coords="244,94,318,120"/>
-<area shape="poly" title=" " alt="" coords="318,48,298,82,293,79,314,45"/>
+<area shape="poly" title=" " alt="" coords="385,49,316,88,313,84,382,44"/>
 <area shape="rect" title=" " alt="" coords="342,94,406,120"/>
-<area shape="poly" title=" " alt="" coords="341,45,361,79,357,82,337,48"/>
-<area shape="rect" title=" " alt="" coords="431,94,600,120"/>
-<area shape="poly" title=" " alt="" coords="375,44,474,85,472,90,373,49"/>
-<area shape="rect" title=" " alt="" coords="624,94,775,120"/>
-<area shape="poly" title=" " alt="" coords="402,40,628,88,627,93,401,45"/>
-<area shape="rect" title=" " alt="" coords="799,94,869,120"/>
-<area shape="poly" title=" " alt="" coords="402,33,573,56,785,91,784,96,572,61,401,38"/>
+<area shape="poly" title=" " alt="" coords="409,48,390,82,386,79,405,45"/>
+<area shape="rect" title=" " alt="" coords="430,94,496,120"/>
+<area shape="poly" title=" " alt="" coords="432,45,451,79,446,82,427,48"/>
+<area shape="rect" title=" " alt="" coords="520,94,585,120"/>
+<area shape="poly" title=" " alt="" coords="453,44,520,83,517,88,450,49"/>
+<area shape="rect" title=" " alt="" coords="609,94,779,120"/>
+<area shape="poly" title=" " alt="" coords="488,44,637,87,636,92,486,49"/>
+<area shape="rect" title=" " alt="" coords="802,94,954,120"/>
+<area shape="poly" title=" " alt="" coords="492,37,792,88,791,93,491,42"/>
+<area shape="rect" title=" " alt="" coords="978,94,1047,120"/>
+<area shape="poly" title=" " alt="" coords="492,31,700,52,830,70,963,91,962,96,829,75,700,58,492,36"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -170,13 +176,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">scran_qc::FindMedianMadOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad()</a></code>.  <a href="structscran__qc_1_1FindMedianMadOptions.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad()</a></code>.  <a href="structscran__qc_1_1FindMedianMadOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1FindMedianMadResults.html">scran_qc::FindMedianMadResults&lt; Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">find_median_mad()</a></code>.  <a href="structscran__qc_1_1FindMedianMadResults.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad()</a></code>.  <a href="structscran__qc_1_1FindMedianMadResults.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">scran_qc::FindMedianMadWorkspace&lt; Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporary data structures for <code><a class="el" href="namespacescran__qc.html#aebf6a0321ea6cdd2b3765929a5652739">find_median_mad_blocked()</a></code>.  <a href="classscran__qc_1_1FindMedianMadWorkspace.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">scran_qc::FindMedianMadBlockedWorkspace&lt; Float_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Workspace for <code><a class="el" href="namespacescran__qc.html#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code>.  <a href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -187,15 +193,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad9809cc2f8c52885e7c3132f6e867b0c" id="r_ad9809cc2f8c52885e7c3132f6e867b0c"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:ad9809cc2f8c52885e7c3132f6e867b0c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ad9809cc2f8c52885e7c3132f6e867b0c">scran_qc::find_median_mad</a> (std::size_t num, Float_ *metrics, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
-<tr class="separator:ad9809cc2f8c52885e7c3132f6e867b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a67cc54a76c1a538274aec61683f493" id="r_a3a67cc54a76c1a538274aec61683f493"><td class="memTemplParams" colspan="2">template&lt;typename Float_  = double, typename Value_ &gt; </td></tr>
-<tr class="memitem:a3a67cc54a76c1a538274aec61683f493"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a3a67cc54a76c1a538274aec61683f493">scran_qc::find_median_mad</a> (const std::size_t num, const Value_ *const metrics, Float_ *buffer, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
-<tr class="separator:a3a67cc54a76c1a538274aec61683f493"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf6a0321ea6cdd2b3765929a5652739" id="r_aebf6a0321ea6cdd2b3765929a5652739"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; </td></tr>
-<tr class="memitem:aebf6a0321ea6cdd2b3765929a5652739"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Output_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#aebf6a0321ea6cdd2b3765929a5652739">scran_qc::find_median_mad_blocked</a> (const std::size_t num, const Value_ *const metrics, const Block_ *const block, <a class="el" href="classscran__qc_1_1FindMedianMadWorkspace.html">FindMedianMadWorkspace</a>&lt; Output_ &gt; *workspace, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
-<tr class="separator:aebf6a0321ea6cdd2b3765929a5652739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7355a4b0dbe0ac2ee0d719d23512c46d" id="r_a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
+<tr class="memitem:a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a7355a4b0dbe0ac2ee0d719d23512c46d">scran_qc::find_median_mad</a> (std::size_t num_obs, Float_ *metrics, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
+<tr class="separator:a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64c3832d38ad9e6d7ba70f98cf0325e3" id="r_a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Output_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a64c3832d38ad9e6d7ba70f98cf0325e3">scran_qc::find_median_mad_blocked</a> (const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, <a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Output_ &gt; *workspace, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
+<tr class="separator:a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Compute the median and MAD from an array of values. </p>

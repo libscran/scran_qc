@@ -1,19 +1,23 @@
 <map id="scran_qc/find_median_mad.hpp" name="scran_qc/find_median_mad.hpp">
-<area shape="rect" id="Node000001" title="Compute the median and MAD from an array of values." alt="" coords="254,5,401,46"/>
+<area shape="rect" id="Node000001" title="Compute the median and MAD from an array of values." alt="" coords="344,5,492,46"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,94,63,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="254,49,78,96,77,90,253,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="344,42,223,65,78,96,77,91,222,59,343,37"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="86,94,139,120"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="275,49,154,93,152,88,273,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="344,47,154,96,153,90,343,42"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="163,94,220,120"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="295,49,226,88,224,84,292,44"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="362,49,236,93,234,88,361,44"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="244,94,318,120"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="318,48,298,82,293,79,314,45"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="385,49,316,88,313,84,382,44"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="342,94,406,120"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="341,45,361,79,357,82,337,48"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="431,94,600,120"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="375,44,474,85,472,90,373,49"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="624,94,775,120"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="402,40,628,88,627,93,401,45"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="799,94,869,120"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="402,33,573,56,785,91,784,96,572,61,401,38"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="409,48,390,82,386,79,405,45"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="430,94,496,120"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="432,45,451,79,446,82,427,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="520,94,585,120"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="453,44,520,83,517,88,450,49"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="609,94,779,120"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="488,44,637,87,636,92,486,49"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="802,94,954,120"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="492,37,792,88,791,93,491,42"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="978,94,1047,120"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="492,31,700,52,830,70,963,91,962,96,829,75,700,58,492,36"/>
 </map>
