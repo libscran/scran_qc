@@ -698,17 +698,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Index_ *</type>
-      <name>max_index</name>
-      <anchorfile>structscran__qc_1_1PerCellQcMetricsBuffers.html</anchorfile>
-      <anchor>a36bca455e5676c0f2568e8dbe85512e4</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>Value_ *</type>
       <name>max_value</name>
       <anchorfile>structscran__qc_1_1PerCellQcMetricsBuffers.html</anchorfile>
       <anchor>a2c2f12d7000fa074d539aed709359e56</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Index_ *</type>
+      <name>max_index</name>
+      <anchorfile>structscran__qc_1_1PerCellQcMetricsBuffers.html</anchorfile>
+      <anchor>a36bca455e5676c0f2568e8dbe85512e4</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -801,17 +801,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::vector&lt; Index_ &gt;</type>
-      <name>max_index</name>
-      <anchorfile>structscran__qc_1_1PerCellQcMetricsResults.html</anchorfile>
-      <anchor>a9498a45a7329e857c4f7dc0e0ff08328</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>std::vector&lt; Value_ &gt;</type>
       <name>max_value</name>
       <anchorfile>structscran__qc_1_1PerCellQcMetricsResults.html</anchorfile>
       <anchor>a9de5d831cd49be72ef9f2ec9000b191a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Index_ &gt;</type>
+      <name>max_index</name>
+      <anchorfile>structscran__qc_1_1PerCellQcMetricsResults.html</anchorfile>
+      <anchor>a9498a45a7329e857c4f7dc0e0ff08328</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">

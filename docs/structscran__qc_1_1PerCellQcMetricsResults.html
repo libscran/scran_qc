@@ -115,10 +115,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aac351652c341a6322813876bf0aa9200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3522cae2b1667ccfc3957f791566ae7" id="r_aa3522cae2b1667ccfc3957f791566ae7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Detected_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3522cae2b1667ccfc3957f791566ae7">detected</a></td></tr>
 <tr class="separator:aa3522cae2b1667ccfc3957f791566ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9498a45a7329e857c4f7dc0e0ff08328" id="r_a9498a45a7329e857c4f7dc0e0ff08328"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9498a45a7329e857c4f7dc0e0ff08328">max_index</a></td></tr>
-<tr class="separator:a9498a45a7329e857c4f7dc0e0ff08328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9de5d831cd49be72ef9f2ec9000b191a" id="r_a9de5d831cd49be72ef9f2ec9000b191a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Value_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9de5d831cd49be72ef9f2ec9000b191a">max_value</a></td></tr>
 <tr class="separator:a9de5d831cd49be72ef9f2ec9000b191a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9498a45a7329e857c4f7dc0e0ff08328" id="r_a9498a45a7329e857c4f7dc0e0ff08328"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9498a45a7329e857c4f7dc0e0ff08328">max_index</a></td></tr>
+<tr class="separator:a9498a45a7329e857c4f7dc0e0ff08328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea53db2b4bdce55bb1274245462f34a0" id="r_aea53db2b4bdce55bb1274245462f34a0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; Sum_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea53db2b4bdce55bb1274245462f34a0">subset_sum</a></td></tr>
 <tr class="separator:aea53db2b4bdce55bb1274245462f34a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa06d90ea11ce41bddb43699cf7f4f83c" id="r_aa06d90ea11ce41bddb43699cf7f4f83c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; Detected_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa06d90ea11ce41bddb43699cf7f4f83c">subset_detected</a></td></tr>
@@ -172,23 +172,6 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
 
 </div>
 </div>
-<a id="a9498a45a7329e857c4f7dc0e0ff08328" name="a9498a45a7329e857c4f7dc0e0ff08328"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9498a45a7329e857c4f7dc0e0ff08328">&#9670;&#160;</a></span>max_index</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;Index_&gt; <a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html">scran_qc::PerCellQcMetricsResults</a>&lt; Sum_, Detected_, Value_, Index_ &gt;::max_index</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Row index of the most-expressed feature in each cell. On ties, the first feature is arbitrarily chosen. Empty if <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#af06162768fa4ad54d0480167110d0640">PerCellQcMetricsOptions::compute_max_index</a></code> is false. </p>
-
-</div>
-</div>
 <a id="a9de5d831cd49be72ef9f2ec9000b191a" name="a9de5d831cd49be72ef9f2ec9000b191a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9de5d831cd49be72ef9f2ec9000b191a">&#9670;&#160;</a></span>max_value</h2>
 
@@ -203,6 +186,23 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
       </table>
 </div><div class="memdoc">
 <p>Maximum value in each cell. Empty if <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a3fef58b5ed559caa982c5a970ebabedf">PerCellQcMetricsOptions::compute_max_value</a></code> is false. </p>
+
+</div>
+</div>
+<a id="a9498a45a7329e857c4f7dc0e0ff08328" name="a9498a45a7329e857c4f7dc0e0ff08328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9498a45a7329e857c4f7dc0e0ff08328">&#9670;&#160;</a></span>max_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Index_&gt; <a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html">scran_qc::PerCellQcMetricsResults</a>&lt; Sum_, Detected_, Value_, Index_ &gt;::max_index</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Row index of the most-expressed feature in each cell. On ties, the first feature is arbitrarily chosen. Empty if either <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#af06162768fa4ad54d0480167110d0640">PerCellQcMetricsOptions::compute_max_index</a></code> or <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a3fef58b5ed559caa982c5a970ebabedf">PerCellQcMetricsOptions::compute_max_value</a></code> is false. </p>
 
 </div>
 </div>

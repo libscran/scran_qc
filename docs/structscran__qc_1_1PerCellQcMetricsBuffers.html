@@ -115,10 +115,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a6ed4f9746c38a212f4a51d367a92f4cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9290094f79352013f917fbc34c2b9373" id="r_a9290094f79352013f917fbc34c2b9373"><td class="memItemLeft" align="right" valign="top">Detected_ *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9290094f79352013f917fbc34c2b9373">detected</a> = NULL</td></tr>
 <tr class="separator:a9290094f79352013f917fbc34c2b9373"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36bca455e5676c0f2568e8dbe85512e4" id="r_a36bca455e5676c0f2568e8dbe85512e4"><td class="memItemLeft" align="right" valign="top">Index_ *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36bca455e5676c0f2568e8dbe85512e4">max_index</a> = NULL</td></tr>
-<tr class="separator:a36bca455e5676c0f2568e8dbe85512e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c2f12d7000fa074d539aed709359e56" id="r_a2c2f12d7000fa074d539aed709359e56"><td class="memItemLeft" align="right" valign="top">Value_ *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c2f12d7000fa074d539aed709359e56">max_value</a> = NULL</td></tr>
 <tr class="separator:a2c2f12d7000fa074d539aed709359e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36bca455e5676c0f2568e8dbe85512e4" id="r_a36bca455e5676c0f2568e8dbe85512e4"><td class="memItemLeft" align="right" valign="top">Index_ *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36bca455e5676c0f2568e8dbe85512e4">max_index</a> = NULL</td></tr>
+<tr class="separator:a36bca455e5676c0f2568e8dbe85512e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecc21fa914a3872305c28b1e4789eca1" id="r_aecc21fa914a3872305c28b1e4789eca1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Sum_ * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aecc21fa914a3872305c28b1e4789eca1">subset_sum</a></td></tr>
 <tr class="separator:aecc21fa914a3872305c28b1e4789eca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6b382c3941795d62efe8367ef2d985f" id="r_ae6b382c3941795d62efe8367ef2d985f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Detected_ * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6b382c3941795d62efe8367ef2d985f">subset_detected</a></td></tr>
@@ -171,23 +171,6 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
 
 </div>
 </div>
-<a id="a36bca455e5676c0f2568e8dbe85512e4" name="a36bca455e5676c0f2568e8dbe85512e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36bca455e5676c0f2568e8dbe85512e4">&#9670;&#160;</a></span>max_index</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Index_* <a class="el" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">scran_qc::PerCellQcMetricsBuffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt;::max_index = NULL</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Pointer to an array of length equal to the number of cells, equivalent to <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html#a9498a45a7329e857c4f7dc0e0ff08328">PerCellQcMetricsResults::max_index</a></code>. Set to <code>NULL</code> to skip this calculation. </p>
-
-</div>
-</div>
 <a id="a2c2f12d7000fa074d539aed709359e56" name="a2c2f12d7000fa074d539aed709359e56"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c2f12d7000fa074d539aed709359e56">&#9670;&#160;</a></span>max_value</h2>
 
@@ -202,6 +185,23 @@ template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Inde
       </table>
 </div><div class="memdoc">
 <p>Pointer to an array of length equal to the number of cells, equivalent to <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html#a9de5d831cd49be72ef9f2ec9000b191a">PerCellQcMetricsResults::max_value</a></code>. Set to <code>NULL</code> to skip this calculation. </p>
+
+</div>
+</div>
+<a id="a36bca455e5676c0f2568e8dbe85512e4" name="a36bca455e5676c0f2568e8dbe85512e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36bca455e5676c0f2568e8dbe85512e4">&#9670;&#160;</a></span>max_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Sum_ , typename Detected_ , typename Value_ , typename Index_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Index_* <a class="el" href="structscran__qc_1_1PerCellQcMetricsBuffers.html">scran_qc::PerCellQcMetricsBuffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt;::max_index = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Pointer to an array of length equal to the number of cells, equivalent to <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html#a9498a45a7329e857c4f7dc0e0ff08328">PerCellQcMetricsResults::max_index</a></code>. On ties, the first feature is arbitrarily chosen. Set to <code>NULL</code> to skip this calculation. </p>
 
 </div>
 </div>
