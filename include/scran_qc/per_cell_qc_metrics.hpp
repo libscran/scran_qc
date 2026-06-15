@@ -8,7 +8,6 @@
 #include <optional>
 
 #include "tatami/tatami.hpp"
-#include "tatami_stats/tatami_stats.hpp"
 #include "sanisizer/sanisizer.hpp"
 
 #include "utils.hpp"

@@ -1,5 +1,6 @@
 #include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
+#include "tatami_stats/tatami_stats.hpp"
 
 #include "scran_qc/per_cell_qc_metrics.hpp"
 

@@ -1,5 +1,6 @@
 #include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
+#include "tatami_stats/tatami_stats.hpp"
 
 #include "scran_qc/crispr_quality_control.hpp"
 
@@ -24,16 +25,13 @@ protected:
 TEST_F(CrisprQualityControlMetricsTest, Basic) {
     scran_qc::ComputeCrisprQcMetricsOptions opts;
     auto res = scran_qc::compute_crispr_qc_metrics(*mat, opts);
-    EXPECT_EQ(res.sum, tatami_stats::sums::by_column(mat.get()));
+    EXPECT_EQ(res.sum, tatami_stats::sum(false, *mat, {}));
 
-    auto nonzeros = tatami_stats::counts::zero::by_column(mat.get());
-    for (auto& nz : nonzeros) {
-        nz = mat->nrow() - nz;
-    }
+    auto nonzeros = tatami_stats::count<int>(false, *mat, [](double val) -> bool { return val != 0; }, {});
     EXPECT_EQ(res.detected, nonzeros);
 
-    auto maxed = tatami_stats::ranges::by_column(mat.get());
-    EXPECT_EQ(res.max_value, maxed.second);
+    auto maxed = tatami_stats::range(false, *mat, {});
+    EXPECT_EQ(res.max_value, maxed.maximum);
 
     size_t NR = mat->nrow(), NC = mat->ncol();
     std::vector<int> best(NC);

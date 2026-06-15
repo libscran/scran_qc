@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cstddef>
 
-#include "tatami_stats/tatami_stats.hpp"
+#include "quickstats/quickstats.hpp"
 #include "sanisizer/sanisizer.hpp"
 
 #include "utils.hpp"
@@ -105,9 +105,7 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, c
         }
     }
 
-    // No need to skip the NaNs again.
-    const auto median = tatami_stats::medians::direct<Float_>(metrics, num, /* skip_nan = */ false);
-
+    const auto median = quickstats::median<Float_>(num, metrics);
     if (options.median_only || std::isnan(median)) {
         // Giving up.
         return FindMedianMadResults<Float_>(median, std::numeric_limits<Float_>::quiet_NaN());
@@ -127,7 +125,7 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num, Float_* metrics, c
     for (I<decltype(num)> i = 0; i < num; ++i) {
         metrics[i] = std::abs(metrics[i] - median);
     }
-    auto mad = tatami_stats::medians::direct<Float_>(metrics, num, /* skip_nan = */ false);
+    auto mad = quickstats::median<Float_>(num, metrics);
     mad *= 1.4826; // for equivalence with the standard deviation under normality.
 
     return FindMedianMadResults<Float_>(median, mad);

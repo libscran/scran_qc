@@ -1,5 +1,6 @@
 #include "scran_tests/scran_tests.hpp"
 #include "tatami/tatami.hpp"
+#include "tatami_stats/tatami_stats.hpp"
 
 #include "scran_qc/adt_quality_control.hpp"
 
@@ -26,12 +27,9 @@ protected:
 TEST_F(AdtQualityControlMetricsTest, NoSubset) {
     scran_qc::ComputeAdtQcMetricsOptions opts;
     auto res = scran_qc::compute_adt_qc_metrics(*mat, std::vector<unsigned char*>(), opts);
-    EXPECT_EQ(res.sum, tatami_stats::sums::by_column(mat.get()));
+    EXPECT_EQ(res.sum, tatami_stats::sum(false, *mat, {}));
 
-    auto nonzeros = tatami_stats::counts::zero::by_column(mat.get());
-    for (auto& nz : nonzeros) {
-        nz = mat->nrow() - nz;
-    }
+    auto nonzeros = tatami_stats::count<int>(false, *mat, [](double val) -> bool { return val != 0; }, {});
     EXPECT_EQ(res.detected, nonzeros);
 
     EXPECT_TRUE(res.subset_sum.empty());
@@ -42,7 +40,7 @@ TEST_F(AdtQualityControlMetricsTest, OneSubset) {
     auto res = scran_qc::compute_adt_qc_metrics(*mat, subs, opts);
 
     auto submat = tatami::make_DelayedSubset(mat, subs[0], true);
-    auto subsums = tatami_stats::sums::by_column(submat.get());
+    auto subsums = tatami_stats::sum(false, *submat, {});
     EXPECT_EQ(res.subset_sum[0], subsums);
 }
 
