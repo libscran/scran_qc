@@ -1478,7 +1478,7 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type of matrix value. </td></tr>
     <tr><td class="paramname">Index_</td><td>Type of the matrix indices. </td></tr>
-    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a <code>std::vector</code> of indices. </td></tr>
+    <tr><td class="paramname">Subset_</td><td>Either a pointer to an array of booleans or a container of booleans/indices, see <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a7ba7b2a1a9218630bdbb59ae86feb334">PerCellQcMetricsOptions::subset_containers_have_indices</a></code> for more details. </td></tr>
     <tr><td class="paramname">Sum_</td><td>Numeric type of the sums, typically floating-point. If integer, this should be large enough to avoid overflow. </td></tr>
     <tr><td class="paramname">Detected_</td><td>Integer type of the number of detected cells. This should be large enough to avoid integer overflow, typically set to the same type as <code>Index_</code>.</td></tr>
   </table>
@@ -1488,8 +1488,9 @@ template&lt;typename Value_ , typename Index_ , typename Subset_ , typename Sum_
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">mat</td><td>A matrix of non-negative counts. Rows should correspond to features (e.g., genes) while columns should correspond to cells. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">subsets</td><td>Vector of feature subsets, where each entry represents a feature subset and may be either:<ul>
-<li>A pointer to an array of length equal to <code>mat.nrow()</code> where each entry is interpretable as a boolean. This indicates whether each row in <code>mat</code> belongs to the subset.</li>
-<li>A <code>std::vector</code> containing sorted and unique row indices. This specifies the rows in <code>mat</code> that belong to the subset. </li>
+<li>A pointer to an array of length equal to <code>mat.nrow()</code>. Each entry is interpreted as a boolean that indicates whether the corresponding row in <code>mat</code> belongs to this subset.</li>
+<li>A container (e.g., <code>std::vector</code>) of any length containing unique row indices, if <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a7ba7b2a1a9218630bdbb59ae86feb334">PerCellQcMetricsOptions::subset_containers_have_indices</a> = true</code>. This specifies the rows in <code>mat</code> that belong to this subset.</li>
+<li>A container (e.g., <code>std::vector</code>) of length equal to <code>mat.nrow()</code>, if <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a7ba7b2a1a9218630bdbb59ae86feb334">PerCellQcMetricsOptions::subset_containers_have_indices</a> = false</code>. Each element is interpreted as a boolean that indicates whether the corresponding row in <code>mat</code> belongs to this subset. </li>
 </ul>
 </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Collection of buffers in which the computed statistics are to be stored. </td></tr>

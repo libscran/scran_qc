@@ -113,6 +113,8 @@ $(function(){ initResizable(false); });
 Public Attributes</h2></td></tr>
 <tr class="memitem:aae5acc01e3e8fa729a6a9c54226bdae6" id="r_aae5acc01e3e8fa729a6a9c54226bdae6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae5acc01e3e8fa729a6a9c54226bdae6">num_threads</a> = 1</td></tr>
 <tr class="separator:aae5acc01e3e8fa729a6a9c54226bdae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223a2c385fc745443272aa7e4e87ba96" id="r_a223a2c385fc745443272aa7e4e87ba96"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a223a2c385fc745443272aa7e4e87ba96">subset_containers_have_indices</a> = true</td></tr>
+<tr class="separator:a223a2c385fc745443272aa7e4e87ba96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Options for <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. </p>
@@ -129,6 +131,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Number of threads to use. The parallelization scheme is determined by <code><a class="elRef" href="https://tatami-inc.github.io/tatami/namespacetatami.html#a9c3979c60e3d7e066be533f7ee3a2f97">tatami::parallelize()</a></code>. </p>
+
+</div>
+</div>
+<a id="a223a2c385fc745443272aa7e4e87ba96" name="a223a2c385fc745443272aa7e4e87ba96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a223a2c385fc745443272aa7e4e87ba96">&#9670;&#160;</a></span>subset_containers_have_indices</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool scran_qc::ComputeAdtQcMetricsOptions::subset_containers_have_indices = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether the <code>subsets</code> supplied to <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code> contain the row indices of the features within each subset, see <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsOptions.html#a7ba7b2a1a9218630bdbb59ae86feb334">PerCellQcMetricsOptions::subset_containers_have_indices</a></code> for more details. </p>
 
 </div>
 </div>

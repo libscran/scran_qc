@@ -319,6 +319,13 @@
       <anchor>aae5acc01e3e8fa729a6a9c54226bdae6</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>subset_containers_have_indices</name>
+      <anchorfile>structscran__qc_1_1ComputeAdtQcMetricsOptions.html</anchorfile>
+      <anchor>a223a2c385fc745443272aa7e4e87ba96</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>scran_qc::ComputeAdtQcMetricsResults</name>
@@ -502,6 +509,13 @@
       <name>num_threads</name>
       <anchorfile>structscran__qc_1_1ComputeRnaQcMetricsOptions.html</anchorfile>
       <anchor>a60634e988b3cc1a7aa468ca047e9466e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>subset_containers_have_indices</name>
+      <anchorfile>structscran__qc_1_1ComputeRnaQcMetricsOptions.html</anchorfile>
+      <anchor>a2cf87d4980b09dfc779442041220ff70</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -769,6 +783,13 @@
       <name>compute_subset_detected</name>
       <anchorfile>structscran__qc_1_1PerCellQcMetricsOptions.html</anchorfile>
       <anchor>a880457a8036b0ef9894b20f7dbd6cbff</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>subset_containers_have_indices</name>
+      <anchorfile>structscran__qc_1_1PerCellQcMetricsOptions.html</anchorfile>
+      <anchor>a7ba7b2a1a9218630bdbb59ae86feb334</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">

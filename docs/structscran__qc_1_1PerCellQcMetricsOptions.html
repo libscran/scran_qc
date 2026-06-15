@@ -123,6 +123,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a2272adf800a0475decbaab562f35898c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a880457a8036b0ef9894b20f7dbd6cbff" id="r_a880457a8036b0ef9894b20f7dbd6cbff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a880457a8036b0ef9894b20f7dbd6cbff">compute_subset_detected</a> = true</td></tr>
 <tr class="separator:a880457a8036b0ef9894b20f7dbd6cbff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ba7b2a1a9218630bdbb59ae86feb334" id="r_a7ba7b2a1a9218630bdbb59ae86feb334"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ba7b2a1a9218630bdbb59ae86feb334">subset_containers_have_indices</a> = true</td></tr>
+<tr class="separator:a7ba7b2a1a9218630bdbb59ae86feb334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9680e7480aee5b33eec9cc8f4160044" id="r_af9680e7480aee5b33eec9cc8f4160044"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9680e7480aee5b33eec9cc8f4160044">num_threads</a> = 1</td></tr>
 <tr class="separator:af9680e7480aee5b33eec9cc8f4160044"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -216,6 +218,27 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Whether to compute the number of detected features in each feature subset. This option only affects the <code><a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> overload that returns a <code><a class="el" href="structscran__qc_1_1PerCellQcMetricsResults.html" title="Result store for QC metric calculations.">PerCellQcMetricsResults</a></code> object. </p>
+
+</div>
+</div>
+<a id="a7ba7b2a1a9218630bdbb59ae86feb334" name="a7ba7b2a1a9218630bdbb59ae86feb334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ba7b2a1a9218630bdbb59ae86feb334">&#9670;&#160;</a></span>subset_containers_have_indices</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool scran_qc::PerCellQcMetricsOptions::subset_containers_have_indices = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether the <code>subsets</code> supplied to <code><a class="el" href="namespacescran__qc.html#ade78b2da5f4df8f7079570cb5e750513">per_cell_qc_metrics()</a></code> contain the row indices of the features within each subset.</p>
+<p>This option is only relevant if <code>Subset_</code> is not a pointer type. Instead, <code>Subset_</code> is expected to be a container-like type with <code>operator[]</code>, <code>size</code>, <code>begin</code> and <code>end</code> methods.</p>
+<ul>
+<li>If <code>true</code>, each entry of <code>subsets</code> is assumed to be a container of unique row indices. This specifies the rows of the input matrix corresponding to the features in this subset..</li>
+<li>If <code>false</code>, each entry of <code>subsets</code> is assumed to be a container of length equal to the number of features in the input matrix. Each container element is interpreted as a boolean indicating whether the corresponding row of the matrix belongs to the subset.</li>
+</ul>
+<p>If <code>Subset_</code> is a pointer type, this option is ignored. Each entry of <code>subsets</code> is assumed to be a pointer to an array of length equal to the number features in the input matrix, where each array element is treated as a boolean indicating whether the coresponding row of the matrix belongs to the subset. </p>
 
 </div>
 </div>
