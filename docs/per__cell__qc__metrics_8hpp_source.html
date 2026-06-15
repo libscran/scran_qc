@@ -580,7 +580,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span> </div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                <span class="keywordflow">if</span> (do_max) {</div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                    <span class="keywordflow">if</span> (r == 0) {</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                        <span class="comment">// If it&#39;s non-zero, we set it; and if it&#39;s not set, then max_value_ptr was already zeroed, so it makes sense either way.</span></div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                        std::fill_n(max_value_ptr, NC, 0);</div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                        <span class="keywordflow">for</span> (Index_ i = 0; i &lt; range.number; ++i) {</div>
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                            <span class="keyword">const</span> <span class="keyword">auto</span> j = range.index[i];</div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                            max_value_ptr[j] = range.value[i];</div>
