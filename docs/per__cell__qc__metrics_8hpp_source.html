@@ -451,7 +451,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="keywordflow">if</span> (output.detected) {</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        std::fill_n(output.detected, NC, 0);</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    }</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    <span class="keywordflow">if</span> (do_max &amp;&amp; NC == 0) { <span class="comment">// no need to zero if it&#39;s not empty, as it&#39;ll get filled by thread 0 upon encountering the first column.</span></div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    <span class="keywordflow">if</span> (do_max &amp;&amp; NR == 0) { <span class="comment">// no need to zero if it&#39;s not empty, as it&#39;ll get filled by thread 0 upon encountering the first column.</span></div>
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        std::fill_n(output.max_value, NC, 0);</div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>        <span class="keywordflow">if</span> (output.max_index) {</div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>            std::fill_n(output.max_index, NC, 0);</div>
