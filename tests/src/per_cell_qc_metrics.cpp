@@ -109,19 +109,38 @@ TEST_P(PerCellQcMetricsTestStandard, OneSubset) {
     for (auto s : subs.front()) {
         bool_sub_raw[0][s] = 1;
     }
-    std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data() };
 
-    auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
-    compare(ref, bres1);
+    {
+        std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data() };
 
-    auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
-    compare(ref, bres2);
+        auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
+        compare(ref, bres1);
 
-    auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
-    compare(ref, bres3);
+        auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
+        compare(ref, bres2);
 
-    auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
-    compare(ref, bres4);
+        auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
+        compare(ref, bres3);
+
+        auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
+        compare(ref, bres4);
+    }
+
+    // Still boolified, but we pass the containers themselves.
+    opt.subset_containers_have_indices = false;
+    {
+        auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub_raw, opt);
+        compare(ref, bres1);
+
+        auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub_raw, opt);
+        compare(ref, bres2);
+
+        auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub_raw, opt);
+        compare(ref, bres3);
+
+        auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub_raw, opt);
+        compare(ref, bres4);
+    }
 }
 
 TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
@@ -161,27 +180,43 @@ TEST_P(PerCellQcMetricsTestStandard, TwoSubsets) {
 
     // Checking with boolified subsets.
     std::vector<std::vector<unsigned char> > bool_sub_raw;
-    bool_sub_raw.emplace_back(dense_row->nrow());
-    for (auto s : subs.front()) {
-        bool_sub_raw[0][s] = 1;
+    for (int sx = 0; sx < 2; ++sx) {
+        bool_sub_raw.emplace_back(dense_row->nrow());
+        for (auto s : subs[sx]) {
+            bool_sub_raw[sx][s] = 1;
+        }
     }
-    bool_sub_raw.emplace_back(dense_row->nrow());
-    for (auto s : subs.back()) {
-        bool_sub_raw[1][s] = 1;
+    {
+        std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
+
+        auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
+        compare(ref, bres1);
+
+        auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
+        compare(ref, bres2);
+
+        auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
+        compare(ref, bres3);
+
+        auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
+        compare(ref, bres4);
     }
-    std::vector<unsigned char*> bool_sub{ bool_sub_raw.front().data(), bool_sub_raw.back().data() };
 
-    auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub, opt);
-    compare(ref, bres1);
+    // Still boolified, but we pass the containers themselves.
+    opt.subset_containers_have_indices = false;
+    {
+        auto bres1 = scran_qc::per_cell_qc_metrics(*dense_row, bool_sub_raw, opt);
+        compare(ref, bres1);
 
-    auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub, opt);
-    compare(ref, bres2);
+        auto bres2 = scran_qc::per_cell_qc_metrics(*dense_column, bool_sub_raw, opt);
+        compare(ref, bres2);
 
-    auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub, opt);
-    compare(ref, bres3);
+        auto bres3 = scran_qc::per_cell_qc_metrics(*sparse_row, bool_sub_raw, opt);
+        compare(ref, bres3);
 
-    auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub, opt);
-    compare(ref, bres4);
+        auto bres4 = scran_qc::per_cell_qc_metrics(*sparse_column, bool_sub_raw, opt);
+        compare(ref, bres4);
+    }
 }
 
 INSTANTIATE_TEST_SUITE_P(

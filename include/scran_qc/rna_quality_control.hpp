@@ -30,6 +30,12 @@ struct ComputeRnaQcMetricsOptions {
      * The parallelization scheme is determined by `tatami::parallelize()`.
      */
     int num_threads = 1;
+
+    /**
+     * Whether the `subsets` supplied to `compute_rna_qc_metrics()` contain the row indices of the features within each subset,
+     * see `PerCellQcMetricsOptions::subset_containers_have_indices` for more details.
+     */
+    bool subset_containers_have_indices = true;
 };
 
 /**
@@ -128,6 +134,7 @@ void compute_rna_qc_metrics(
 
     PerCellQcMetricsOptions opt;
     opt.num_threads = options.num_threads;
+    opt.subset_containers_have_indices = options.subset_containers_have_indices;
     per_cell_qc_metrics(mat, subsets, tmp, opt);
 
     for (I<decltype(nsubsets)> s = 0 ; s < nsubsets; ++s) {
