@@ -125,7 +125,9 @@ TEST(ChooseFilterThresholds, FromMetrics) {
 
     std::vector<int> imetrics { 0, 1, 2, 3, 4, 5 };
     std::vector<int> block { 0, 0, 0, 1, 1, 1 };
-    auto bthresholds = scran_qc::choose_filter_thresholds_blocked<int, int, double>(imetrics.size(), imetrics.data(), block.data(), 2, NULL, opt);
+    scran_qc::FindMedianMadBlockedWorkspace<double> work(imetrics.size(), block.data(), 2);
+    auto bthresholds = scran_qc::choose_filter_thresholds_blocked<int, int, double>(imetrics.size(), imetrics.data(), block.data(), work, opt);
+
     ASSERT_EQ(bthresholds.size(), 2);
     EXPECT_DOUBLE_EQ(bthresholds[0].lower, 1 - 1.4826 * 3);
     EXPECT_DOUBLE_EQ(bthresholds[0].upper, 1 + 1.4826 * 3);

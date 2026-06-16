@@ -142,8 +142,7 @@ FindMedianMadResults<Float_> find_median_mad(std::size_t num_obs, Float_* metric
  * @tparam Float_ Floating-point type of the buffer.
  */
 template<typename Float_>
-class FindMedianMadBlockedWorkspace {
-public:
+struct FindMedianMadBlockedWorkspace {
     /**
      * @tparam Block_ Integer type of the block identifiers.
      * @param num_obs Number of observations.
@@ -153,10 +152,8 @@ public:
      * @param num_blocks Total ncumber of blocks, i.e., \f$N\f$.
      */
     template<typename Block_>
-    FindMedianMadBlockedWorkspace(const std::size_t num_obs, const Block_* const block, const std::size_t num_blocks) :
-        my_buffer(sanisizer::cast<I<decltype(my_buffer.size())> >(num_obs))
-    {
-        set(num_obs, block, num_blocks);
+    FindMedianMadBlockedWorkspace(const std::size_t num_obs, const Block_* const block, const std::size_t num_blocks) {
+        reset_find_median_mad_blocked_workspace(*this, num_obs, block, num_blocks);
     }
 
     /**
@@ -164,55 +161,65 @@ public:
      */
     FindMedianMadBlockedWorkspace() = default;
 
-    /**
-     * @tparam Block_ Integer type of the block identifiers.
-     * @param num_obs Number of observations.
-     * @param[in] block Pointer to an array of block identifiers.
-     * The array should be of length equal to `num`.
-     * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
-     * @param num_blocks Total ncumber of blocks, i.e., \f$N\f$.
-     */
-    template<typename Block_>
-    void set(const std::size_t num_obs, const Block_* const block, const std::size_t num_blocks) {
-        my_block_starts.clear();
-
-        sanisizer::resize(my_block_starts, num_blocks);
-        for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
-            ++my_block_starts[block[i]];
-        }
-
-        std::size_t sofar = 0;
-        for (auto& s : my_block_starts) {
-            const auto last = sofar;
-            sofar += s;
-            s = last;
-        }
-
-        sanisizer::resize(my_buffer, num_obs
-#ifdef SCRAN_QC_TEST_INIT
-            , SCRAN_QC_TEST_INIT
-#endif
-        );
-        sanisizer::resize(my_block_ends, my_block_starts.size()
-#ifdef SCRAN_QC_TEST_INIT
-            , SCRAN_QC_TEST_INIT
-#endif
-        );
-    }
-
 /**
  * @cond
  */
 public:
-    // Can't figure out how to make compute_blocked() a friend,
-    // so these puppies are public for simplicity.
-    std::vector<Float_> my_buffer;
-    std::vector<std::size_t> my_block_starts;
-    std::vector<std::size_t> my_block_ends;
+    std::vector<Float_> buffer;
+    std::vector<std::size_t> block_starts;
+    std::vector<std::size_t> block_offsets;
 /**
  * @endcond
  */
 };
+
+/**
+ * Reset a `FindMedianMadBlockedWorkspace` object so that it can be used with a new blocking factor.
+ *
+ * @tparam Float_ Floating-point type of the buffer.
+ * @tparam Block_ Integer type of the block identifiers.
+ *
+ * @param work Workspace object.
+ * On return, `work` is equivalent to an object that was constructed with `num_obs`, `block`, and `num_blocks`.
+ * @param num_obs New number of observations.
+ * @param[in] block Pointer to an array of block identifiers.
+ * The array should be of length equal to `num_obs`.
+ * Values should be integer IDs in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
+ * @param num_blocks Total ncumber of blocks, i.e., \f$N\f$.
+ */
+template<typename Float_, typename Block_>
+void reset_find_median_mad_blocked_workspace(
+    FindMedianMadBlockedWorkspace<Float_>& work,
+    const std::size_t num_obs,
+    const Block_* const block,
+    const std::size_t num_blocks
+) {
+    work.block_starts.clear();
+
+    sanisizer::resize(work.block_starts, num_blocks);
+    for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
+        ++work.block_starts[block[i]];
+    }
+
+    std::size_t sofar = 0;
+    for (auto& s : work.block_starts) {
+        const auto last = sofar;
+        sofar += s;
+        s = last;
+    }
+
+    sanisizer::resize(work.buffer, num_obs
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
+
+    sanisizer::resize(work.block_offsets, num_blocks
+#ifdef SCRAN_QC_TEST_INIT
+        , SCRAN_QC_TEST_INIT
+#endif
+    );
+}
 
 /**
  * For blocked datasets, this function computes the median and MAD for each block.
@@ -223,15 +230,13 @@ public:
  * @tparam Value_ Numeric type of the input.
  *
  * @param num_obs Number of observations.
- * @param[in] metrics Pointer to an array of observations of length `num`.
+ * @param[in] metrics Pointer to an array of observations of length `num_obs`.
  * NaNs are ignored.
  * @param[in] block Pointer to an array of length `num_obs`, containing block assignments.
  * Eacn entry should be an integer ID in \f$[0, N)\f$ where \f$N\f$ is the number of blocks.
- * @param num_blocks Total number of blocks, i.e., \f$N\f$.
- * @param workspace Pointer to a workspace object, either (i) constructed on `num_obs`, `block` and `num_blocks`
- * or (ii) configured using `FindMedianMadWorkspace::set()` on `num_obs`, `block` and `num_blocks`.
+ * @param workspace Pointer to a workspace object, either (i) constructed with `num_obs` and `block`
+ * or (ii) configured using `reset_find_median_mad_blocked_workspace()` on `num_obs` and `block`. 
  * The same object can be re-used across multiple calls to `find_median_mad_blocked()` with the same `num` and `block`.
- * This can also be `NULL` in which case a new workspace is allocated inside this function. 
  * @param options Further options.
  *
  * @return Vector of length \f$N\f$, where each entry contains the median and MAD for each block in `block`.
@@ -241,22 +246,14 @@ std::vector<FindMedianMadResults<Output_> > find_median_mad_blocked(
     const std::size_t num_obs,
     const Value_* const metrics, 
     const Block_* const block,
-    const std::size_t num_blocks,
-    FindMedianMadBlockedWorkspace<Output_>* workspace,
+    FindMedianMadBlockedWorkspace<Output_>& workspace,
     const FindMedianMadOptions& options
 ) {
-    std::optional<FindMedianMadBlockedWorkspace<Output_> > xworkspace;
-    if (workspace == NULL) {
-        xworkspace.emplace(num_obs, block, num_blocks);
-        workspace = &(*xworkspace);
-    } else {
-        assert(num_blocks == workspace->my_block_starts.size());
-        assert(num_obs == workspace->my_buffer.size());
-    }
+    assert(num_obs == workspace.buffer.size());
 
-    auto& buffer = workspace->my_buffer;
-    const auto& starts = workspace->my_block_starts;
-    auto& ends = workspace->my_block_ends;
+    auto& buffer = workspace.buffer;
+    const auto& starts = workspace.block_starts;
+    auto& ends = workspace.block_offsets;
     std::copy(starts.begin(), starts.end(), ends.begin());
     for (I<decltype(num_obs)> i = 0; i < num_obs; ++i) {
         auto& pos = ends[block[i]];
@@ -264,6 +261,7 @@ std::vector<FindMedianMadResults<Output_> > find_median_mad_blocked(
         ++pos;
     }
 
+    const auto num_blocks = workspace.block_starts.size();
     std::vector<FindMedianMadResults<Output_> > output;
     output.reserve(num_blocks);
     for (I<decltype(num_blocks)> g = 0; g < num_blocks; ++g) {

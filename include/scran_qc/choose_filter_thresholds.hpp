@@ -220,10 +220,9 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
  * @tparam Float_ Floating-point type of the metrics and thresholds.
  *
  * @param num_cells Number of cells.
- * @param[in] metrics Pointer to an array of length `num`, containing a QC metric for each cell.
- * @param[in] block Optional pointer to an array of block identifiers, see `find_median_mad_blocked()` for details.
- * @param num_blocks Total number of blocks in `block`, see `find_median_mad_blocked()` for details.
- * @param workspace Pointer to a workspace object, see `find_median_mad_blocked()` for details.
+ * @param[in] metrics Pointer to an array of length `num_cells`, containing a QC metric for each cell.
+ * @param[in] block Pointer to an array of block identifiers, see `find_median_mad_blocked()` for details.
+ * @param workspace Workspace object constructed with `num_cells` and `blocks`, see `find_median_mad_blocked()` for details.
  * @param options Further options.
  *
  * @return A vector containing the upper and lower thresholds for each block.
@@ -233,13 +232,12 @@ std::vector<ChooseFilterThresholdsResults<Float_> > choose_filter_thresholds_blo
     const std::size_t num_cells,
     const Value_* const metrics,
     const Block_* const block,
-    const std::size_t num_blocks,
-    FindMedianMadBlockedWorkspace<Float_>* const workspace,
+    FindMedianMadBlockedWorkspace<Float_>& workspace,
     const ChooseFilterThresholdsOptions& options
 ) {
     FindMedianMadOptions fopt;
     fopt.log = options.log;
-    const auto mms = find_median_mad_blocked(num_cells, metrics, block, num_blocks, workspace, fopt);
+    const auto mms = find_median_mad_blocked(num_cells, metrics, block, workspace, fopt);
     return choose_filter_thresholds_blocked(mms, options);
 }
 

@@ -258,7 +258,7 @@ void crispr_populate(
             std::copy_n(maxprop.begin(), num_cells, buffer.begin());
             return find_median_mad(num_cells, buffer.data(), fopt);
         } else {
-            return find_median_mad_blocked(num_cells, maxprop.data(), block, num_blocks, &buffer, fopt);
+            return find_median_mad_blocked(num_cells, maxprop.data(), block, buffer, fopt);
         }
     }();
 
@@ -287,7 +287,7 @@ void crispr_populate(
             std::copy_n(maxprop.begin(), num_cells, buffer.begin());
             return choose_filter_thresholds(num_cells, buffer.data(), copt).lower;
         } else {
-            return internal::strip_threshold<true>(choose_filter_thresholds_blocked(num_cells, maxprop.data(), block, num_blocks, &buffer, copt));
+            return internal::strip_threshold<true>(choose_filter_thresholds_blocked(num_cells, maxprop.data(), block, buffer, copt));
         }
     }();
 }

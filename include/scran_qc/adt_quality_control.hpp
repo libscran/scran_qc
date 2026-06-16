@@ -263,7 +263,7 @@ void adt_populate(
                 std::copy_n(res.detected, num_cells, buffer.begin());
                 return choose_filter_thresholds(num_cells, buffer.data(), opts).lower;
             } else {
-                return internal::strip_threshold<true>(choose_filter_thresholds_blocked(num_cells, res.detected, block, num_blocks, &buffer, opts));
+                return internal::strip_threshold<true>(choose_filter_thresholds_blocked(num_cells, res.detected, block, buffer, opts));
             }
         }();
     }
@@ -285,7 +285,7 @@ void adt_populate(
                     std::copy_n(sub, num_cells, buffer.begin());
                     return choose_filter_thresholds(num_cells, buffer.data(), opts).upper;
                 } else {
-                    return internal::strip_threshold<false>(choose_filter_thresholds_blocked(num_cells, sub, block, num_blocks, &buffer, opts));
+                    return internal::strip_threshold<false>(choose_filter_thresholds_blocked(num_cells, sub, block, buffer, opts));
                 }
             }();
         }
