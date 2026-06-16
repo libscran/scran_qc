@@ -228,7 +228,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>) {</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> fopt;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    fopt.<a class="code hl_variable" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">log</a> = options.<a class="code hl_variable" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#a7896ba64781d12a2153a0cbbda3b10d0">log</a>;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keyword">const</span> <span class="keyword">auto</span> mms = <a class="code hl_function" href="namespacescran__qc.html#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked</a>(num_cells, metrics, block, num_blocks, workspace, fopt);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keyword">const</span> <span class="keyword">auto</span> mms = <a class="code hl_function" href="namespacescran__qc.html#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked</a>(num_cells, metrics, block, workspace, fopt);</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacescran__qc.html#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked</a>(mms, options);</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>}</div>
 </div>

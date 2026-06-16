@@ -257,19 +257,19 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace&lt;Output_&gt;</a>&amp; workspace,</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a>&amp; options</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>) {</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    assert(num_blocks == workspace.block_starts.size());</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    assert(num_obs == workspace.buffer.size());</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keyword">auto</span>&amp; buffer = workspace.buffer;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; starts = workspace.block_starts;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">auto</span>&amp; ends = workspace.block_offsets;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    std::copy(starts.begin(), starts.end(), ends.begin());</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num_obs)&gt; i = 0; i &lt; num_obs; ++i) {</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keyword">auto</span>&amp; pos = ends[block[i]];</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        buffer[pos] = metrics[i];</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        ++pos;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    }</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    assert(num_obs == workspace.buffer.size());</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keyword">auto</span>&amp; buffer = workspace.buffer;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; starts = workspace.block_starts;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keyword">auto</span>&amp; ends = workspace.block_offsets;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    std::copy(starts.begin(), starts.end(), ends.begin());</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num_obs)&gt; i = 0; i &lt; num_obs; ++i) {</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="keyword">auto</span>&amp; pos = ends[block[i]];</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        buffer[pos] = metrics[i];</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        ++pos;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keyword">const</span> <span class="keyword">auto</span> num_blocks = workspace.block_starts.size();</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    std::vector&lt;FindMedianMadResults&lt;Output_&gt; &gt; output;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    output.reserve(num_blocks);</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(num_blocks)&gt; g = 0; g &lt; num_blocks; ++g) {</div>
