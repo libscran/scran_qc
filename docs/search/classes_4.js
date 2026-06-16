@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['findmedianmadblockedworkspace_0',['FindMedianMadBlockedWorkspace',['../classscran__qc_1_1FindMedianMadBlockedWorkspace.html',1,'scran_qc']]],
+  ['findmedianmadblockedworkspace_0',['FindMedianMadBlockedWorkspace',['../structscran__qc_1_1FindMedianMadBlockedWorkspace.html',1,'scran_qc']]],
   ['findmedianmadoptions_1',['FindMedianMadOptions',['../structscran__qc_1_1FindMedianMadOptions.html',1,'scran_qc']]],
   ['findmedianmadresults_2',['FindMedianMadResults',['../structscran__qc_1_1FindMedianMadResults.html',1,'scran_qc']]],
   ['fixedvectororacle_3',['FixedVectorOracle',['https://tatami-inc.github.io/tatami/classtatami_1_1FixedVectorOracle.html',1,'tatami']]],

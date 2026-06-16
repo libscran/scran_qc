@@ -45,7 +45,7 @@
     <filename>find__median__mad_8hpp.html</filename>
     <class kind="struct">scran_qc::FindMedianMadOptions</class>
     <class kind="struct">scran_qc::FindMedianMadResults</class>
-    <class kind="class">scran_qc::FindMedianMadBlockedWorkspace</class>
+    <class kind="struct">scran_qc::FindMedianMadBlockedWorkspace</class>
     <namespace>scran_qc</namespace>
   </compound>
   <compound kind="file">
@@ -627,30 +627,23 @@
       <arglist>(const ComputeCrisprQcMetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics) const</arglist>
     </member>
   </compound>
-  <compound kind="class">
+  <compound kind="struct">
     <name>scran_qc::FindMedianMadBlockedWorkspace</name>
-    <filename>classscran__qc_1_1FindMedianMadBlockedWorkspace.html</filename>
+    <filename>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</filename>
     <templarg>typename Float_</templarg>
     <member kind="function">
       <type></type>
       <name>FindMedianMadBlockedWorkspace</name>
-      <anchorfile>classscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
+      <anchorfile>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
       <anchor>ac94405d49e61c3b2951f1b1ca2358ef6</anchor>
       <arglist>(const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>FindMedianMadBlockedWorkspace</name>
-      <anchorfile>classscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
+      <anchorfile>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
       <anchor>a9f37273efa598f786ec6ce8bec1e86ad</anchor>
       <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>set</name>
-      <anchorfile>classscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
-      <anchor>a468c4e3cbe9d24235a6e87d0db308992</anchor>
-      <arglist>(const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -1007,7 +1000,7 @@
     <class kind="struct">scran_qc::ComputeRnaQcMetricsResults</class>
     <class kind="class">scran_qc::CrisprQcBlockedFilters</class>
     <class kind="class">scran_qc::CrisprQcFilters</class>
-    <class kind="class">scran_qc::FindMedianMadBlockedWorkspace</class>
+    <class kind="struct">scran_qc::FindMedianMadBlockedWorkspace</class>
     <class kind="struct">scran_qc::FindMedianMadOptions</class>
     <class kind="struct">scran_qc::FindMedianMadResults</class>
     <class kind="struct">scran_qc::PerCellQcMetricsBuffers</class>
@@ -1082,8 +1075,8 @@
       <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
       <name>choose_filter_thresholds_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a680c0b9affc8acf5927c98c2d88eba2c</anchor>
-      <arglist>(const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, FindMedianMadBlockedWorkspace&lt; Float_ &gt; *const workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a632c6502823b0ea5bace401a18c1d7d0</anchor>
+      <arglist>(const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, FindMedianMadBlockedWorkspace&lt; Float_ &gt; &amp;workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1135,11 +1128,18 @@
       <arglist>(std::size_t num_obs, Float_ *metrics, const FindMedianMadOptions &amp;options)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>reset_find_median_mad_blocked_workspace</name>
+      <anchorfile>namespacescran__qc.html</anchorfile>
+      <anchor>a6607aa99be92ac34a3deb0b83babbf71</anchor>
+      <arglist>(FindMedianMadBlockedWorkspace&lt; Float_ &gt; &amp;work, const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</arglist>
+    </member>
+    <member kind="function">
       <type>std::vector&lt; FindMedianMadResults&lt; Output_ &gt; &gt;</type>
       <name>find_median_mad_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a64c3832d38ad9e6d7ba70f98cf0325e3</anchor>
-      <arglist>(const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, FindMedianMadBlockedWorkspace&lt; Output_ &gt; *workspace, const FindMedianMadOptions &amp;options)</arglist>
+      <anchor>a86d80b9fa132f10126403b599a360830</anchor>
+      <arglist>(const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, FindMedianMadBlockedWorkspace&lt; Output_ &gt; &amp;workspace, const FindMedianMadOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

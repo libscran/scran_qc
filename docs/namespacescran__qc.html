@@ -159,8 +159,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1CrisprQcFilters.html">CrisprQcFilters</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter for high-quality cells using CRISPR-based metrics.  <a href="classscran__qc_1_1CrisprQcFilters.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Workspace for <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code>.  <a href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Workspace for <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code>.  <a href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad()</a></code>.  <a href="structscran__qc_1_1FindMedianMadOptions.html#details">More...</a><br /></td></tr>
@@ -213,9 +213,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a958e9714d759bba33f54441c527e0905" id="r_a958e9714d759bba33f54441c527e0905"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
 <tr class="memitem:a958e9714d759bba33f54441c527e0905"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked</a> (const std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt; &gt; &amp;mms, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
 <tr class="separator:a958e9714d759bba33f54441c527e0905"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a680c0b9affc8acf5927c98c2d88eba2c" id="r_a680c0b9affc8acf5927c98c2d88eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a680c0b9affc8acf5927c98c2d88eba2c"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a680c0b9affc8acf5927c98c2d88eba2c">choose_filter_thresholds_blocked</a> (const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, <a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; *const workspace, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
-<tr class="separator:a680c0b9affc8acf5927c98c2d88eba2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a632c6502823b0ea5bace401a18c1d7d0" id="r_a632c6502823b0ea5bace401a18c1d7d0"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a632c6502823b0ea5bace401a18c1d7d0"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a632c6502823b0ea5bace401a18c1d7d0">choose_filter_thresholds_blocked</a> (const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, <a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; &amp;workspace, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
+<tr class="separator:a632c6502823b0ea5bace401a18c1d7d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d57853e7f9d53acbe63649f19a1ab72" id="r_a9d57853e7f9d53acbe63649f19a1ab72"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Index_ , typename Sum_ , typename Detected_ &gt; </td></tr>
 <tr class="memitem:a9d57853e7f9d53acbe63649f19a1ab72"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a9d57853e7f9d53acbe63649f19a1ab72">compute_crispr_qc_metrics</a> (const <a class="elRef" href="https://tatami-inc.github.io/tatami/classtatami_1_1Matrix.html">tatami::Matrix</a>&lt; Value_, Index_ &gt; &amp;mat, const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsBuffers.html">ComputeCrisprQcMetricsBuffers</a>&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;output, const <a class="el" href="structscran__qc_1_1ComputeCrisprQcMetricsOptions.html">ComputeCrisprQcMetricsOptions</a> &amp;options)</td></tr>
 <tr class="separator:a9d57853e7f9d53acbe63649f19a1ab72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,9 +237,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a7355a4b0dbe0ac2ee0d719d23512c46d" id="r_a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
 <tr class="memitem:a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad</a> (std::size_t num_obs, Float_ *metrics, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
 <tr class="separator:a7355a4b0dbe0ac2ee0d719d23512c46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64c3832d38ad9e6d7ba70f98cf0325e3" id="r_a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; </td></tr>
-<tr class="memitem:a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Output_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked</a> (const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, <a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Output_ &gt; *workspace, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
-<tr class="separator:a64c3832d38ad9e6d7ba70f98cf0325e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6607aa99be92ac34a3deb0b83babbf71" id="r_a6607aa99be92ac34a3deb0b83babbf71"><td class="memTemplParams" colspan="2">template&lt;typename Float_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:a6607aa99be92ac34a3deb0b83babbf71"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a6607aa99be92ac34a3deb0b83babbf71">reset_find_median_mad_blocked_workspace</a> (<a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; &amp;work, const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</td></tr>
+<tr class="separator:a6607aa99be92ac34a3deb0b83babbf71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86d80b9fa132f10126403b599a360830" id="r_a86d80b9fa132f10126403b599a360830"><td class="memTemplParams" colspan="2">template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:a86d80b9fa132f10126403b599a360830"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Output_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked</a> (const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, <a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Output_ &gt; &amp;workspace, const <a class="el" href="structscran__qc_1_1FindMedianMadOptions.html">FindMedianMadOptions</a> &amp;options)</td></tr>
+<tr class="separator:a86d80b9fa132f10126403b599a360830"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accda57e0c354b921eeb47b4ed224c691" id="r_accda57e0c354b921eeb47b4ed224c691"><td class="memTemplParams" colspan="2">template&lt;typename Keep_ , typename Index_ &gt; </td></tr>
 <tr class="memitem:accda57e0c354b921eeb47b4ed224c691"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#accda57e0c354b921eeb47b4ed224c691">filter_index</a> (const std::size_t num, const Keep_ *const filter, std::vector&lt; Index_ &gt; &amp;output)</td></tr>
 <tr class="separator:accda57e0c354b921eeb47b4ed224c691"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -714,8 +717,8 @@ template&lt;typename Float_ &gt; </div>
 
 </div>
 </div>
-<a id="a680c0b9affc8acf5927c98c2d88eba2c" name="a680c0b9affc8acf5927c98c2d88eba2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a680c0b9affc8acf5927c98c2d88eba2c">&#9670;&#160;</a></span>choose_filter_thresholds_blocked() <span class="overload">[2/2]</span></h2>
+<a id="a632c6502823b0ea5bace401a18c1d7d0" name="a632c6502823b0ea5bace401a18c1d7d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a632c6502823b0ea5bace401a18c1d7d0">&#9670;&#160;</a></span>choose_filter_thresholds_blocked() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -740,12 +743,7 @@ template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_blocks</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; *const</td>          <td class="paramname"><span class="paramname"><em>workspace</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>workspace</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -754,7 +752,7 @@ template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This overload computes the median and MAD for each block via <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code> before deriving thresholds in each block with <code><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked()</a></code>.</p>
+<p>This overload computes the median and MAD for each block via <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code> before deriving thresholds in each block with <code><a class="el" href="#a958e9714d759bba33f54441c527e0905">choose_filter_thresholds_blocked()</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Value_</td><td>Type for the input data. </td></tr>
@@ -765,10 +763,9 @@ template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_cells</td><td>Number of cells. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of length <code>num</code>, containing a QC metric for each cell. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Optional pointer to an array of block identifiers, see <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code> for details. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_blocks</td><td>Total number of blocks in <code>block</code>, see <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code> for details. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Pointer to a workspace object, see <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code> for details. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of length <code>num_cells</code>, containing a QC metric for each cell. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of block identifiers, see <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code> for details. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Workspace object constructed with <code>num_cells</code> and <code>blocks</code>, see <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code> for details. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
@@ -1123,8 +1120,58 @@ template&lt;typename Float_ &gt; </div>
 
 </div>
 </div>
-<a id="a64c3832d38ad9e6d7ba70f98cf0325e3" name="a64c3832d38ad9e6d7ba70f98cf0325e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64c3832d38ad9e6d7ba70f98cf0325e3">&#9670;&#160;</a></span>find_median_mad_blocked()</h2>
+<a id="a6607aa99be92ac34a3deb0b83babbf71" name="a6607aa99be92ac34a3deb0b83babbf71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6607aa99be92ac34a3deb0b83babbf71">&#9670;&#160;</a></span>reset_find_median_mad_blocked_workspace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Float_ , typename Block_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void scran_qc::reset_find_median_mad_blocked_workspace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>work</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_obs</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Block_ *const</td>          <td class="paramname"><span class="paramname"><em>block</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_blocks</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reset a <code><a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html" title="Workspace for find_median_mad_blocked().">FindMedianMadBlockedWorkspace</a></code> object so that it can be used with a new blocking factor.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the buffer. </td></tr>
+    <tr><td class="paramname">Block_</td><td>Integer type of the block identifiers.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">work</td><td>Workspace object. On return, <code>work</code> is equivalent to an object that was constructed with <code>num_obs</code>, <code>block</code>, and <code>num_blocks</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_obs</td><td>New number of observations. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of block identifiers. The array should be of length equal to <code>num_obs</code>. Values should be integer IDs in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_blocks</td><td>Total ncumber of blocks, i.e., \(N\). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a86d80b9fa132f10126403b599a360830" name="a86d80b9fa132f10126403b599a360830"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86d80b9fa132f10126403b599a360830">&#9670;&#160;</a></span>find_median_mad_blocked()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1149,12 +1196,7 @@ template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; <
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>num_blocks</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Output_ &gt; *</td>          <td class="paramname"><span class="paramname"><em>workspace</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Output_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>workspace</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1175,10 +1217,9 @@ template&lt;typename Output_  = double, typename Value_ , typename Block_ &gt; <
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_obs</td><td>Number of observations. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of observations of length <code>num</code>. NaNs are ignored. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">metrics</td><td>Pointer to an array of observations of length <code>num_obs</code>. NaNs are ignored. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">block</td><td>Pointer to an array of length <code>num_obs</code>, containing block assignments. Eacn entry should be an integer ID in \([0, N)\) where \(N\) is the number of blocks. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_blocks</td><td>Total number of blocks, i.e., \(N\). </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Pointer to a workspace object, either (i) constructed on <code>num_obs</code>, <code>block</code> and <code>num_blocks</code> or (ii) configured using <code>FindMedianMadWorkspace::set()</code> on <code>num_obs</code>, <code>block</code> and <code>num_blocks</code>. The same object can be re-used across multiple calls to <code><a class="el" href="#a64c3832d38ad9e6d7ba70f98cf0325e3">find_median_mad_blocked()</a></code> with the same <code>num</code> and <code>block</code>. This can also be <code>NULL</code> in which case a new workspace is allocated inside this function. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">workspace</td><td>Pointer to a workspace object, either (i) constructed with <code>num_obs</code> and <code>block</code> or (ii) configured using <code><a class="el" href="#a6607aa99be92ac34a3deb0b83babbf71">reset_find_median_mad_blocked_workspace()</a></code> on <code>num_obs</code> and <code>block</code>. The same object can be re-used across multiple calls to <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code> with the same <code>num</code> and <code>block</code>. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>

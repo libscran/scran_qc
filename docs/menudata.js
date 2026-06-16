@@ -30,11 +30,13 @@ var menudata={children:[
 {text:"All",url:"namespacemembers.html",children:[
 {text:"c",url:"namespacemembers.html#index_c"},
 {text:"f",url:"namespacemembers.html#index_f"},
-{text:"p",url:"namespacemembers.html#index_p"}]},
+{text:"p",url:"namespacemembers.html#index_p"},
+{text:"r",url:"namespacemembers.html#index_r"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
 {text:"c",url:"namespacemembers_func.html#index_c"},
 {text:"f",url:"namespacemembers_func.html#index_f"},
-{text:"p",url:"namespacemembers_func.html#index_p"}]}]}]},
+{text:"p",url:"namespacemembers_func.html#index_p"},
+{text:"r",url:"namespacemembers_func.html#index_r"}]}]}]},
 {text:"Classes",url:"annotated.html",children:[
 {text:"Class List",url:"annotated.html"},
 {text:"Class Index",url:"classes.html"},
@@ -51,8 +53,7 @@ var menudata={children:[
 {text:"u",url:"functions.html#index_u"}]},
 {text:"Functions",url:"functions_func.html",children:[
 {text:"f",url:"functions_func.html#index_f"},
-{text:"g",url:"functions_func.html#index_g"},
-{text:"s",url:"functions_func.html#index_s"}]},
+{text:"g",url:"functions_func.html#index_g"}]},
 {text:"Variables",url:"functions_vars.html",children:[
 {text:"c",url:"functions_vars.html#index_c"},
 {text:"d",url:"functions_vars.html#index_d"},
