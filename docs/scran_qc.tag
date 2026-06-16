@@ -1058,25 +1058,11 @@
       <arglist>(const FindMedianMadResults&lt; Float_ &gt; &amp;mm, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type>ChooseFilterThresholdsResults&lt; Float_ &gt;</type>
-      <name>choose_filter_thresholds</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>ad9183ecb1b9b7ef8ed0228f1b53c684a</anchor>
-      <arglist>(const std::size_t num_cells, Float_ *const metrics, const ChooseFilterThresholdsOptions &amp;options)</arglist>
-    </member>
-    <member kind="function">
       <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
       <name>choose_filter_thresholds_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
       <anchor>a958e9714d759bba33f54441c527e0905</anchor>
       <arglist>(const std::vector&lt; FindMedianMadResults&lt; Float_ &gt; &gt; &amp;mms, const ChooseFilterThresholdsOptions &amp;options)</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
-      <name>choose_filter_thresholds_blocked</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a632c6502823b0ea5bace401a18c1d7d0</anchor>
-      <arglist>(const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, FindMedianMadBlockedWorkspace&lt; Float_ &gt; &amp;workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
