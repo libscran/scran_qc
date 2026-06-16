@@ -619,7 +619,7 @@ template&lt;typename Float_ &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mm</td><td>Median and MADc computed by <code><a class="el" href="#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad()</a></code>. If <code><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#a7896ba64781d12a2153a0cbbda3b10d0">ChooseFilterThresholdsOptions::log</a> = true</code>, it is expected that the median and MAD are computed on the log-transformed metrics (i.e., <code><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">FindMedianMadOptions::log</a> = true</code>). </td></tr>
+    <tr><td class="paramname">mm</td><td>Median and MAD computed by <code><a class="el" href="#a7355a4b0dbe0ac2ee0d719d23512c46d">find_median_mad()</a></code> on an array of per-cell QC metrics. If <code><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#a7896ba64781d12a2153a0cbbda3b10d0">ChooseFilterThresholdsOptions::log</a> = true</code>, it is expected that the median and MAD are computed on the log-transformed metrics (i.e., <code><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">FindMedianMadOptions::log</a> = true</code>). </td></tr>
     <tr><td class="paramname">options</td><td>Further options. </td></tr>
   </table>
   </dd>
@@ -658,7 +658,7 @@ template&lt;typename Float_ &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mms</td><td>Vector of medians and MADs for each block. </td></tr>
+    <tr><td class="paramname">mms</td><td>Vector of length equal to the number of blocks, typically computed by <code><a class="el" href="#a86d80b9fa132f10126403b599a360830">find_median_mad_blocked()</a></code>. Each entry contains the median and MAD of the per-cell QC metrics from the corresponding block. </td></tr>
     <tr><td class="paramname">options</td><td>Further options.</td></tr>
   </table>
   </dd>
