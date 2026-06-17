@@ -299,7 +299,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Output_ &gt; </div>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_cells</td><td>Number of cells. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>A collection of arrays containing ADT-based QC metrics, filled by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#a453053a41f8eb69fae40dcdabf121cad">compute_adt_qc_filters()</a></code>.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num_cells</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
 </dl>
@@ -347,7 +347,7 @@ template&lt;typename Sum_ , typename Detected_ , typename Output_ &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">metrics</td><td>ADT-based QC metrics returned by <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>. The feature subsets should be the same as those used in the <code>metrics</code> supplied to <code><a class="el" href="namespacescran__qc.html#a453053a41f8eb69fae40dcdabf121cad">compute_adt_qc_filters()</a></code>. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>Pointer to an array of length <code>num_cells</code>. On output, this is truthy for cells considered to be of high quality, and false otherwise. </td></tr>
   </table>
   </dd>
 </dl>
@@ -394,7 +394,7 @@ template&lt;typename Output_  = unsigned char, typename Sum_ , typename Detected
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector of length <code>num</code>, containing the high-quality calls. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of length <code>num_cells</code>, containing the high-quality calls. </dd></dl>
 
 </div>
 </div>

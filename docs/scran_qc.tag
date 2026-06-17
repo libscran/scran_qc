@@ -4,7 +4,6 @@
     <name>adt_quality_control.hpp</name>
     <path>scran_qc/</path>
     <filename>adt__quality__control_8hpp.html</filename>
-    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
     <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
     <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
     <class kind="struct">scran_qc::ComputeAdtQcMetricsOptions</class>
@@ -19,16 +18,15 @@
     <name>choose_filter_thresholds.hpp</name>
     <path>scran_qc/</path>
     <filename>choose__filter__thresholds_8hpp.html</filename>
-    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
     <class kind="struct">scran_qc::ChooseFilterThresholdsOptions</class>
     <class kind="struct">scran_qc::ChooseFilterThresholdsResults</class>
+    <class kind="struct">scran_qc::ChooseFilterThresholdsBlockedWorkspace</class>
     <namespace>scran_qc</namespace>
   </compound>
   <compound kind="file">
     <name>crispr_quality_control.hpp</name>
     <path>scran_qc/</path>
     <filename>crispr__quality__control_8hpp.html</filename>
-    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
     <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
     <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
     <class kind="struct">scran_qc::ComputeCrisprQcMetricsOptions</class>
@@ -37,15 +35,6 @@
     <class kind="struct">scran_qc::ComputeCrisprQcFiltersOptions</class>
     <class kind="class">scran_qc::CrisprQcFilters</class>
     <class kind="class">scran_qc::CrisprQcBlockedFilters</class>
-    <namespace>scran_qc</namespace>
-  </compound>
-  <compound kind="file">
-    <name>find_median_mad.hpp</name>
-    <path>scran_qc/</path>
-    <filename>find__median__mad_8hpp.html</filename>
-    <class kind="struct">scran_qc::FindMedianMadOptions</class>
-    <class kind="struct">scran_qc::FindMedianMadResults</class>
-    <class kind="struct">scran_qc::FindMedianMadBlockedWorkspace</class>
     <namespace>scran_qc</namespace>
   </compound>
   <compound kind="file">
@@ -67,7 +56,6 @@
     <name>rna_quality_control.hpp</name>
     <path>scran_qc/</path>
     <filename>rna__quality__control_8hpp.html</filename>
-    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
     <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
     <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
     <class kind="struct">scran_qc::ComputeRnaQcMetricsOptions</class>
@@ -85,7 +73,6 @@
     <includes id="per__cell__qc__metrics_8hpp" name="per_cell_qc_metrics.hpp" local="yes" import="no" module="no" objc="no">per_cell_qc_metrics.hpp</includes>
     <includes id="choose__filter__thresholds_8hpp" name="choose_filter_thresholds.hpp" local="yes" import="no" module="no" objc="no">choose_filter_thresholds.hpp</includes>
     <includes id="format__filters_8hpp" name="format_filters.hpp" local="yes" import="no" module="no" objc="no">format_filters.hpp</includes>
-    <includes id="find__median__mad_8hpp" name="find_median_mad.hpp" local="yes" import="no" module="no" objc="no">find_median_mad.hpp</includes>
     <includes id="adt__quality__control_8hpp" name="adt_quality_control.hpp" local="yes" import="no" module="no" objc="no">adt_quality_control.hpp</includes>
     <includes id="crispr__quality__control_8hpp" name="crispr_quality_control.hpp" local="yes" import="no" module="no" objc="no">crispr_quality_control.hpp</includes>
     <includes id="rna__quality__control_8hpp" name="rna_quality_control.hpp" local="yes" import="no" module="no" objc="no">rna_quality_control.hpp</includes>
@@ -197,6 +184,25 @@
       <anchorfile>classscran__qc_1_1AdtQcFilters.html</anchorfile>
       <anchor>a9280b8e701bfd0135eb0ded64f2fadab</anchor>
       <arglist>(const ComputeAdtQcMetricsResults&lt; Sum_, Detected_ &gt; &amp;metrics) const</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>scran_qc::ChooseFilterThresholdsBlockedWorkspace</name>
+    <filename>structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html</filename>
+    <templarg>typename Float_</templarg>
+    <member kind="function">
+      <type></type>
+      <name>ChooseFilterThresholdsBlockedWorkspace</name>
+      <anchorfile>structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html</anchorfile>
+      <anchor>acced18ff51926b8a00b829152a14d93c</anchor>
+      <arglist>(const std::size_t num_cells, const Block_ *const block, const std::size_t num_blocks)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ChooseFilterThresholdsBlockedWorkspace</name>
+      <anchorfile>structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html</anchorfile>
+      <anchor>aab63021f3da838d768ab068acaf80abc</anchor>
+      <arglist>()=default</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -569,8 +575,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1CrisprQcBlockedFilters.html</anchorfile>
-      <anchor>a0e82bb962191821c865147112bb07607</anchor>
-      <arglist>(const std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *const block, Output_ *const output) const</arglist>
+      <anchor>a9bb774af492976ea0fc5e03577cc7f74</anchor>
+      <arglist>(const std::size_t num_cells, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *const block, Output_ *const output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -609,8 +615,8 @@
       <type>void</type>
       <name>filter</name>
       <anchorfile>classscran__qc_1_1CrisprQcFilters.html</anchorfile>
-      <anchor>adadb4121d7bc82e5b0f1920b976fa594</anchor>
-      <arglist>(const std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *const output) const</arglist>
+      <anchor>af4612869a18332c3231044930bd9cddd</anchor>
+      <arglist>(const std::size_t num_cells, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, Output_ *const output) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -625,62 +631,6 @@
       <anchorfile>classscran__qc_1_1CrisprQcFilters.html</anchorfile>
       <anchor>a083a839ca299d3667f1d839571f9fe78</anchor>
       <arglist>(const ComputeCrisprQcMetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics) const</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>scran_qc::FindMedianMadBlockedWorkspace</name>
-    <filename>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</filename>
-    <templarg>typename Float_</templarg>
-    <member kind="function">
-      <type></type>
-      <name>FindMedianMadBlockedWorkspace</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
-      <anchor>ac94405d49e61c3b2951f1b1ca2358ef6</anchor>
-      <arglist>(const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>FindMedianMadBlockedWorkspace</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadBlockedWorkspace.html</anchorfile>
-      <anchor>a9f37273efa598f786ec6ce8bec1e86ad</anchor>
-      <arglist>()=default</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>scran_qc::FindMedianMadOptions</name>
-    <filename>structscran__qc_1_1FindMedianMadOptions.html</filename>
-    <member kind="variable">
-      <type>bool</type>
-      <name>log</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadOptions.html</anchorfile>
-      <anchor>a4706e6f124a7eef17c5a2afc1dd6427d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>median_only</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadOptions.html</anchorfile>
-      <anchor>a95e62ad6e3a447f23e04003d74700469</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>scran_qc::FindMedianMadResults</name>
-    <filename>structscran__qc_1_1FindMedianMadResults.html</filename>
-    <templarg>typename Float_</templarg>
-    <member kind="variable">
-      <type>Float_</type>
-      <name>median</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadResults.html</anchorfile>
-      <anchor>a6e2bb8ea88a3c06f19d1d96a3befaa81</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>Float_</type>
-      <name>mad</name>
-      <anchorfile>structscran__qc_1_1FindMedianMadResults.html</anchorfile>
-      <anchor>aeaf95eecfa996193c6ce322929ae32fe</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -984,6 +934,7 @@
     <filename>namespacescran__qc.html</filename>
     <class kind="class">scran_qc::AdtQcBlockedFilters</class>
     <class kind="class">scran_qc::AdtQcFilters</class>
+    <class kind="struct">scran_qc::ChooseFilterThresholdsBlockedWorkspace</class>
     <class kind="struct">scran_qc::ChooseFilterThresholdsOptions</class>
     <class kind="struct">scran_qc::ChooseFilterThresholdsResults</class>
     <class kind="struct">scran_qc::ComputeAdtQcFiltersOptions</class>
@@ -1000,9 +951,6 @@
     <class kind="struct">scran_qc::ComputeRnaQcMetricsResults</class>
     <class kind="class">scran_qc::CrisprQcBlockedFilters</class>
     <class kind="class">scran_qc::CrisprQcFilters</class>
-    <class kind="struct">scran_qc::FindMedianMadBlockedWorkspace</class>
-    <class kind="struct">scran_qc::FindMedianMadOptions</class>
-    <class kind="struct">scran_qc::FindMedianMadResults</class>
     <class kind="struct">scran_qc::PerCellQcMetricsBuffers</class>
     <class kind="struct">scran_qc::PerCellQcMetricsOptions</class>
     <class kind="struct">scran_qc::PerCellQcMetricsResults</class>
@@ -1054,29 +1002,22 @@
       <type>ChooseFilterThresholdsResults&lt; Float_ &gt;</type>
       <name>choose_filter_thresholds</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>aeee603882324b072b88a6f641ffcc2e6</anchor>
-      <arglist>(const FindMedianMadResults&lt; Float_ &gt; &amp;mm, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a933d574572abed5a57b425089fb10d26</anchor>
+      <arglist>(const std::size_t num_cells, const Value_ *const metrics, Float_ *const buffer, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type>ChooseFilterThresholdsResults&lt; Float_ &gt;</type>
-      <name>choose_filter_thresholds</name>
+      <type>void</type>
+      <name>reset_choose_filter_thresholds_blocked_workspace</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>ad9183ecb1b9b7ef8ed0228f1b53c684a</anchor>
-      <arglist>(const std::size_t num_cells, Float_ *const metrics, const ChooseFilterThresholdsOptions &amp;options)</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
-      <name>choose_filter_thresholds_blocked</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a958e9714d759bba33f54441c527e0905</anchor>
-      <arglist>(const std::vector&lt; FindMedianMadResults&lt; Float_ &gt; &gt; &amp;mms, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a91ac2e8f673547840607276726790f09</anchor>
+      <arglist>(ChooseFilterThresholdsBlockedWorkspace&lt; Float_ &gt; &amp;work, const std::size_t num_cells, const Block_ *const block, const std::size_t num_blocks)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; ChooseFilterThresholdsResults&lt; Float_ &gt; &gt;</type>
       <name>choose_filter_thresholds_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a632c6502823b0ea5bace401a18c1d7d0</anchor>
-      <arglist>(const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, FindMedianMadBlockedWorkspace&lt; Float_ &gt; &amp;workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
+      <anchor>a17d8c5d6bad21e85de2b675223cbefb3</anchor>
+      <arglist>(const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, ChooseFilterThresholdsBlockedWorkspace&lt; Float_ &gt; &amp;workspace, const ChooseFilterThresholdsOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1096,8 +1037,8 @@
       <type>CrisprQcFilters&lt; Float_ &gt;</type>
       <name>compute_crispr_qc_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>ad3349d2a4352412e10c9826843d33767</anchor>
-      <arglist>(const std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
+      <anchor>acfb6b4e4103d64d957a34769ee320db7</anchor>
+      <arglist>(const std::size_t num_cells, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>CrisprQcFilters&lt; Float_ &gt;</type>
@@ -1110,8 +1051,8 @@
       <type>CrisprQcBlockedFilters&lt; Float_ &gt;</type>
       <name>compute_crispr_qc_filters_blocked</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a0bc2ea200e5c3c95af865736b4a60594</anchor>
-      <arglist>(const std::size_t num, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *const block, const std::size_t num_blocks, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
+      <anchor>ad5bfbaca1a9ab0ae6fb17c56394d2919</anchor>
+      <arglist>(const std::size_t num_cells, const ComputeCrisprQcMetricsBuffers&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *const block, const std::size_t num_blocks, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
       <type>CrisprQcBlockedFilters&lt; Float_ &gt;</type>
@@ -1121,67 +1062,46 @@
       <arglist>(const ComputeCrisprQcMetricsResults&lt; Sum_, Detected_, Value_, Index_ &gt; &amp;metrics, const Block_ *const block, const std::size_t num_blocks, const ComputeCrisprQcFiltersOptions &amp;options)</arglist>
     </member>
     <member kind="function">
-      <type>FindMedianMadResults&lt; Float_ &gt;</type>
-      <name>find_median_mad</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a7355a4b0dbe0ac2ee0d719d23512c46d</anchor>
-      <arglist>(std::size_t num_obs, Float_ *metrics, const FindMedianMadOptions &amp;options)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>reset_find_median_mad_blocked_workspace</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a6607aa99be92ac34a3deb0b83babbf71</anchor>
-      <arglist>(FindMedianMadBlockedWorkspace&lt; Float_ &gt; &amp;work, const std::size_t num_obs, const Block_ *const block, const std::size_t num_blocks)</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; FindMedianMadResults&lt; Output_ &gt; &gt;</type>
-      <name>find_median_mad_blocked</name>
-      <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a86d80b9fa132f10126403b599a360830</anchor>
-      <arglist>(const std::size_t num_obs, const Value_ *const metrics, const Block_ *const block, FindMedianMadBlockedWorkspace&lt; Output_ &gt; &amp;workspace, const FindMedianMadOptions &amp;options)</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>filter_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>accda57e0c354b921eeb47b4ed224c691</anchor>
-      <arglist>(const std::size_t num, const Keep_ *const filter, std::vector&lt; Index_ &gt; &amp;output)</arglist>
+      <anchor>aabb700467e27813982e0e26995fbafd2</anchor>
+      <arglist>(const std::size_t num_cells, const Keep_ *const filter, std::vector&lt; Index_ &gt; &amp;output)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Index_ &gt;</type>
       <name>filter_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>af7e2f8c2a590858d35986828f0c0eb9d</anchor>
-      <arglist>(const std::size_t num, const Keep_ *const filter)</arglist>
+      <anchor>a7d5bbf37c98d80d299ff3c92359b869a</anchor>
+      <arglist>(const std::size_t num_cells, const Keep_ *const filter)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>combine_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a9e36d010f9cc6ed68eb086be91f0fe4b</anchor>
-      <arglist>(const std::size_t num, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *const output)</arglist>
+      <anchor>a88e60108d856a24a482681ef34cce7b8</anchor>
+      <arglist>(const std::size_t num_cells, const std::vector&lt; Keep_ * &gt; &amp;filters, Output_ *const output)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Output_ &gt;</type>
       <name>combine_filters</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a2644b9e4a6efdea16d339acd04e6c6f5</anchor>
-      <arglist>(const std::size_t num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
+      <anchor>adca73b25c4a70d36dca77e9ec3ad5845</anchor>
+      <arglist>(const std::size_t num_cells, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>combine_filters_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>afe86f4f2c234435eb13176d2242b6a4c</anchor>
-      <arglist>(const Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters, std::vector&lt; Index_ &gt; &amp;output)</arglist>
+      <anchor>aeebae6431663dee0f7b65aecc93fc821</anchor>
+      <arglist>(const Index_ num_cells, const std::vector&lt; const Keep_ * &gt; &amp;filters, std::vector&lt; Index_ &gt; &amp;output)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Index_ &gt;</type>
       <name>combine_filters_index</name>
       <anchorfile>namespacescran__qc.html</anchorfile>
-      <anchor>a6255429112be82b9f1a0308d7418f965</anchor>
-      <arglist>(const Index_ num, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
+      <anchor>a9a421424ac83c0cbd5a57ef811e47a3d</anchor>
+      <arglist>(const Index_ num_cells, const std::vector&lt; const Keep_ * &gt; &amp;filters)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

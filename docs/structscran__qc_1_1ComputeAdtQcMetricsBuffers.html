@@ -143,7 +143,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pointer to an array of length equal to the number of cells, to store the sum of ADT counts for each cell. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#a93ccfcc3bda726725faa30cc2ccf3a82">ComputeAdtQcMetricsResults::sum</a></code>. </p>
+<p>Pointer to an array of length equal to the number of cells, to store the sum of ADT counts for each cell. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#a93ccfcc3bda726725faa30cc2ccf3a82">ComputeAdtQcMetricsResults::sum</a></code>. </p>
 
 </div>
 </div>
@@ -160,7 +160,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pointer to an array of length equal to the number of cells, to store the number of detected ADTs for each cell. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#a72368ea4fbbe693b7afc863a720cb780">ComputeAdtQcMetricsResults::detected</a></code>. </p>
+<p>Pointer to an array of length equal to the number of cells, to store the number of detected ADTs for each cell. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#a72368ea4fbbe693b7afc863a720cb780">ComputeAdtQcMetricsResults::detected</a></code>. </p>
 
 </div>
 </div>
@@ -177,7 +177,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Vector of pointers of length equal to the number of feature subsets, to store the sum of counts for each ADT subset in each cell. Each entry should point to an array of length equal to the number of cells. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#ad70883fffcce7ad130f4fb28b1ac6bf1">ComputeAdtQcMetricsResults::subset_sum</a></code>. </p>
+<p>Vector of pointers of length equal to the number of feature subsets, to store the sum of counts for each ADT subset in each cell. Each entry should point to an array of length equal to the number of cells. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeAdtQcMetricsResults.html#ad70883fffcce7ad130f4fb28b1ac6bf1">ComputeAdtQcMetricsResults::subset_sum</a></code>. </p>
 
 </div>
 </div>

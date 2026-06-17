@@ -110,40 +110,36 @@ $(function(){ initResizable(false); });
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
-<code>#include &quot;<a class="el" href="find__median__mad_8hpp_source.html">find_median_mad.hpp</a>&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
+<code>#include &quot;quickstats/quickstats.hpp&quot;</code><br />
 <code>#include &quot;utils.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for choose_filter_thresholds.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="choose__filter__thresholds_8hpp__incl.png" border="0" usemap="#ascran__qc_2choose__filter__thresholds_8hpp" alt=""/></div>
 <map name="ascran__qc_2choose__filter__thresholds_8hpp" id="ascran__qc_2choose__filter__thresholds_8hpp">
-<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="116,5,267,46"/>
-<area shape="rect" title=" " alt="" coords="5,168,63,193"/>
-<area shape="poly" title=" " alt="" coords="173,48,59,158,56,155,170,44"/>
-<area shape="rect" title=" " alt="" coords="86,168,139,193"/>
-<area shape="poly" title=" " alt="" coords="184,47,128,155,124,152,179,45"/>
-<area shape="rect" title=" " alt="" coords="163,168,220,193"/>
-<area shape="poly" title=" " alt="" coords="194,46,194,152,189,152,189,46"/>
-<area shape="rect" href="find__median__mad_8hpp.html" title="Compute the median and MAD from an array of values." alt="" coords="301,94,447,120"/>
-<area shape="poly" title=" " alt="" coords="238,44,333,85,331,90,236,49"/>
-<area shape="rect" title=" " alt="" coords="978,168,1047,193"/>
-<area shape="poly" title=" " alt="" coords="268,37,568,88,963,164,962,170,567,93,267,42"/>
-<area shape="poly" title=" " alt="" coords="305,123,202,143,78,170,77,164,201,137,304,118"/>
-<area shape="poly" title=" " alt="" coords="327,123,154,169,153,164,326,118"/>
-<area shape="poly" title=" " alt="" coords="344,123,236,165,234,160,342,118"/>
-<area shape="rect" title=" " alt="" coords="244,168,318,193"/>
-<area shape="poly" title=" " alt="" coords="360,122,310,160,307,156,357,118"/>
-<area shape="rect" title=" " alt="" coords="342,168,406,193"/>
-<area shape="poly" title=" " alt="" coords="377,120,377,152,371,152,371,120"/>
-<area shape="rect" title=" " alt="" coords="430,168,496,193"/>
-<area shape="poly" title=" " alt="" coords="391,118,438,156,435,160,387,122"/>
-<area shape="rect" title=" " alt="" coords="520,168,585,193"/>
-<area shape="poly" title=" " alt="" coords="405,118,509,159,507,164,403,123"/>
-<area shape="rect" title=" " alt="" coords="609,168,779,193"/>
-<area shape="poly" title=" " alt="" coords="429,118,625,161,624,166,428,123"/>
-<area shape="rect" title=" " alt="" coords="802,168,954,193"/>
-<area shape="poly" title=" " alt="" coords="448,116,787,164,786,169,447,121"/>
-<area shape="poly" title=" " alt="" coords="448,110,674,128,817,143,963,165,962,170,816,149,674,133,448,115"/>
+<area shape="rect" title="Define QC filter thresholds using a MAD&#45;based approach." alt="" coords="298,5,450,46"/>
+<area shape="rect" title=" " alt="" coords="5,94,63,120"/>
+<area shape="poly" title=" " alt="" coords="298,45,79,96,77,91,297,40"/>
+<area shape="rect" title=" " alt="" coords="86,94,139,120"/>
+<area shape="poly" title=" " alt="" coords="309,49,154,95,153,90,307,44"/>
+<area shape="rect" title=" " alt="" coords="163,94,220,120"/>
+<area shape="poly" title=" " alt="" coords="329,49,234,90,232,85,327,44"/>
+<area shape="rect" title=" " alt="" coords="244,94,318,120"/>
+<area shape="poly" title=" " alt="" coords="353,48,308,86,305,82,349,44"/>
+<area shape="rect" title=" " alt="" coords="342,94,406,120"/>
+<area shape="poly" title=" " alt="" coords="377,46,377,78,371,78,371,46"/>
+<area shape="rect" title=" " alt="" coords="430,94,494,120"/>
+<area shape="poly" title=" " alt="" coords="398,44,439,81,435,85,394,48"/>
+<area shape="rect" title=" " alt="" coords="518,94,670,120"/>
+<area shape="poly" title=" " alt="" coords="430,44,547,86,545,91,428,49"/>
+<area shape="rect" title=" " alt="" coords="693,94,863,120"/>
+<area shape="poly" title=" " alt="" coords="450,39,701,88,700,93,449,44"/>
+<area shape="rect" title=" " alt="" coords="887,94,957,120"/>
+<area shape="poly" title=" " alt="" coords="450,32,638,54,873,91,872,96,638,60,450,37"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -171,10 +167,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">scran_qc::ChooseFilterThresholdsOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="namespacescran__qc.html#a933d574572abed5a57b425089fb10d26">choose_filter_thresholds()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">scran_qc::ChooseFilterThresholdsResults&lt; Float_ &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results of <code><a class="el" href="namespacescran__qc.html#ac96495884db86cf7ecefb3635f649cd3">compute_adt_qc_metrics()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsResults.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html">scran_qc::ChooseFilterThresholdsBlockedWorkspace&lt; Float_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Workspace for <code><a class="el" href="namespacescran__qc.html#a17d8c5d6bad21e85de2b675223cbefb3">choose_filter_thresholds_blocked()</a></code>.  <a href="structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -185,18 +184,15 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aeee603882324b072b88a6f641ffcc2e6" id="r_aeee603882324b072b88a6f641ffcc2e6"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:aeee603882324b072b88a6f641ffcc2e6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">scran_qc::choose_filter_thresholds</a> (const <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt; &amp;mm, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
-<tr class="separator:aeee603882324b072b88a6f641ffcc2e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9183ecb1b9b7ef8ed0228f1b53c684a" id="r_ad9183ecb1b9b7ef8ed0228f1b53c684a"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:ad9183ecb1b9b7ef8ed0228f1b53c684a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#ad9183ecb1b9b7ef8ed0228f1b53c684a">scran_qc::choose_filter_thresholds</a> (const std::size_t num_cells, Float_ *const metrics, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
-<tr class="separator:ad9183ecb1b9b7ef8ed0228f1b53c684a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a958e9714d759bba33f54441c527e0905" id="r_a958e9714d759bba33f54441c527e0905"><td class="memTemplParams" colspan="2">template&lt;typename Float_ &gt; </td></tr>
-<tr class="memitem:a958e9714d759bba33f54441c527e0905"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a958e9714d759bba33f54441c527e0905">scran_qc::choose_filter_thresholds_blocked</a> (const std::vector&lt; <a class="el" href="structscran__qc_1_1FindMedianMadResults.html">FindMedianMadResults</a>&lt; Float_ &gt; &gt; &amp;mms, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
-<tr class="separator:a958e9714d759bba33f54441c527e0905"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a632c6502823b0ea5bace401a18c1d7d0" id="r_a632c6502823b0ea5bace401a18c1d7d0"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a632c6502823b0ea5bace401a18c1d7d0"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a632c6502823b0ea5bace401a18c1d7d0">scran_qc::choose_filter_thresholds_blocked</a> (const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, <a class="el" href="structscran__qc_1_1FindMedianMadBlockedWorkspace.html">FindMedianMadBlockedWorkspace</a>&lt; Float_ &gt; &amp;workspace, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
-<tr class="separator:a632c6502823b0ea5bace401a18c1d7d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a933d574572abed5a57b425089fb10d26" id="r_a933d574572abed5a57b425089fb10d26"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a933d574572abed5a57b425089fb10d26"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a933d574572abed5a57b425089fb10d26">scran_qc::choose_filter_thresholds</a> (const std::size_t num_cells, const Value_ *const metrics, Float_ *const buffer, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
+<tr class="separator:a933d574572abed5a57b425089fb10d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ac2e8f673547840607276726790f09" id="r_a91ac2e8f673547840607276726790f09"><td class="memTemplParams" colspan="2">template&lt;typename Float_ , typename Block_ &gt; </td></tr>
+<tr class="memitem:a91ac2e8f673547840607276726790f09"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a91ac2e8f673547840607276726790f09">scran_qc::reset_choose_filter_thresholds_blocked_workspace</a> (<a class="el" href="structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html">ChooseFilterThresholdsBlockedWorkspace</a>&lt; Float_ &gt; &amp;work, const std::size_t num_cells, const Block_ *const block, const std::size_t num_blocks)</td></tr>
+<tr class="separator:a91ac2e8f673547840607276726790f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17d8c5d6bad21e85de2b675223cbefb3" id="r_a17d8c5d6bad21e85de2b675223cbefb3"><td class="memTemplParams" colspan="2">template&lt;typename Value_ , typename Block_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a17d8c5d6bad21e85de2b675223cbefb3"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsResults.html">ChooseFilterThresholdsResults</a>&lt; Float_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacescran__qc.html#a17d8c5d6bad21e85de2b675223cbefb3">scran_qc::choose_filter_thresholds_blocked</a> (const std::size_t num_cells, const Value_ *const metrics, const Block_ *const block, const std::size_t num_blocks, <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsBlockedWorkspace.html">ChooseFilterThresholdsBlockedWorkspace</a>&lt; Float_ &gt; &amp;workspace, const <a class="el" href="structscran__qc_1_1ChooseFilterThresholdsOptions.html">ChooseFilterThresholdsOptions</a> &amp;options)</td></tr>
+<tr class="separator:a17d8c5d6bad21e85de2b675223cbefb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Define QC filter thresholds using a MAD-based approach. </p>

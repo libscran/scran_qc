@@ -104,7 +104,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Options for <code><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>.  
+<p>Options for <code><a class="el" href="namespacescran__qc.html#a933d574572abed5a57b425089fb10d26">choose_filter_thresholds()</a></code>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="choose__filter__thresholds_8hpp_source.html">choose_filter_thresholds.hpp</a>&gt;</code></p>
@@ -123,7 +123,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a7896ba64781d12a2153a0cbbda3b10d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Options for <code><a class="el" href="namespacescran__qc.html#aeee603882324b072b88a6f641ffcc2e6">choose_filter_thresholds()</a></code>. </p>
+<div class="textblock"><p>Options for <code><a class="el" href="namespacescran__qc.html#a933d574572abed5a57b425089fb10d26">choose_filter_thresholds()</a></code>. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="aea53830ac78cf9d215f3eb19bb4387cf" name="aea53830ac78cf9d215f3eb19bb4387cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea53830ac78cf9d215f3eb19bb4387cf">&#9670;&#160;</a></span>lower</h2>
@@ -196,10 +196,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether the median and MAD should computed on the log-scale, i.e., <code><a class="el" href="structscran__qc_1_1FindMedianMadOptions.html#a4706e6f124a7eef17c5a2afc1dd6427d">FindMedianMadOptions::log</a> = true</code>. (Or, for the overload that accepts a <code>FindMedianMadResult</code>, whether the median and MAD were already computed the log-scale.)</p>
+<p>Whether to compute the median and MAD on the log-scale. If <code>true</code>, the threshold is calculated in log-space, and the log-transformation is reversed before the function returns; this ensures that the reported thresholds are on the original scale of the metrics and can be directly compared to the per-cell values of the metrics.</p>
 <p>Using a log-transformation instructs the outlier definition to focus on the fold-change from the median. This has several benefits for right-skewed distributions of (mostly) positive values, where the log-transformation symmetrizes the distribution and makes it more normal-like. This improves the relevance of the interpretation of <code><a class="el" href="#aa64296dfb5762f15989ad022806bcecc">ChooseFilterThresholdsOptions::num_mads</a></code>. When defining a lower threshold, the log-transformation also ensures that the defined threshold is always positive.</p>
-<p>Some caution is required for distributions close to zero, e.g., proportions. The conversion of near-zero values to large negative log-values can unexpectedly inflate the MAD. This could be mitigated by adding a pseudo-count prior to log-transformation, but a large pseudo-count would cause the log-transformation to converge to a linear transformation, rendering this option meaningless for distributions consisting of small values.</p>
-<p>If this is <code>true</code>, the reported thresholds are still converted back to the original scale of the metrics. </p>
+<p>Some caution is required for distributions close to zero, e.g., proportions. The conversion of near-zero values to large negative log-values can unexpectedly inflate the MAD. This could be mitigated by adding a pseudo-count prior to log-transformation, but a large pseudo-count would cause the log-transformation to converge to a linear transformation, rendering this option meaningless for distributions consisting of small values. </p>
 
 </div>
 </div>

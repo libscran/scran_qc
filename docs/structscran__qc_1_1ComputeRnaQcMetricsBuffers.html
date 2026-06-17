@@ -144,7 +144,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pointer to an array of length equal to the number of cells, to store the sum of counts in each cell. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#a22fd07002497134022aa5d2d6e1c6b53">ComputeRnaQcMetricsResults::sum</a></code>. </p>
+<p>Pointer to an array of length equal to the number of cells, to store the sum of counts in each cell. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#a22fd07002497134022aa5d2d6e1c6b53">ComputeRnaQcMetricsResults::sum</a></code>. </p>
 
 </div>
 </div>
@@ -161,7 +161,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pointer to an array of length equal to the number of cells, to store the number of detected genes in each cell. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#a7f26c5d1de895a88485a7ffa5479d4ca">ComputeRnaQcMetricsResults::detected</a></code>. </p>
+<p>Pointer to an array of length equal to the number of cells, to store the number of detected genes in each cell. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#a7f26c5d1de895a88485a7ffa5479d4ca">ComputeRnaQcMetricsResults::detected</a></code>. </p>
 
 </div>
 </div>
@@ -178,7 +178,7 @@ template&lt;typename Sum_  = double, typename Detected_  = int, typename Proport
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Vector of pointers of length equal to the number of feature subsets. Each entry should point to an array of length equal to the number of cells, to store the subset proportion in each cell. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#abb188ef0d3417d6f6c433a3759dfdc15">ComputeRnaQcMetricsResults::subset_proportion</a></code>. </p>
+<p>Vector of pointers of length equal to the number of feature subsets. Each entry should point to an array of length equal to the number of cells, to store the subset proportion in each cell. All values should be non-negative. This is analogous to <code><a class="el" href="structscran__qc_1_1ComputeRnaQcMetricsResults.html#abb188ef0d3417d6f6c433a3759dfdc15">ComputeRnaQcMetricsResults::subset_proportion</a></code>. </p>
 
 </div>
 </div>
