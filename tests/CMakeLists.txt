@@ -43,7 +43,6 @@ endmacro()
 add_executable(
     libtest 
     src/per_cell_qc_metrics.cpp
-    src/find_median_mad.cpp
     src/choose_filter_thresholds.cpp
     src/rna_quality_control.cpp
     src/adt_quality_control.cpp
@@ -55,7 +54,6 @@ decorate_executable(libtest)
 add_executable(
     dirtytest 
     src/per_cell_qc_metrics.cpp
-    src/find_median_mad.cpp
     src/choose_filter_thresholds.cpp
     src/rna_quality_control.cpp
     src/adt_quality_control.cpp
