@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(scran_qc
-    VERSION 0.2.0
+project(
+    scran_qc
+    VERSION 0.3.0
     DESCRIPTION "Simple per-cell quality control statistics"
-    LANGUAGES CXX)
+    LANGUAGES CXX
+)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -22,9 +24,9 @@ option(SCRAN_QC_FETCH_EXTERN "Automatically fetch scran_qc's external dependenci
 if(SCRAN_QC_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(tatami_tatami 4.0.0 CONFIG REQUIRED)
-    find_package(ltla_quickstats 0.1.0 CONFIG REQUIRED)
-    find_package(ltla_sanisizer 0.1.2 CONFIG REQUIRED)
+    find_package(tatami_tatami 4.1.0 CONFIG REQUIRED)
+    find_package(ltla_quickstats 0.2.0 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.2.0 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(scran_qc INTERFACE tatami::tatami ltla::quickstats ltla::sanisizer)

@@ -147,8 +147,14 @@ ChooseFilterThresholdsResults<Float_> choose_filter_thresholds_internal(
     lthresh = -std::numeric_limits<Float_>::infinity();
     uthresh = std::numeric_limits<Float_>::infinity();
 
-    const auto median = quickstats::median<Float_>(num_cells, metrics);
-    const auto mad = quickstats::scale_mad_to_sd(quickstats::mad_with_infinities<Float_>(num_cells, metrics, median));
+    quickstats::MedianOptions<Float_> medopt;
+    medopt.placeholder = std::numeric_limits<Float_>::quiet_NaN();
+    const auto median = quickstats::median<Float_>(num_cells, metrics, medopt);
+
+    quickstats::MadOptions<Float_> madopt;
+    madopt.placeholder = std::numeric_limits<Float_>::quiet_NaN();
+    madopt.difference_between_infinities_is_zero = true; // for sane handling of log(0).
+    const auto mad = quickstats::scale_mad_to_sd(quickstats::mad<Float_>(num_cells, metrics, median, madopt));
 
     if (!std::isnan(mad)) {
         const auto delta = std::max(static_cast<Float_>(options.min_diff), static_cast<Float_>(options.num_mads * mad));

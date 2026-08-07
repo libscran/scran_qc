@@ -256,9 +256,12 @@ void compute_crispr_qc_filters_internal(
     }
 
     auto prop_res = [&]{
+        quickstats::MedianOptions<Float_> medopt;
+        medopt.placeholder = std::numeric_limits<Float_>::quiet_NaN();
+
         if constexpr(unblocked) {
             std::copy_n(maxprop.begin(), num_cells, buffer.begin());
-            return quickstats::median<Float_>(num_cells, buffer.data());
+            return quickstats::median<Float_>(num_cells, buffer.data(), medopt);
         } else {
             std::vector<Float_> output;
             output.reserve(num_blocks);
@@ -269,7 +272,7 @@ void compute_crispr_qc_filters_internal(
                 num_blocks,
                 buffer,
                 [&](const std::size_t len, Float_* const ptr) -> void {
-                    output.push_back(quickstats::median<Float_>(len, ptr));
+                    output.push_back(quickstats::median<Float_>(len, ptr, medopt));
                 }
             );
             return output;
